@@ -10,10 +10,10 @@ let executors = {
   down: migration.downgrade
 }
 
-function migrate (action, version, customWebConfig) {
+function migrate (action, version, customWebConfig, callback) {
   let webConfig = helper.getWebConfig()
   // load webConfig
-  if (!util.isNullOrUndefined(customWebConfig)) {
+  if (util.isRealObject(customWebConfig)) {
     webConfig = util.getPatchedObject(webConfig, customWebConfig)
   } 
   // add `helper` and `cck` to webConfig.vars.$
@@ -30,6 +30,9 @@ function migrate (action, version, customWebConfig) {
       for (let version of result) {
         console.warn(' * ' + version + ' ' + action)
       }
+    }
+    if (util.isFunction(callback)) {
+      callback (error, result)
     }
   })
 }
