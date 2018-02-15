@@ -1,0 +1,5 @@
+<% if (typeof value === 'undefined' || value === null || (typeof value === 'string' && value.trim() === '')) { %>
+  <i>[Not set]</i>
+<% } else { %>
+  <%= value in fieldInfo.options? fieldInfo.options[value]: "" %>
+<% } %>
