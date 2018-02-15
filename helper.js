@@ -351,6 +351,9 @@ function jwtMiddleware (req, res, next) {
   try {
     if (!util.isNullOrUndefined(token)) {
       req.auth = jwt.verify(token, webConfig.jwtSecret)
+      if (!('groups' in req.auth) || !(util.isArray(req.auth.groups)) || req.auth.groups.length === 0) {
+        setCookieToken(webConfig, req, res)
+      }
     } else {
       setCookieToken(webConfig, req, res)
     }
