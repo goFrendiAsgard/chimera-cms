@@ -1,5 +1,4 @@
 node_modules/
-plugins/
 npm_debug.log
 .cache-require-paths.json
 .*.cjson
