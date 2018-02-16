@@ -35,6 +35,12 @@
 <script>
   $(document).ready(function () {
     let fieldInfo = JSON.parse(unescape('<%- escape(JSON.stringify(fieldInfo)) %>'))
+    let clipboardRow = null
+
+    function toggleActionButton () {
+      $('#<%= inputId %>InputContainer .btnAction').toggle()
+      $('#<%= inputId %>BtnAdd').toggle()
+    }
 
     // load presentation container
     cwLoadOne2ManyPresentationContainer('<%= inputId %>', fieldInfo)
@@ -49,6 +55,34 @@
       event.preventDefault()
       let html = cwGetOne2ManyTableRow({}, fieldInfo.fields)
       $('#<%= inputId %>Table').append(html)
+    })
+
+    // Cut Row
+    $('#<%= inputId %>InputContainer').on('click', '.btnCutRow', function (event) {
+      event.preventDefault()
+      clipboardRow = $(this).parent().parent()
+      toggleActionButton()
+    })
+
+    // Cancel Cut Row
+    $('#<%= inputId %>InputContainer').on('click', '.btnCancelCutRow', function (event) {
+      event.preventDefault()
+      clipboardRow = null
+      toggleActionButton()
+    })
+
+    // Paste Before Row
+    $('#<%= inputId %>InputContainer').on('click', '.btnPasteBeforeRow', function (event) {
+      event.preventDefault()
+      clipboardRow.insertBefore($(this).parent().parent())
+      toggleActionButton()
+    })
+
+    // Paste After Row
+    $('#<%= inputId %>InputContainer').on('click', '.btnPasteAfterRow', function (event) {
+      event.preventDefault()
+      clipboardRow.insertAfter($(this).parent().parent())
+      toggleActionButton()
     })
 
     // Delete record

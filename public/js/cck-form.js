@@ -211,7 +211,13 @@ function cwGetOne2ManyTableRow (row, fieldInfoList) {
     let presentation = ejs.render(fieldInfo['inputTemplate'], { row, fieldName, fieldInfo, value })
     html += '<td fieldName="' + fieldName + '">' + presentation + '</td>'
   }
-  html += '<td><a class="btnDeleteRow btn btn-default" href="#"><span class="glyphicon glyphicon-remove"></span> </a></td>'
+  html += '<td>'
+  html += '<a class="btnPasteBeforeRow btnAction btn btn-default" style="display:none;" href="#"><span class="glyphicon glyphicon-open-file"></span></a>'
+  html += '<a class="btnPasteAfterRow btnAction btn btn-default" style="display:none;" href="#"><span class="glyphicon glyphicon-save-file"></span></a>'
+  html += '<a class="btnCancelCutRow btnAction btn btn-default" style="display:none;" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>'
+  html += '<a class="btnCutRow btn btnAction btn-default" href="#"><span class="glyphicon glyphicon-scissors"></span></a>'
+  html += '<a class="btnDeleteRow btn btnAction btn-default" href="#"><span class="glyphicon glyphicon-remove"></span></a>'
+  html += '</td>'
   html += '</tr>'
   return html
 }
