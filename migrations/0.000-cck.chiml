@@ -10,7 +10,7 @@ vars:
       updateGroups: ['superAdmin']
       deleteGroups: ['superAdmin']
       selectGroups: ['superAdmin']
-      initChain: '<%= chainPath %>cck.init.js'
+      initChain: '<%- chainPath %>cck.init.js'
       tabs:
         config: '<span class="glyphicon glyphicon-cog"></span> Configs'
         privilege: '<span class="glyphicon glyphicon-user"></span> Privileges'
@@ -29,7 +29,7 @@ vars:
         caption:
           hidden: ["tabular"]
         fields:
-          inputTemplate: '<%- viewPath %>cck/inputs/cckField.ejs '
+          inputTemplate: '<%- viewPath %>cck/inputs/cckField.ejs'
           tabularPresentationTemplate: '<%- cck.presentation.text %>'
           presentationTemplate: '<%- cck.presentation.jsonText %>'
           hidden: ['tabular']
@@ -245,7 +245,7 @@ vars:
       updateGroups: ['superAdmin']
       deleteGroups: ['superAdmin']
       selectGroups: ['superAdmin']
-      initChain: '<%= chainPath %>route.init.js'
+      initChain: '<%- chainPath %>route.init.js'
       fields:
         name:
           notNull: 1
@@ -299,9 +299,9 @@ vars:
       updateGroups: ['superAdmin']
       deleteGroups: ['superAdmin']
       selectGroups: ['superAdmin']
-      beforeInsertChain: '<%= chainPath %>user.beforeInsertOrUpdate.js'
-      beforeUpdateChain: '<%= chainPath %>user.beforeInsertOrUpdate.js'
-      initChain: '<%= chainPath %>user.init.js'
+      beforeInsertChain: '<%- chainPath %>user.beforeInsertOrUpdate.js'
+      beforeUpdateChain: '<%- chainPath %>user.beforeInsertOrUpdate.js'
+      initChain: '<%- chainPath %>user.init.js'
       afterSelectChain: '<%- chainPath %>user.afterSelect.js'
       fields:
         profilePicture:
@@ -346,7 +346,7 @@ vars:
       updateGroups: ['superAdmin']
       deleteGroups: ['superAdmin']
       selectGroups: ['superAdmin']
-      afterSelectChain: '<%= chainPath %>config.afterSelect.js'
+      afterSelectChain: '<%- chainPath %>config.afterSelect.js'
       fields:
         key:
           notNull: 1
@@ -359,6 +359,10 @@ vars:
 
     - name: 'tests'
       collectionName: 'web_tests'
+      insertGroups: ['loggedIn', 'loggedOut']
+      updateGroups: ['loggedIn', 'loggedOut']
+      deleteGroups: ['loggedIn', 'loggedOut']
+      selectGroups: ['loggedIn', 'loggedOut']
       groups: ['loggedIn', 'loggedOut']
       fields:
         key: {}
