@@ -43,22 +43,26 @@ module.exports = (ins, vars, callback) => {
           caption: {
             caption: 'Caption',
             inputTemplate: getTemplate(config.cck.input.text),
-            presentationTemplate: getTemplate(config.cck.presentation.text)
+            presentationTemplate: getTemplate(config.cck.presentation.text),
+            bootstrapColWidth: 2
           },
           url: {
             caption: 'URL',
             inputTemplate: getTemplate(config.cck.input.text),
-            presentationTemplate: getTemplate(config.cck.presentation.text)
+            presentationTemplate: getTemplate(config.cck.presentation.text),
+            bootstrapColWidth: 2
           },
           groups: {
             caption: 'Groups',
             inputTemplate: getTemplate(config.cck.input.jsonText),
-            presentationTemplate: getTemplate(config.cck.presentation.list)
+            presentationTemplate: getTemplate(config.cck.presentation.list),
+            bootstrapColWidth: 2
           },
           children: {
             caption: 'Children',
             inputTemplate: getTemplate(config.cck.input.one2many),
             presentationTemplate: getTemplate(config.cck.presentation.one2many),
+            bootstrapColWidth: 4,
             fields: {
               caption: {
                 caption: 'Caption',
