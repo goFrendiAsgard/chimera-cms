@@ -42,8 +42,9 @@
     <thead>
       <tr>
         <% for (let fieldName of cckState.fieldNames) { %>
-          <% if (cckState.schema.fields[fieldName].hidden && cckState.schema.fields[fieldName].hidden.indexOf('tabular') > -1) { continue;} %>
-          <th><%= cckState.schema.fields[fieldName].caption %></th>
+          <% let fieldInfo = cckState.fields[fieldName] %>
+          <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
+          <th class="<%= fieldInfo.bootstrapColWidth ? 'col-sm-' + fieldInfo.bootsrapColWidth : '' %>"><%= fieldInfo.caption %></th>
         <% } %>
         <th>Action</th>
       </tr>
