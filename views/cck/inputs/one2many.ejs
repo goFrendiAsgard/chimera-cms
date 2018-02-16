@@ -24,7 +24,8 @@
         <div id="<%= inputId %>InputContainer"></div>
       </div>
       <div class="modal-footer">
-        <a id="<%= inputId %>BtnClose" class="btn btn-default btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Close</a>
+        <a id="<%= inputId %>BtnSave" class="btn btn-default btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Save</a>
+        <a id="<%= inputId %>BtnCancel" class="btn btn-default btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Cancel</a>
       </div>
     </div>
 
@@ -56,8 +57,13 @@
       $(this).parent().parent().remove()
     })
 
+    // Close and clear inputContainer
+    $('#<%= inputId %>BtnCancel').click(function (event) {
+      $('#<%= inputId %>InputContainer').html('')
+    })
+
     // Save value and reload presentation
-    $('#<%= inputId %>BtnClose').click(function (event) {
+    $('#<%= inputId %>BtnSave').click(function (event) {
       // clear uploadContainer
       $('#<%= inputId %>UploadContainer').html('')
       // build value
@@ -92,5 +98,6 @@
       // clear inputContainer
       $('#<%= inputId %>InputContainer').html('')
     })
+
   })
 </script>

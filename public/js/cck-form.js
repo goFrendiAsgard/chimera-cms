@@ -95,23 +95,38 @@ function cwLoadMany2OnePresentationContainer(componentId, componentFieldInfo) {
   })
 }
 
-function cwGetTableHeader (fields, fieldInfoList, addAction = false) {
-  let fieldCount = fields.length
-  let gridCount = addAction? 11 : 12
-  let colWidth = Math.floor(gridCount / fieldCount)
-  let actionWidth = addAction ? 12 - (colWidth * fieldCount) : 0
-  let colClass = ''
-  let actionClass = ''
-  if (colWidth > 0) {
-    colClass= 'col-sm-' + colWidth
-    actionClass= 'col-sm-1'
+function cwGetColWidthAndActionWidth (fields, fieldInfoList, addAction) {
+  let unsetWidthFieldCount = fields.length
+  let unsetWidthGridCount = addAction? 11 : 12
+  let setWidth = 0
+  for (let fieldName of fields) {
+    let fieldInfo = fieldInfoList[fieldName]
+    if (fieldInfo.bootstrapColWidth) {
+      unsetWidthFieldCount -= 1
+      unsetWidthGridCount -= parseInt(fieldInfo.bootstrapColWidth)
+      setWidth += parseInt(fieldInfo.bootstrapColWidth)
+    }
   }
+  unsetWidthFieldCount = unsetWidthFieldCount < 1 ? 1 : unsetWidthFieldCount
+  unsetWidthGridGridCount = unsetWidthGridCount < 1 ? 1 : unsetWidthGridCount
+  let colWidth = Math.floor(unsetWidthGridCount / unsetWidthFieldCount)
+  let actionWidth = addAction ? 12 - (setWidth + (colWidth * unsetWidthFieldCount)) : 0
+  actionWidth = actionWidth < 1 ? 1 : actionWidth
+  return {colWidth, actionWidth}
+}
+
+function cwGetTableHeader (fields, fieldInfoList, addAction = false) {
+  let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, addAction)
   // table header
   let html = '<tr>'
   for (let fieldName of fields) {
+    let fieldInfo = fieldInfoList[fieldName]
+    let colClass = 'col-sm-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
     html += '<th class="' + colClass + '">' + fieldInfoList[fieldName].caption + '</th>'
   }
   if (addAction) {
+    //let actionClass = 'col-sm-' + actionWidth
+    let actionClass = 'col-sm-1'
     html += '<th class="' + actionClass + '">Action</th>'
   }
   html += '</tr>'
