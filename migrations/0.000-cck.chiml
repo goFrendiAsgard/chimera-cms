@@ -250,13 +250,13 @@ vars:
         name:
           notNull: 1
           unique: 1
-          bootstrapColWidth: 3
+          bootstrapColWidth: 2
         route:
           notNull: 1
           bootstrapColWidth: 4
         method:
           notNull: 1
-          bootstrapColWidth: 3
+          bootstrapColWidth: 2
           inputTemplate: '<%- cck.input.option %>'
           presentationTemplate: '<%- cck.presentation.option %>'
           options:
@@ -288,6 +288,7 @@ vars:
         groups:
           inputTemplate: '<%- cck.input.checkBoxes %>'
           presentationTemplate: '<%- cck.presentation.list %>'
+          bootstrapColWidth: 2
           options:
             loggedIn: loggedIn
             loggedOut: loggedOut
