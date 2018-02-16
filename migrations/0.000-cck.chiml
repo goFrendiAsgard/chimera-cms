@@ -250,10 +250,13 @@ vars:
         name:
           notNull: 1
           unique: 1
+          bootstrapColWidth: 3
         route:
           notNull: 1
+          bootstrapColWidth: 4
         method:
           notNull: 1
+          bootstrapColWidth: 3
           inputTemplate: '<%- cck.input.option %>'
           presentationTemplate: '<%- cck.presentation.option %>'
           options:
