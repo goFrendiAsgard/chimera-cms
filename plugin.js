@@ -10,7 +10,8 @@ const specialDirectories = ['chains', 'views', 'public']
 
 module.exports = {
   install,
-  uninstall
+  uninstall,
+  pack
 }
 
 function getMigrationPath (pluginName) {
