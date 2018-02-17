@@ -1,0 +1,1 @@
+cd plugins/total-kanban && npm pack && cd ../.. && npm uninstall total-kanban && npm install plugins/total-kanban/total-kanban-0.0.0.tgz && npm start
