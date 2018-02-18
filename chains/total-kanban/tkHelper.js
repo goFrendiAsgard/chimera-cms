@@ -21,6 +21,7 @@ function getCardCckState(ins, vars, labelTypes) {
   for (let labelType of labelTypes) {
     let options = {}
     if (labelType.labels && $.util.isArray(labelType.labels)) {
+      options[''] = '[Not Set]'
       for (let label of labelType.labels) {
         options[label] = label
       }
@@ -30,7 +31,8 @@ function getCardCckState(ins, vars, labelTypes) {
       options,
       caption: labelType.name,
       inputTemplate: getTemplate(config.cck.input.option),
-      presentationTemplate: getTemplate(config.cck.presentation.option)
+      presentationTemplate: getTemplate(config.cck.presentation.option),
+      hidden: ['tabular']
     }
   }
   return cckState
