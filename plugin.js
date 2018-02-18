@@ -4,7 +4,7 @@ const fse = require('fs-extra')
 const path = require('path')
 const async = require('neo-async')
 const {migrate} = require('./migrate.js')
-const {readJsonFile} = require('chimera-framework/lib/util.js')
+const {readJsonFile, isFunction} = require('chimera-framework/lib/util.js')
 
 const specialDirectories = ['chains', 'views', 'public']
 
@@ -30,23 +30,26 @@ function getPluginSpecialDirectory (pluginName, directory) {
   return path.join(__dirname, 'plugins', pluginName, directory)
 }
 
-function install (pluginName) {
+
+function install (pluginName, callback) {
   const migrationPath = getMigrationPath(pluginName)
   createCmsDirectory(pluginName, (error) => {
     if (error) {
       return console.error(error)
     }
-    return migrate('up', null, { migrationPath })
+    callback = isFunction(callback) ? callback : defaultCallback
+    return migrate('up', null, { migrationPath }, callback)
   })
 }
 
-function uninstall (pluginName) {
+function uninstall (pluginName, callback) {
   const migrationPath = getMigrationPath(pluginName)
   removeCmsDirectory(pluginName, (error) => {
     if (error) {
       return console.error(error)
     }
-    return migrate('down', null, { migrationPath })
+    callback = isFunction(callback) ? callback : defaultCallback
+    return migrate('down', null, { migrationPath }, callback)
   })
 }
 
@@ -156,12 +159,12 @@ function createPluginSpecialDirectories (pluginName, callback) {
   async.parallel(actions, callback)
 }
 
-function packCallback (error) {
+function defaultCallback (error) {
   if (error) { return console.error(error) }
-  console.error('Done packing')
+  console.error('DONE')
 }
 
-function pack (pluginName) {
+function pack (pluginName, callback) {
   const pluginDirectory = path.join(__dirname, 'plugins', pluginName)
   const packageSrc = path.join(__dirname, 'plugin-template/package.json')
   const packageDst = path.join(pluginDirectory, 'package.json')
@@ -190,6 +193,7 @@ function pack (pluginName) {
       }
     ], (error) => {
       if (error) { return console.error(error) }
+      callback = isFunction(callback) ? callback : defaultCallback
       return adjustPackageAndPackDirectories(pluginName, packCallback)
     })
   })
