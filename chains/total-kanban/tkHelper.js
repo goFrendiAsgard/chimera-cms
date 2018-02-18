@@ -32,6 +32,9 @@ function getCardCckState(ins, vars, labelTypes) {
   let config = state.config
   let $ = vars.$
   for (let labelType of labelTypes) {
+    // don't add the same label twice
+    if (cckState.fieldNames.indexOf(labelType.name) >= 0) { continue }
+    // build options
     let options = {}
     if (labelType.labels && $.util.isArray(labelType.labels)) {
       options[''] = '[Not Set]'
@@ -39,6 +42,7 @@ function getCardCckState(ins, vars, labelTypes) {
         options[label] = label
       }
     }
+    // add label metadata to cckState
     cckState.fieldNames.push(labelType.name)
     cckState.schema.fields[labelType.name] = {
       options,
