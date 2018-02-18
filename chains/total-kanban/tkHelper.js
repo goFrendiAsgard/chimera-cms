@@ -1,9 +1,11 @@
 const fs = require('fs')
 const path = require('path')
+const {markdown} = require('markdown')
 
 module.exports = {
   getTemplate,
-  getCardCckState
+  getCardCckState,
+  getCardCckStateWithParsedDescription
 }
 
 function getTemplate(template) {
@@ -11,6 +13,17 @@ function getTemplate(template) {
     return fs.readFileSync(template, 'utf8')
   }
   return template
+}
+
+function getCardCckStateWithParsedDescription (cckState) {
+  if (cckState.result.result) {
+    cckState.result.result.parsedDescription = markdown.toHTML(cckState.result.result.description)
+  } else if (cckState.result.results) {
+    for (let i = 0; i < cckState.result.results.length; i++) {
+      cckState.result.results[i].parsedDescription = markdown.toHTML(cckState.result.results[i].description)
+    }
+  }
+  return cckState
 }
 
 function getCardCckState(ins, vars, labelTypes) {
@@ -29,7 +42,7 @@ function getCardCckState(ins, vars, labelTypes) {
     cckState.fieldNames.push(labelType.name)
     cckState.schema.fields[labelType.name] = {
       options,
-      caption: labelType.name,
+      caption: labelType.caption,
       inputTemplate: getTemplate(config.cck.input.option),
       presentationTemplate: getTemplate(config.cck.presentation.option),
       hidden: ['tabular']
