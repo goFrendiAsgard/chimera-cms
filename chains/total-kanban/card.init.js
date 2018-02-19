@@ -19,7 +19,7 @@ module.exports = (ins, vars, callback) => {
     if (error) {
       return callback(error, cckState)
     }
-    cckState = tkHelper.getCardCckState(ins, vars, labelTypes)
+    cckState = tkHelper.initLabeledCardCckState(ins, vars, labelTypes)
     // add request.body to data
     for (let fieldName of cckState.fieldNames) {
       if (fieldName in request.body && !(fieldName in cckState.data) && !(fieldName in cckState.unset)) {

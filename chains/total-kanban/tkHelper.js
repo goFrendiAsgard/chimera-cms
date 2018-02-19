@@ -4,8 +4,8 @@ const {markdown} = require('markdown')
 
 module.exports = {
   getTemplate,
-  getCardCckState,
-  getCardCckStateWithAdditionalFields
+  initLabeledCardCckState,
+  embedCardVirtualFields
 }
 
 function getTemplate(template) {
@@ -15,14 +15,14 @@ function getTemplate(template) {
   return template
 }
 
-function getRowWithParsedDescription (row) {
+function getCardRowWithParsedDescription (row) {
   row.parsedDescription = markdown.toHTML(row.description)
   return row
 }
 
-function getRowWithTags (row) {
+function getCardRowWithTags (row) {
   row.tags = {}
-  const nonTagFieldNames = ['_id', '_muser', '_mtime', '_deleted', '_history', 'name', 'description', 'scheduleFrom', 'scheduleTo', 'members', 'progressMeter', 'attachments', 'parsedDescription', 'tags']
+  const nonTagFieldNames = ['_id', '_muser', '_mtime', '_deleted', '_history', 'name', 'description', 'scheduleFrom', 'scheduleTo', 'members', 'progressMeter', 'attachments', 'board', 'default', 'parsedDescription', 'tags']
   for (let fieldName in row) {
     if (nonTagFieldNames.indexOf(fieldName) >= 0) { continue }
     row.tags[fieldName] = row[fieldName]
@@ -30,24 +30,24 @@ function getRowWithTags (row) {
   return row
 }
 
-function getRowWithAdditionalFields (row) {
-  row = getRowWithParsedDescription(row)
-  row = getRowWithTags(row)
+function getCardRowWithAdditionalFields (row) {
+  row = getCardRowWithParsedDescription(row)
+  row = getCardRowWithTags(row)
   return row
 }
 
-function getCardCckStateWithAdditionalFields (cckState) {
+function embedCardVirtualFields (cckState) {
   if (cckState.result.result) {
-    cckState.result.result = getRowWithAdditionalFields(cckState.result.result)
+    cckState.result.result = getCardRowWithAdditionalFields(cckState.result.result)
   } else if (cckState.result.results) {
     for (let i = 0; i < cckState.result.results.length; i++) {
-      cckState.result.results[i] = getRowWithAdditionalFields(cckState.result.results[i])
+      cckState.result.results[i] = getCardRowWithAdditionalFields(cckState.result.results[i])
     }
   }
   return cckState
 }
 
-function getCardCckState(ins, vars, labelTypes) {
+function initLabeledCardCckState (ins, vars, labelTypes) {
   let cckState = ins[0]
   let state = ins[1]
   let config = state.config

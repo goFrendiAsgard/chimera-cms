@@ -1,0 +1,52 @@
+<div class="panel panel-default <%= row._deleted ? "panel-deleted" : "" %>">
+
+  <div class="panel-heading">
+    <!-- Caption -->
+    <b>
+      <%- renderFieldTemplate(cckState.schema, 'name', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
+    </b>
+    (
+    <%- renderFieldTemplate(cckState.schema, 'board', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>)
+  </div>
+
+  <div class="panel-body">
+    <!-- Schedule -->
+    <%- renderFieldTemplate(cckState.schema, 'scheduleFrom', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
+      -
+    <%- renderFieldTemplate(cckState.schema, 'scheduleTo', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
+    <br />
+    <!-- Tags -->
+    <%- renderFieldTemplate(cckState.schema, 'tags', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
+    <br />
+    <!-- Parsed Description -->
+    <div class="parsed-description-container">
+      <%- renderFieldTemplate(cckState.schema, 'parsedDescription', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
+    </div>
+
+    <% if (row._customHtmlComponents) { %>
+      <%- row._customHtmlComponents %>
+    <% } %>
+
+    <!-- Detail Button -->
+    <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
+      <a class="btn btn-default button-detail" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/<%=row._id%>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+        <span class="glyphicon glyphicon-file"></span>
+      </a>
+    <% } %>
+
+    <!-- Update Button -->
+    <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups) && !row._restrictUpdate) { %>
+      <a class="btn btn-default button-update" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/update/<%=row._id%>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+    <% } %>
+
+    <!-- Delete Button -->
+    <% if (isAuthorized(cckState.auth, cckState.schema.deleteGroups) && !row._restrictDelete) { %>
+      <a class="btn btn-default button-delete" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/delete/<%=row._id%>?_excludeDeleted=<%= row._deleted ? 0 : 1%>&limit=<%= cckState.limit %>">
+        <span class="glyphicon glyphicon-trash"></span>
+      </a>
+    <% } %>
+
+  </div>
+</div>
