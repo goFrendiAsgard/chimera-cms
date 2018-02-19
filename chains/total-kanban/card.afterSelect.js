@@ -2,7 +2,7 @@ const tkHelper = require('./tkHelper.js')
 
 module.exports = (ins, vars, callback) => {
   let cckState = ins[0]
-  cckState = tkHelper.getCardCckStateWithParsedDescription(cckState)
+  cckState = tkHelper.getCardCckStateWithAdditionalFields(cckState)
   // not single result
   if (!cckState.result.result) {
     return callback(null, cckState)

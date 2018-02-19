@@ -5,7 +5,7 @@ const {markdown} = require('markdown')
 module.exports = {
   getTemplate,
   getCardCckState,
-  getCardCckStateWithParsedDescription
+  getCardCckStateWithAdditionalFields
 }
 
 function getTemplate(template) {
@@ -15,12 +15,33 @@ function getTemplate(template) {
   return template
 }
 
-function getCardCckStateWithParsedDescription (cckState) {
+function getRowWithParsedDescription (row) {
+  row.parsedDescription = markdown.toHTML(row.description)
+  return row
+}
+
+function getRowWithTags (row) {
+  row.tags = {}
+  const nonTagFieldNames = ['_id', '_muser', '_mtime', '_deleted', '_history', 'name', 'description', 'scheduleFrom', 'scheduleTo', 'members', 'progressMeter', 'attachments', 'parsedDescription', 'tags']
+  for (let fieldName in row) {
+    if (nonTagFieldNames.indexOf(fieldName) >= 0) { continue }
+    row.tags[fieldName] = row[fieldName]
+  }
+  return row
+}
+
+function getRowWithAdditionalFields (row) {
+  row = getRowWithParsedDescription(row)
+  row = getRowWithTags(row)
+  return row
+}
+
+function getCardCckStateWithAdditionalFields (cckState) {
   if (cckState.result.result) {
-    cckState.result.result.parsedDescription = markdown.toHTML(cckState.result.result.description)
+    cckState.result.result = getRowWithAdditionalFields(cckState.result.result)
   } else if (cckState.result.results) {
     for (let i = 0; i < cckState.result.results.length; i++) {
-      cckState.result.results[i].parsedDescription = markdown.toHTML(cckState.result.results[i].description)
+      cckState.result.results[i] = getRowWithAdditionalFields(cckState.result.results[i])
     }
   }
   return cckState

@@ -16,8 +16,6 @@ module.exports = (ins, vars, callback) => {
     filter = {$or: [filter, {board: request.body.board}]}
   }
   $.helper.mongoExecute(dbConfig, 'find', filter, (error, labelTypes) => {
-    console.error(filter)
-    console.error(labelTypes)
     if (error) {
       return callback(error, cckState)
     }
