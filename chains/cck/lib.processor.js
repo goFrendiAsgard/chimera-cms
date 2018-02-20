@@ -68,6 +68,8 @@ function mainProcess (state, cckState, $, chainNames, groupKey, callback) {
     let response = {
       error,
       cckState,
+      cookies: (cckState && 'cookies' in cckState) ? cckState.cookies : {},
+      session: (cckState && 'session' in cckState) ? cckState.session : {},
       status: (cckState && 'result' in cckState && 'status' in cckState.result) ? cckState.result.status : 500,
       data: (cckState && 'result' in cckState) ? cckState.result : {}
     }
