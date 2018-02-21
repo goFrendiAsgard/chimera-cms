@@ -69,10 +69,10 @@ function mainProcess (state, cckState, $, chainNames, groupKey, callback) {
       error,
       cckState,
       status: (cckState && 'result' in cckState && 'status' in cckState.result) ? cckState.result.status : 500,
-      data: (cckState && 'result' in cckState) ? cckState.result : {}
+      data: (cckState && 'result' in cckState) ? cckState.result : {},
+      cookies: ('cookies' in cckState) ? cckState.cookies : {},
+      session: ('session' in cckState) ? cckState.session : {}
     }
-    if ('cookies' in cckState) { response.cookies = cckState.cookies }
-    if ('session' in cckState) { response.session = cckState.session }
     return callback(error, response)
   })
 }
