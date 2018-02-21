@@ -18,6 +18,12 @@ module.exports = (ins, vars, callback) => {
       if (apiResponse.status < 400) {
         response.data = apiResponse.data
         response.data.cckState = $.util.getDeepCopiedObject(apiResponse.cckState)
+        if ('cookies' in apiResponse) {
+          response.cookies = $.util.getDeepCopiedObject(apiResponse.cookies)
+        }
+        if ('session' in apiResponse) {
+          response.session = $.util.getDeepCopiedObject(apiResponse.session)
+        }
         response.partial = cckState.schema.partial
       } else {
         response.status = apiResponse.status

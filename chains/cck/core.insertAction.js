@@ -16,6 +16,12 @@ module.exports = (ins, vars, callback) => {
       }
       response.data = apiResponse.data
       response.data.cckState = cckState
+      if ('cookies' in apiResponse) {
+        response.cookies = $.util.getDeepCopiedObject(apiResponse.cookies)
+      }
+      if ('session' in apiResponse) {
+        response.session = $.util.getDeepCopiedObject(apiResponse.session)
+      }
       response.partial = cckState.schema.partial
       return callback(null, response)
     })
