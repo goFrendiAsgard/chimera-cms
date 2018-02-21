@@ -1,10 +1,8 @@
-<div class="panel panel-primary <%= row._deleted ? "panel-deleted" : "" %>">
+<div class="panel panel-default <%= row._deleted ? "panel-deleted" : "" %>">
 
   <div class="panel-heading">
     <!-- Caption -->
-    <b>
-      <%- renderFieldTemplate(cckState.schema, 'name', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
-    </b>
+    <%- renderFieldTemplate(cckState.schema, 'name', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
     <span class="label label-primary">
       <%- renderFieldTemplate(cckState.schema, 'board', ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
     </span>

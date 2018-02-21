@@ -83,8 +83,8 @@
     <% for (let label of cckState.labelType.labels) { %>
       <!-- Categorized cards -->
       <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-        <div class="panel panel-primary">
-          <div class="panel-heading"><%= label %></div>
+        <div class="panel panel-default">
+          <div class="panel-heading"><b><%= label %></b></div>
           <div class="panel-body card-list">
             <% for (let row of results) { %>
               <% let labelFieldName = cckState.labelType['name'] %>
@@ -98,8 +98,8 @@
 
     <!-- Uncategorized cards -->
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">Uncategorized</div>
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Uncategorized</b></div>
         <div class="panel-body card-list">
           <% for (let row of results) { %>
             <% if (!(cckState.labelType.name in row)) { %>
