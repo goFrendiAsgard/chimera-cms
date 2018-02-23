@@ -7,6 +7,7 @@
   <!-- Trigger the modal with a button -->
   <div class="col-md-4" style="padding-right:0px">
     <a id="<%= inputId %>BtnShowModal" class="btn btn-default pull-right" data-toggle="modal" data-target="#<%= inputId %>ModalContainer"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+    <a id="<%= inputId %>BtnClear" class="btn btn-default pull-right"><span class="glyphicon glyphicon-trash"></span> Clear</a>
   </div>
 </div>
 
@@ -41,6 +42,14 @@
     // load input container
     $('#<%= inputId %>BtnShowModal').click(function (event) {
       cwLoadMany2OneInputContainer('<%= inputId %>', fieldInfo)
+    })
+
+    // clear
+    $('#<%= inputId %>BtnClear').click(function (event) {
+      event.preventDefault()
+      $('#<%= inputId %>').val('')
+      // reload presentation container
+      cwLoadMany2OnePresentationContainer('<%= inputId %>', fieldInfo)
     })
 
     // if searchBox changed, reload input container
