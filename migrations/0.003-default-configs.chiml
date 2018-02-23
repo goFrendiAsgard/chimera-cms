@@ -26,6 +26,10 @@ vars:
     - key: verbose
       defaultConfig: 1
       value: 0
+    
+    - key: thirdPartyLoginChain
+      defaultConfig: 1
+      value: ''
 
     - key: navigation
       defaultConfig: 1
