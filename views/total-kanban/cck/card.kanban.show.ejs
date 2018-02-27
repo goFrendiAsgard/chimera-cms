@@ -1,0 +1,195 @@
+<style type="text/css">
+  .panel-deleted{
+    opacity: 0.5;
+  }
+  .parsed-description-container {
+    max-height: 200px;
+    overflow: auto;
+    font-size: smaller;
+  }
+  .parsed-description-container h1{
+    margin-top: 10px;
+    font-size: 1.5em;
+  }
+  .parsed-description-container h2{
+    margin-top: 10px;
+    font-size: 1.2em;
+  }
+  .parsed-description-container h3{
+    margin-top: 10px;
+    font-size: 1.17em;
+  }
+  .parsed-description-container h4, .parsed-description-container h5, .parsed-description-container h6{
+    margin-top: 10px;
+    font-size: 1.1em;
+  }
+  .parsed-description-container img{
+    max-width: 100%;
+  }
+  .small{
+    font-size: smaller;
+  }
+  .card-list {
+    max-height: 600px;
+    overflow: auto;
+  }
+</style>
+<script src="/ace-builds/src-min-noconflict/ace.js"></script>
+<script src="/js/cck-form.js"></script>
+<script src="/ejs/ejs.min.js"></script>
+
+<h3>KANBAN</h3>
+
+<div style="margin-bottom:1em">
+
+  <% if (cckState._customHtmlComponents) { %>
+    <%- cckState._customHtmlComponents %>
+  <% } %>
+
+  <form action="/data/<%= cckState.schemaName %>" class="form-horizontal">
+
+    <div class="form-group">
+      <div class="col-sm-4">
+        <select id="select-kanban" name="_kanban" class="form-control">
+        </select>
+      </div>
+      <div class="col-sm-4">
+        <input type="hidden" name="_excludeDeleted" value="<%= cckState.excludeDeleted %>" />
+        <input type="hidden" name="limit" value="<%= cckState.limit %>" />
+        <input type="hidden" name="_q" value="<%= cckState.q %>" />
+        <input type="text" class="form-control" name="_k" placeholder="Keyword" value="<%= cckState.k %>" />
+      </div>
+      <button class="btn btn-default" name="search" value="1"><span class="glyphicon glyphicon-search"></button>
+
+      <a id="button-show-all" class="btn btn-default" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+        <span class="glyphicon <%= cckState.excludeDeleted == 1 ? 'glyphicon-eye-close' : 'glyphicon-eye-open' %>"></span>
+      </a>
+
+      <!-- Insert Button -->
+      <% if (isAuthorized(cckState.auth, cckState.schema.insertGroups)) { %>
+        <a id="button-insert" class="btn btn-default" href="/data/<%= cckState.schemaName %>/insert?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+          <span class="glyphicon glyphicon-plus"></span>
+        </a>
+      <% } %>
+
+    </div>
+  </form>
+
+</div>
+
+<% if (results.length > 0) { %>
+  <div id="kanban-container">
+
+    <% for (let label of cckState.labelType.labels) { %>
+      <!-- Categorized cards -->
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading"><b><%= label %></b></div>
+          <div class="panel-body card-list">
+            <% for (let row of results) { %>
+              <% let labelFieldName = cckState.labelType['name'] %>
+              <% if (!row[labelFieldName] || row[labelFieldName] != label) { continue } %>
+              <%- render(cckState.cardTemplate, {cckState, row, renderFieldTemplate, isAuthorized}) %>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Uncategorized cards -->
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Uncategorized</b></div>
+        <div class="panel-body card-list">
+          <% for (let row of results) { %>
+            <% if (!(cckState.labelType.name in row)) { %>
+              <%- render(cckState.cardTemplate, {cckState, row, renderFieldTemplate, isAuthorized}) %>
+            <% } %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+<% } else { %>
+  <div class="alert alert-warning"><b>No Data</b></div>
+<% } %>
+
+<% let pageCount = Math.round(metadata.resultset.count / cckState.limit) %>
+
+<% if (pageCount > 1) { %>
+  <% let pageNumber = Math.round(metadata.resultset.offset / cckState.limit) %>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+
+      <!-- prev -->
+      <li class="<%= pageNumber === 0 ? 'disabled' : '' %>">
+        <a href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber - 1) * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+
+      <!-- pages -->
+      <% for (let i = 0; i < pageCount; i++) { %>
+        <li class="<%= i === pageNumber ? 'active' : '' %>">
+          <a href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= i * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+            <%= i + 1%>
+          </a>
+        </li>
+      <% } %>
+
+      <!-- next -->
+      <li class="<%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
+        <a href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber + 1) * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+<% } %>
+
+<script>
+  $(document).ready(function (event) {
+
+    // adjust kanban selection
+    $.ajax({
+      url: '/api/v1/tklabeltypes/',
+      dataType: 'json',
+      success: function (response) {
+        let html = ''
+        for (let labelType of response.results) {
+          let selected = '<%= cckState.labelType.name %>' === labelType.name ? 'selected' : ''
+          html += '<option value="' + labelType.name + '" ' + selected + '>' + labelType.caption + '</option>'
+        }
+        $('#select-kanban').html(html)
+      }
+    })
+
+    function getDateObject (str) {
+      if (str.trim() === '<i>[Not set]</i>') {
+        return null
+      }
+      try {
+        return new Date(str.trim())
+      } catch (error) {
+        return null
+      }
+    }
+
+    function dateFormat (dateObject) {
+      if (dateObject) {
+        return dateObject.toLocaleDateString() + ' ' + dateObject.toLocaleTimeString()
+      }
+      return ''
+    }
+
+    // update schedule
+    $('.schedule').each(function () {
+      let from = getDateObject($(this).attr('from'))
+      let to = getDateObject($(this).attr('to'))
+      let html = dateFormat(from) + ' ' + dateFormat(to)
+      $(this).html(html)
+    })
+
+  })
+</script>
