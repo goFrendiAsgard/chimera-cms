@@ -260,18 +260,27 @@ function injectState (state, callback) {
   })
 }
 
-function renderConfigValue (doc, webConfig) {
-  let value = doc.value
-  if (util.isRealObject(value) || util.isArray(value)) {
-    let str = JSON.stringify(value)
-    if (str.indexOf('<%') > -1) {
-      value = ejs.render(str, webConfig)
-      value = JSON.parse(value)
+function renderValue(value, webConfig) {
+  if (util.isString(value) && value.indexOf('<%') > -1) {
+    return ejs.render(value, webConfig)
+  }
+  if (util.isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      value[i] = renderValue(value[i], webConfig)
     }
-  } else if (util.isString(value) && value.indexOf('<%') > -1) {
-    value = ejs.render(value, webConfig)
+    return value
+  }
+  if (util.isRealObject(value)) {
+    for (let key in value) {
+      value[key] = renderValue(value[key], webConfig)
+    }
+    return value
   }
   return value
+}
+
+function renderConfigValue (doc, webConfig) {
+  return renderValue(doc.value, webConfig)
 }
 
 function renderRoute (doc, config) {
