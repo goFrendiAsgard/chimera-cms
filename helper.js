@@ -10,6 +10,8 @@ const util = require('chimera-framework/lib/util.js')
 const mongo = require('chimera-framework/lib/mongo.js')
 const core = require('chimera-framework/lib/core.js')
 
+const configExceptionKeys = ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler', 'port']
+
 module.exports = {
   hashPassword,
   getLoggedInAuth,
@@ -210,7 +212,7 @@ function injectState (state, callback) {
     // render configuration from database
     let configActions = []
     for (let doc of configDocs) {
-      if (state.config.exceptionKeys.indexOf(doc.key) === -1) {
+      if (configExceptionKeys.indexOf(doc.key) === -1) {
         configActions.push((next) => {
           state.config[doc.key] = renderConfigValue(doc, state.config)
           next()
@@ -221,7 +223,6 @@ function injectState (state, callback) {
       if (error) {
         return callback(error, state)
       }
-      state.config.exceptionKeys = []
       state.config.middlewares = []
       state.config.vars = []
       let routeActions = []
