@@ -10,6 +10,8 @@
       <option value="checkBoxes">Check Boxes</option>
       <option value="date">Date</option>
       <option value="dateTime">Date &amp; Time</option>
+      <option value="file">File</option>
+      <option value="image">Image</option>
       <option value="many2one">Many to One</option>
       <option value="one2many">One to Many</option>
       <option value="many2many">Many to Many</option>
@@ -68,6 +70,14 @@
       dateTime: {
         inputTemplate: '<%%- cck.input.dateTime %>',
         presentationTemplate: '<%%- cck.presentation.text %>'
+      },
+      image: {
+        inputTemplate: '<%%- cck.input.image %>',
+        presentationTemplate: '<%%- cck.presentation.image %>'
+      },
+      file: {
+        inputTemplate: '<%%- cck.input.file %>',
+        presentationTemplate: '<%%- cck.presentation.file %>'
       },
       one2many: {
         inputTemplate: '<%%- cck.input.one2many %>',
