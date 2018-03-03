@@ -7,11 +7,11 @@ const web = require('chimera-framework/lib/web.js')
 const util = require('chimera-framework/lib/util.js')
 const cck = require('./cck.js')
 const helper = require('./helper.js')
-const port = process.env.PORT || 3000
 
 // load webConfig
 let webConfig = helper.getWebConfig()
-let maxAgeOption = {maxAge: 'staticMaxAge' in webConfig ? webConfig.staticMaxAge : 365 * 24 * 60 * 60}
+const maxAgeOption = {maxAge: webConfig.staticMaxAge || (365 * 24 * 60 * 60) }
+const port = webConfig.port || process.env.PORT || 3000
 
 // get bootstrap & jquery path
 let bootstrapPath = path.join(__dirname, 'node_modules/bootstrap')

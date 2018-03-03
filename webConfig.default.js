@@ -23,7 +23,8 @@ const webConfig = {
   staticPath,
   faviconPath,
   socketHandler,
-  exceptionKeys: ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler'],
+  port: 3000,
+  staticMaxAge: 365 * 24 * 60 * 60,
   // routes
   routes: [],
   // jwt configuration
