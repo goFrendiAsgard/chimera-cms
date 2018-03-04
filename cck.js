@@ -11,10 +11,12 @@ module.exports = {
   createSchema,
   removeSchema,
   getRoutes,
-  getInitialState,
-  getShownDocument,
+  getInitialCckState,
+  getPresentationDocument,
   getCombinedFilter,
-  renderFieldTemplate
+  renderFieldTemplate,
+  preprocessCckStateResult,
+  preprocessCckStateData
 }
 
 const cckCollectionName = 'web_cck'
@@ -34,7 +36,7 @@ const defaultInitialState = {
     userMessage: '',
     developerMessage: ''
   },
-  state: {},
+  //state: {},
   schema: {},
   q: null,
   k: null,
@@ -87,6 +89,30 @@ const defaultFieldData = {
   presentationTemplate: '<%- cck.presentation.text %>',
   defaultValue: '',
   options: {}
+}
+
+function preprocessCckStateData (cckState, processor) {
+  console.log('BEFORE')
+  console.error(cckState)
+  if (util.isRealObject(cckState.data)) {
+    cckState.data = processor(cckState.data, cckState)
+  } else if (util.isArray(cckState.data)) {
+    for (let i = 0; i < cckState.data.length; i++) {
+      cckState.data[i] = processor(cckState.data[i], cckState)
+    }
+  }
+  console.log('AFTER')
+  console.error(cckState)
+}
+
+function preprocessCckStateResult (cckState, processor) {
+  if ('result' in cckState.result) {
+    cckState.result.result = processor(cckState.result.result, cckState)
+  } else if ('results' in cckState.result) {
+    for (let i = 0; i < cckState.result.results.length; i++) {
+      cckState.result.results[i] = processor(cckState.result.results[i], cckState)
+    }
+  }
 }
 
 function renderFieldTemplate (schemaInfo, fieldName, templateNames, row) {
@@ -289,7 +315,7 @@ function getFilter (q, k, fieldNames, documentId) {
   return filter
 }
 
-function getInitialState (state, callback) {
+function getInitialCckState (state, callback) {
   try {
     let {config, request} = state
     let basePath = config.basePath ? config.basePath : null
@@ -472,7 +498,7 @@ function getAllowedFieldNames (fieldNames) {
   return allowedFieldNames
 }
 
-function getShownDocument (document, fieldNames, callback) {
+function getPresentationDocument (document, fieldNames, callback) {
   let allowedFieldNames = getAllowedFieldNames(fieldNames)
   if (util.isArray(document)) {
     let actions = []
@@ -480,7 +506,7 @@ function getShownDocument (document, fieldNames, callback) {
     for (let i = 0; i < document.length; i++) {
       let row = document[i]
       actions.push((next) => {
-        getShownSingleDocument(row, allowedFieldNames, (error, newRow) => {
+        getSinglePresentationDocument(row, allowedFieldNames, (error, newRow) => {
           if (error) {
             return next(error)
           }
@@ -493,10 +519,10 @@ function getShownDocument (document, fieldNames, callback) {
       return callback(error, newDocument)
     })
   }
-  return getShownSingleDocument(document, allowedFieldNames, callback)
+  return getSinglePresentationDocument(document, allowedFieldNames, callback)
 }
 
-function getShownSingleDocument (row, allowedFieldNames, callback) {
+function getSinglePresentationDocument (row, allowedFieldNames, callback) {
   let newRow = helper.getSubObject(row, allowedFieldNames)
   return callback(null, newRow)
 }

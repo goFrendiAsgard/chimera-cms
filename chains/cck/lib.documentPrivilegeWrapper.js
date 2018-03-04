@@ -15,7 +15,7 @@ module.exports = (processor, rowRestrictionKey) => {
     let $ = vars.$
     let response = state.response
     let chainPath = path.join(__dirname, 'core.select.js')
-    $.cck.getInitialState(state, (error, cckState) => {
+    $.cck.getInitialCckState(state, (error, cckState) => {
       if (error) {
         return callback(error, response)
       }

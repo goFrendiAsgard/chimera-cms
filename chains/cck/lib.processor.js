@@ -173,7 +173,7 @@ module.exports = (chainNames, groupKey, processFilter) => {
     let cckState = ins[1]
     let $ = vars.$
     if (!cckState) {
-      return $.cck.getInitialState(state, (error, cckState) => {
+      return $.cck.getInitialCckState(state, (error, cckState) => {
         if (error) {
           let response = {data: {}}
           return callback(error, response)

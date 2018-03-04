@@ -2,7 +2,7 @@ module.exports = (ins, vars, callback) => {
   let state = ins[0]
   let $ = vars.$
   let response = state.response
-  $.cck.getInitialState(state, (error, cckState) => {
+  $.cck.getInitialCckState(state, (error, cckState) => {
     if (error) {
       return callback(error, response)
     }
