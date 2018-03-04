@@ -26,7 +26,7 @@ module.exports = (ins, vars, callback) => {
     // remove password from fieldNames
     removePasswordField(cckState)
     // hash password(s)
-    $.cck.preprocessCckStateData(cckState, hashPassword)
+    cckState = $.cck.getPreprocessedCckStateData(cckState, hashPassword)
     callback(null, cckState)
   } catch (error) {
     callback(error, cckState)

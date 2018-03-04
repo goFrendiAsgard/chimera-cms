@@ -9,7 +9,7 @@ module.exports = (ins, vars, callback) => {
   let cckState = ins[0]
   let $ = vars.$
   try {
-    $.cck.preprocessCckStateResult(cckState, restrictDelete)
+    cckState = $.cck.getPreprocessedCckStateResult(cckState, restrictDelete)
     callback(null, cckState)
   } catch (error) {
     callback(error, cckState)

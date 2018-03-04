@@ -15,8 +15,8 @@ module.exports = {
   getPresentationDocument,
   getCombinedFilter,
   renderFieldTemplate,
-  preprocessCckStateResult,
-  preprocessCckStateData
+  getPreprocessedCckStateResult,
+  getPreprocessedCckStateData
 }
 
 const cckCollectionName = 'web_cck'
@@ -91,9 +91,7 @@ const defaultFieldData = {
   options: {}
 }
 
-function preprocessCckStateData (cckState, processor) {
-  console.log('BEFORE')
-  console.error(cckState)
+function getPreprocessedCckStateData (cckState, processor) {
   if (util.isRealObject(cckState.data)) {
     cckState.data = processor(cckState.data, cckState)
   } else if (util.isArray(cckState.data)) {
@@ -101,11 +99,10 @@ function preprocessCckStateData (cckState, processor) {
       cckState.data[i] = processor(cckState.data[i], cckState)
     }
   }
-  console.log('AFTER')
-  console.error(cckState)
+  return cckState
 }
 
-function preprocessCckStateResult (cckState, processor) {
+function getPreprocessedCckStateResult (cckState, processor) {
   if ('result' in cckState.result) {
     cckState.result.result = processor(cckState.result.result, cckState)
   } else if ('results' in cckState.result) {
@@ -113,6 +110,7 @@ function preprocessCckStateResult (cckState, processor) {
       cckState.result.results[i] = processor(cckState.result.results[i], cckState)
     }
   }
+  return cckState
 }
 
 function renderFieldTemplate (schemaInfo, fieldName, templateNames, row) {
