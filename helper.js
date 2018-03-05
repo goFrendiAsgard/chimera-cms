@@ -380,5 +380,11 @@ function getWebConfig () {
   } catch (error) {
     webConfig = require('./webConfig.default.js')
   }
+  try {
+    let additionalWebConfig = require('./webConfig.json')
+    webConfig = util.getPatchedObject(webConfig, additionalWebConfig)
+  } catch (error) {
+    // do nothing
+  }
   return webConfig
 }

@@ -8,6 +8,7 @@ let viewPath = path.join(__dirname, 'views') + '/'
 let migrationPath = path.join(__dirname, 'migrations') + '/'
 let staticPath = path.join(__dirname, 'public') + '/'
 let faviconPath = path.join(__dirname, 'public/favicon.ico')
+
 function socketHandler (socket) {
   socket.on('chat-send', (data) => {
     socket.emit('chat-broadcast', data) // send data back to sender
