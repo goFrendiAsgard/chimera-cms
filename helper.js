@@ -374,17 +374,14 @@ function jwtMiddleware (req, res, next) {
 }
 
 function getWebConfig () {
-  let webConfig
-  try {
-    webConfig = require('./webConfig.js')
-  } catch (error) {
-    webConfig = require('./webConfig.default.js')
-  }
-  try {
-    let additionalWebConfig = require('./webConfig.json')
-    webConfig = util.getPatchedObject(webConfig, additionalWebConfig)
-  } catch (error) {
-    // do nothing
+  let webConfig = {}
+  for (let configFile of ['./webConfig.default.js', './webConfig.js', './webConfig.json']) {
+    try {
+      let config = require(configFile)
+      webConfig = util.getPatchedObject(webConfig, config)
+    } catch (error) {
+      // do nothing
+    }
   }
   return webConfig
 }
