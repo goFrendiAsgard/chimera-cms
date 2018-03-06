@@ -1,28 +1,34 @@
-module.exports = (ins, vars, callback) => {
-  let cckState = ins[0]
-  let $ = vars.$
-  // remove password from fieldNames
+function removePasswordField (cckState) {
   let fieldNames = []
   for (let fieldName in cckState.fieldNames) {
     if (fieldName === 'password') { continue }
     fieldNames.push(fieldName)
   }
   cckState.fieldNames = fieldNames
-  // hash password(s)
-  if ($.util.isRealObject(cckState.data) && 'password' in cckState.data) {
-    let hashObject = $.helper.hashPassword(cckState.data.password)
-    let {salt, hashedPassword} = hashObject
-    cckState.data.hashedPassword = hashedPassword
-    cckState.data.salt = salt
-    cckState.data.password = null
-  } else if ($.util.isArray(cckState.data)) {
-    for (let row of cckState.data) {
-      let hashObject = $.helper.hashPassword(row.password)
-      let {salt, hashedPassword} = hashObject
-      row.hashedPassword = hashedPassword
-      row.salt = salt
-      row.password = null
+}
+
+module.exports = (ins, vars, callback) => {
+  let cckState = ins[0]
+  let $ = vars.$
+  // define hashPassword function, has to be located here since we need $ inside the function
+  function hashPassword (data) {
+    if ('password' in data) {
+      let hashObject = $.helper.hashPassword(data.password)
+      let { salt, hashedPassword } = hashObject
+      data.hashedPassword = hashedPassword
+      data.salt = salt
+      data.password = null
     }
+    return data
   }
-  callback(null, cckState)
+  // preprocess cckState
+  try{
+    // remove password from fieldNames
+    removePasswordField(cckState)
+    // hash password(s)
+    cckState = $.cck.getPreprocessedCckStateData(cckState, hashPassword)
+    callback(null, cckState)
+  } catch (error) {
+    callback(error, cckState)
+  }
 }

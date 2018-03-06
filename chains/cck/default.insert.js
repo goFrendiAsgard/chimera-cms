@@ -13,7 +13,7 @@ module.exports = (ins, vars, callback) => {
     if (error) {
       return callback(error, null)
     }
-    return $.cck.getShownDocument(results, cckState.fieldNames, (error, results) => {
+    return $.cck.getPresentationDocument(results, cckState.fieldNames, (error, results) => {
       cckState.result.status = 201
       if ($.util.isArray(results)) {
         cckState.result.results = results

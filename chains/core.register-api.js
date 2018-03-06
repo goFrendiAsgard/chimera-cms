@@ -10,7 +10,7 @@ module.exports = (ins, vars, callback) => {
     email: request.query.email || request.body.email
   }
   state.request.params = {version: 'v1', schemaName: 'users'}
-  $.cck.getInitialState(state, (error, cckState) => {
+  $.cck.getInitialCckState(state, (error, cckState) => {
     if (error) {
       let response = {
         data: {
