@@ -1,4 +1,5 @@
 webConfig.js
+webConfig.json
 node_modules/
 plugins/
 npm_debug.log
