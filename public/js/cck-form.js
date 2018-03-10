@@ -159,7 +159,7 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
           let presentation = ejs.render(template, { row, fieldInfo, value, fieldName})
           html += '<td>' + presentation + '</td>'
         }
-        html += '<td><a class="' + componentId + 'BtnSelect btn btn-default" value="' +row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="glyphicon glyphicon-ok"></span></a></td>'
+        html += '<td><a class="' + componentId + 'BtnSelect btn btn-secondary" value="' +row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-ok"></span></a></td>'
         html += '</tr>'
       }
       // end of the table
@@ -212,11 +212,11 @@ function cwGetOne2ManyTableRow (row, fieldInfoList) {
     html += '<td fieldName="' + fieldName + '">' + presentation + '</td>'
   }
   html += '<td>'
-  html += '<a class="btnPasteBeforeRow btnAction btn btn-default" style="display:none;" href="#"><span class="glyphicon glyphicon-open-file"></span></a>'
-  html += '<a class="btnPasteAfterRow btnAction btn btn-default" style="display:none;" href="#"><span class="glyphicon glyphicon-save-file"></span></a>'
-  html += '<a class="btnCancelCutRow btnAction btn btn-default" style="display:none;" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>'
-  html += '<a class="btnCutRow btn btnAction btn-default" href="#"><span class="glyphicon glyphicon-scissors"></span></a>'
-  html += '<a class="btnDeleteRow btn btnAction btn-default" href="#"><span class="glyphicon glyphicon-remove"></span></a>'
+  html += '<a class="btnPasteBeforeRow btnAction btn btn-secondary" style="display:none;" href="#"><span class="oi oi-open-file"></span></a>'
+  html += '<a class="btnPasteAfterRow btnAction btn btn-secondary" style="display:none;" href="#"><span class="oi oi-save-file"></span></a>'
+  html += '<a class="btnCancelCutRow btnAction btn btn-secondary" style="display:none;" href="#"><span class="oi oi-share-alt"></span></a>'
+  html += '<a class="btnCutRow btn btnAction btn-secondary" href="#"><span class="oi oi-scissors"></span></a>'
+  html += '<a class="btnDeleteRow btn btnAction btn-secondary" href="#"><span class="oi oi-remove"></span></a>'
   html += '</td>'
   html += '</tr>'
   return html

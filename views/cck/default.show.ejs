@@ -19,16 +19,16 @@
         <input type="hidden" name="_q" value="<%= cckState.q %>" />
         <input type="text" class="form-control" name="_k" placeholder="Keyword" value="<%= cckState.k %>" />
       </div>
-      <button class="btn btn-default" name="search" value="1"><span class="glyphicon glyphicon-search"></button>
+      <button class="btn btn-secondary" name="search" value="1"><span class="oi oi-magnifying-glass"></button>
 
-      <a id="button-show-all" class="btn btn-default" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
-        <span class="glyphicon <%= cckState.excludeDeleted == 1 ? 'glyphicon-eye-close' : 'glyphicon-eye-open' %>"></span>
+      <a id="button-show-all" class="btn btn-secondary" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+        <span class="oi <%= cckState.excludeDeleted == 1 ? 'oi-ban' : 'oi-eye' %>"></span>
       </a>
 
       <!-- Insert Button -->
       <% if (isAuthorized(cckState.auth, cckState.schema.insertGroups)) { %>
-        <a id="button-insert" class="btn btn-default" href="/data/<%= cckState.schemaName %>/insert?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
-          <span class="glyphicon glyphicon-plus"></span>
+        <a id="button-insert" class="btn btn-secondary" href="/data/<%= cckState.schemaName %>/insert?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+          <span class="oi oi-plus"></span>
         </a>
       <% } %>
 
@@ -66,22 +66,22 @@
 
             <!-- Detail Button -->
             <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
-              <a class="btn btn-default button-detail" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/<%=row._id%>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
-                <span class="glyphicon glyphicon-file"></span>
+              <a class="btn btn-secondary button-detail" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/<%=row._id%>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+                <span class="oi oi-file"></span>
               </a>
             <% } %>
 
             <!-- Update Button -->
             <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups) && !row._restrictUpdate) { %>
-              <a class="btn btn-default button-update" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/update/<%=row._id%>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">
-                <span class="glyphicon glyphicon-pencil"></span>
+              <a class="btn btn-secondary button-update" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/update/<%=row._id%>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">
+                <span class="oi oi-pencil"></span>
               </a>
             <% } %>
 
             <!-- Delete Button -->
             <% if (isAuthorized(cckState.auth, cckState.schema.deleteGroups) && !row._restrictDelete) { %>
-              <a class="btn btn-default button-delete" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/delete/<%=row._id%>?_excludeDeleted=<%= row._deleted ? 0 : 1%>&limit=<%= cckState.limit %>">
-                <span class="glyphicon glyphicon-trash"></span>
+              <a class="btn btn-secondary button-delete" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/delete/<%=row._id%>?_excludeDeleted=<%= row._deleted ? 0 : 1%>&limit=<%= cckState.limit %>">
+                <span class="oi oi-trash"></span>
               </a>
             <% } %>
           </td>

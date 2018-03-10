@@ -117,9 +117,9 @@ module.exports = (ins, vars, callback) => {
       if (['bootstrapNavClass'].indexOf(key) > -1) {
         cckState.schema.fields.value.inputTemplate = getTemplate(config.cck.input.option)
         cckState.schema.fields.value.options = {
-          'navbar-default': 'default',
-          'navbar-default navbar-static-top': 'default and static',
-          'navbar-default navbar-fixed-top': 'default and fixed',
+          'navbar-light': 'default',
+          'navbar-light navbar-static-top': 'default and static',
+          'navbar-light navbar-fixed-top': 'default and fixed',
           'navbar-inverse': 'inverse',
           'navbar-inverse navbar-static-top': 'inverse and static',
           'navbar-inverse navbar-fixed-top': 'inverse and fixed'

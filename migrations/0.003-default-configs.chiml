@@ -17,7 +17,7 @@ vars:
 
     - key: bootstrapNavClass
       defaultConfig: 1
-      value: 'navbar-default'
+      value: 'navbar-light'
 
     - key: bootstrapTheme
       defaultConfig: 1
@@ -156,7 +156,7 @@ vars:
           <div id="chat-messages" class="col-xs-12 well" style="height:150px;">
           </div>
           <textarea id="chat-box" class="form-control"></textarea>
-          <button id="chat-send" class="form-control btn btn-default">Send</button>
+          <button id="chat-send" class="form-control btn btn-secondary">Send</button>
         </div>
         <script>
           let socket = io.connect()

@@ -7,35 +7,29 @@
   <body>
     <%- partial.scripts %>
     <%- partial.customScripts %>
-    <div class="container">
-      <div class="row">
-        <%- partial.largeBanner %>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <% if (partial.leftWidget.trim().length > 0) { %>
-          <div class="col-sm-3">
-            <%- partial.leftWidget %>
-          </div>
-        <% } %>
-        <div class="<%= partial.leftWidget && partial.rightWidget? 'col-sm-6': (partial.leftWidget || partial.rightWidget? 'col-sm-9': 'col-sm-12')%>">
-          <%- partial.smallBanner %>
-          <%- content %>
-          <%- partial.smallFooter %>
+    <header>
+      <%- partial.largeBanner %>
+    </header>
+    <main role="main" class="row container">
+      <% if (partial.leftWidget.trim().length > 0) { %>
+        <div class="col-sm-3">
+          <%- partial.leftWidget %>
         </div>
-        <% if (partial.rightWidget.trim().length > 0) { %>
-          <div class="col-sm-3">
-            <%- partial.rightWidget %>
-          </div>
-        <% } %>
+      <% } %>
+      <div class="<%= partial.leftWidget && partial.rightWidget? 'col-sm-6': (partial.leftWidget || partial.rightWidget? 'col-sm-9': 'col-sm-12')%>">
+        <%- partial.smallBanner %>
+        <%- content %>
+        <%- partial.smallFooter %>
       </div>
-    </div>
-    <div class="container">
-      <div class="row">
+      <% if (partial.rightWidget.trim().length > 0) { %>
+        <div class="col-sm-3">
+          <%- partial.rightWidget %>
+        </div>
+      <% } %>
+    </main>
+    <footer class="container">
         <%- partial.largeFooter %>
-      </div>
-    </div>
+    </footer>
     <%- partial.customFinalScripts %>
   </body>
 </html>
