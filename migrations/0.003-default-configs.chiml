@@ -17,7 +17,7 @@ vars:
 
     - key: bootstrapNavClass
       defaultConfig: 1
-      value: 'navbar-light'
+      value: 'navbar-light navbar-expand-sm bg-light'
 
     - key: bootstrapTheme
       defaultConfig: 1
@@ -115,13 +115,15 @@ vars:
     - key: jumbotron
       defaultConfig: 1
       value: |
-        <div class="jumbotron col-sm-12">
-          <div class="col-sm-2">    
-            <img class="col-sm-12" src="<%%= config.logo %>" />
-          </div>
-          <div class="col-sm-11">
-            <h1><%%= config.title %></h1>      
-            <p><%%= config.jargon %></p>
+        <div class="jumbotron container">
+          <div class="row">
+            <div class="col-sm-2">    
+              <img class="col-sm-12" src="<%%= config.logo %>" />
+            </div>
+            <div class="col-sm-10">
+              <h1><%%= config.title %></h1>      
+              <p><%%= config.jargon %></p>
+            </div>
           </div>
         </div>
 

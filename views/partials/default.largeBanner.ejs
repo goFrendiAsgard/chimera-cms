@@ -1,5 +1,5 @@
 <% if (config.showTopNav) { %>
-  <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+  <nav class="navbar <%= config.bootstrapNavClass ? config.bootstrapNavClass : 'navbar-light bg-light navbar-expand-sm' %>">
 
     <a class="navbar-brand" href="/">
       <%= config.title %>
@@ -14,12 +14,10 @@
       <ul class="navbar-nav mr-auto">
         <% for (let navigation of config.navigation) { %>
           <% if (!isAuthorized(request.auth, navigation.groups)) {continue; } %>
-
           <% if ('url' in navigation && typeof(navigation.url) === 'string' && navigation.url.trim() !== '') { %>
             <!-- Navigation -->
             <li class="nav-item <%= navigation.url === request.url ? 'active' : '' %>"><a class="nav-link" href="<%= navigation.url %>"><%- navigation.caption %></a></li>
           <% } else { %>
-
             <!-- Dropdown -->
             <li class="nav-item dropdown">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%- navigation.caption %> <span class="caret"></span></a>
@@ -34,23 +32,17 @@
                 <% } %>
               </div>
             </li>
-
           <% } %>
-
         <% } %>
-
       </ul>
+
+      <% if (request.auth.username){ %>
+        <div class=navbar-text mr-md-2"><%= request.auth.username %></div>
+      <% } %>
 
       <ul class="navbar-nav mr-md-2">
         <% if (request.auth.username){ %>
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <%= request.auth.username %> <span class="caret" ></span>
-            </a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="/logout">Logout</a>
-            </div>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
         <% } else { %>
           <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
           <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
@@ -64,20 +56,30 @@
       // determine active `.top-menu`
       let requestUrl = '<%= request.url %>'
       let maxHref = ''
-      if ($('.top-menu.active').length === 0) {
-        $('.top-menu').each(function () {
+      if ($('.nav-item.active, .dropdown-item.active').length === 0) {
+        // nav-item
+        $('.nav-item').each(function () {
           let href = $(this).children('a').attr('href')
           if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
             maxHref = href
           }
         })
-        $('.top-menu:has(a[href="' + maxHref + '"])').addClass('active')
+        // dropdown-item
+        $('.dropdown-item').each(function () {
+          let href = $(this).attr('href')
+          if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
+            maxHref = href
+          }
+        })
+        // add active for nav-item
+        $('.nav-item:has(a[href="' + maxHref + '"])').addClass('active')
+        // add active for dropdown-item
+        $('.dropdown-item[href="' + maxHref + '"]').addClass('active')
+        $('.dropdown-item').parent('div').parent('li').addClass('active')
       }
-      // also make `.top-menu` parent active
-      $('.top-menu.active').parent('ul').parent('li').addClass('active')
       // add additional padding
-      if ($('.navbar-fixed-top').length > 0) {
-        let paddingTop = $('.navbar-fixed-top').height() + 20 + 'px'
+      if ($('.fixed-top').length > 0) {
+        let paddingTop = $('.fixed-top').height() + 20 + 'px'
         $('body').css('padding-top', paddingTop)
       }
     })
