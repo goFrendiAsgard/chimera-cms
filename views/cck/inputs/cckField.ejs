@@ -1,5 +1,5 @@
-<div style="margin-bottom:10px;">
-  <div class="col-xs-10" style="padding-left:0">
+<div class="row container" style="margin-bottom:10px;">
+  <div class="col-sm-10" style="padding-left:0">
     <select id="fieldType" class="form-control">
       <option value="text">Text</option>
       <option value="textArea">Text Area</option>
@@ -19,7 +19,7 @@
       <option value="codeText">Source Code</option>
     </select>
   </div>
-  <a href="#" id="btnAddField" class="btn btn-secondary"><span class="oi oi-plus"></span></a>
+  <a href="#" id="btnAddField" class="btn btn-sm btn-secondary"><span class="oi oi-plus"></span></a>
 </div>
 <textarea name="<%= fieldName %>" rowId="<%= row._id %>" class="form-control cw-textarea" data-editor="json"><%= value === Object(value) ? JSON.stringify(value, null, 2) : value %></textarea>
 

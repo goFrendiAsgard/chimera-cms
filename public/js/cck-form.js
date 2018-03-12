@@ -163,7 +163,7 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
           html += '<td class="' + colClass + '">' + presentation + '</td>'
         }
         let actionClass = 'col-' + actionWidth
-        html += '<td class="' + actionClass + '"><a class="' + componentId + 'BtnSelect btn btn-secondary" value="' +row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
+        html += '<td class="' + actionClass + '"><a class="' + componentId + 'BtnSelect btn btn-secondary btn-sm" value="' +row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
         html += '</tr>'
       }
       // end of the table
@@ -220,11 +220,11 @@ function cwGetOne2ManyTableRow (row, fieldInfoList, colWidth, actionWidth) {
   }
   let actionClass = 'col-' + actionWidth
   html += '<td class="' + actionClass + '">'
-  html += '<a class="btnPasteBeforeRow btnAction btn btn-secondary" style="display:none;" href="#"><span class="oi oi-chevron-top"></span></a>'
-  html += '<a class="btnPasteAfterRow btnAction btn btn-secondary" style="display:none;" href="#"><span class="oi oi-chevron-bottom"></span></a>'
-  html += '<a class="btnCancelCutRow btnAction btn btn-secondary" style="display:none;" href="#"><span class="oi oi-action-undo"></span></a>'
-  html += '<a class="btnCutRow btn btnAction btn-secondary" href="#"><span class="oi oi-clipboard"></span></a>'
-  html += '<a class="btnDeleteRow btn btnAction btn-secondary" href="#"><span class="oi oi-trash"></span></a>'
+  html += '<a class="btnPasteBeforeRow btnAction btn btn-sm btn-secondary" style="display:none;" href="#"><span class="oi oi-chevron-top"></span></a>'
+  html += '<a class="btnPasteAfterRow btnAction btn btn-sm btn-secondary" style="display:none;" href="#"><span class="oi oi-chevron-bottom"></span></a>'
+  html += '<a class="btnCancelCutRow btnAction btn btn-sm btn-secondary" style="display:none;" href="#"><span class="oi oi-action-undo"></span></a>'
+  html += '<a class="btnCutRow btn btn-sm btnAction btn-secondary" href="#"><span class="oi oi-clipboard"></span></a>'
+  html += '<a class="btnDeleteRow btn btn-sm btnAction btn-secondary" href="#"><span class="oi oi-trash"></span></a>'
   html += '</td>'
   html += '</tr>'
   return html

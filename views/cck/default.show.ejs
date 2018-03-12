@@ -71,7 +71,7 @@
     </thead>
     <tbody>
       <% for (let row of results) { %>
-        <tr class="<%= row._deleted ? "danger" : "" %> d-flex">
+        <tr class="<%= row._deleted ? "table-danger" : "" %> d-flex">
           <!-- Content -->
           <% for (let fieldName of cckState.fieldNames) { %>
             <% let fieldInfo = cckState.schema.fields[fieldName] %>

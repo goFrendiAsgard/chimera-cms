@@ -13,9 +13,9 @@ vars:
       initChain: '<%- chainPath %>cck.init.js'
       tabs:
         config: '<span class="oi oi-cog"></span> Configs'
-        privilege: '<span class="oi oi-user"></span> Privileges'
-        init: '<span class="oi oi-play"></span> Init'
-        select: '<span class="oi oi-eye-open"></span> Select'
+        privilege: '<span class="oi oi-key"></span> Privileges'
+        init: '<span class="oi oi-media-play"></span> Init'
+        select: '<span class="oi oi-eye"></span> Select'
         insert: '<span class="oi oi-plus"></span> Insert'
         update: '<span class="oi oi-pencil"></span> Update'
         delete: '<span class="oi oi-trash"></span> Delete'
