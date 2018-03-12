@@ -75,7 +75,7 @@
         $('.nav-item:has(a[href="' + maxHref + '"])').addClass('active')
         // add active for dropdown-item
         $('.dropdown-item[href="' + maxHref + '"]').addClass('active')
-        $('.dropdown-item').parent('div').parent('li').addClass('active')
+        $('.dropdown-item[href="' + maxHref + '"]').parent('div').parent('li').addClass('active')
       }
       // add additional padding
       if ($('.fixed-top').length > 0) {
