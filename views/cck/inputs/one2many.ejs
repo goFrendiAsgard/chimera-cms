@@ -6,7 +6,7 @@
 <span id="<%= inputId %>PresentationContainer"><%= value %></span>
 
 <!-- Trigger the modal with a button -->
-<a id="<%= inputId %>BtnShowModal" class="btn btn-default pull-right" data-toggle="modal" data-target="#<%= inputId %>ModalContainer"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+<a id="<%= inputId %>BtnShowModal" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#<%= inputId %>ModalContainer"><span class="oi oi-pencil"></span> Edit</a>
 
 <!-- Modal -->
 <div class="modal fade" id="<%= inputId %>ModalContainer">
@@ -19,13 +19,13 @@
       </div>
       <div class="modal-body cw-modal-body">
         <div style="margin-bottom:1em">
-          <a id="<%= inputId %>BtnAdd" class="btn btn-default" href="#"><span class="glyphicon glyphicon-plus"></span></a>
+          <a id="<%= inputId %>BtnAdd" class="btn btn-secondary" href="#"><span class="oi oi-plus"></span></a>
         </div>
         <div id="<%= inputId %>InputContainer"></div>
       </div>
       <div class="modal-footer">
-        <a id="<%= inputId %>BtnSave" class="btn btn-default btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Save</a>
-        <a id="<%= inputId %>BtnCancel" class="btn btn-default btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Cancel</a>
+        <a id="<%= inputId %>BtnSave" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Save</a>
+        <a id="<%= inputId %>BtnCancel" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#<%= inputId %>ModalContainer">Cancel</a>
       </div>
     </div>
 

@@ -1,86 +1,85 @@
 <% if (config.showTopNav) { %>
-  <nav class="navbar <%= config.bootstrapNavClass? config.bootstrapNavClass : 'navbar-default' %>">
-    <div class="container-fluid">
+  <nav class="navbar <%= config.bootstrapNavClass ? config.bootstrapNavClass : 'navbar-light bg-light navbar-expand-sm' %>">
 
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/"><%= config.title %></a>
-      </div>
+    <a class="navbar-brand" href="/">
+      <%= config.title %>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <div id="navbar" class="navbar-collapse collapse">
+    <div id="navbar" class="collapse navbar-collapse">
 
-        <ul class="nav navbar-nav">
-          <% for (let navigation of config.navigation) { %>
-            <% if (!isAuthorized(request.auth, navigation.groups)) {continue; } %>
-
-            <% if ('url' in navigation && typeof(navigation.url) === 'string' && navigation.url.trim() !== '') { %>
-              <!-- Navigation -->
-              <li class="top-menu <%= navigation.url === request.url ? 'active' : '' %>"><a href="<%= navigation.url %>"><%- navigation.caption %></a></li>
-            <% } else { %>
-
-              <!-- Dropdown -->
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%- navigation.caption %> <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <% for (let subNavigation of navigation.children) { %>
-                    <% if (!isAuthorized(request.auth, subNavigation.groups)) {continue; } %>
-                    <% if ('url' in subNavigation) { %>
-                      <li class="top-menu <%= subNavigation.url === request.url ? 'active' : '' %>">
-                        <a href="<%= subNavigation.url %>"><%- subNavigation.caption %></a>
-                      </li>
-                    <% } %>
-                  <% } %>
-                </ul>
-              </li>
-
-            <% } %>
-
-          <% } %>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-          <% if (request.auth.username){ %>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <%= request.auth.username %> <span class="caret" ></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="/logout">Logout</a></li>
-              </ul>
-            </li>
+      <ul class="navbar-nav mr-auto">
+        <% for (let navigation of config.navigation) { %>
+          <% if (!isAuthorized(request.auth, navigation.groups)) {continue; } %>
+          <% if ('url' in navigation && typeof(navigation.url) === 'string' && navigation.url.trim() !== '') { %>
+            <!-- Navigation -->
+            <li class="nav-item <%= navigation.url === request.url ? 'active' : '' %>"><a class="nav-link" href="<%= navigation.url %>"><%- navigation.caption %></a></li>
           <% } else { %>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
+            <!-- Dropdown -->
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%- navigation.caption %> <span class="caret"></span></a>
+              <div class="dropdown-menu">
+                <% for (let subNavigation of navigation.children) { %>
+                  <% if (!isAuthorized(request.auth, subNavigation.groups)) {continue; } %>
+                  <% if ('url' in subNavigation) { %>
+                    <a class="dropdown-item <%= subNavigation.url === request.url ? 'active' : '' %>" href="<%= subNavigation.url %>">
+                      <%- subNavigation.caption %>
+                    </a>
+                  <% } %>
+                <% } %>
+              </div>
+            </li>
           <% } %>
-        </ul>
+        <% } %>
+      </ul>
 
-      </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
+      <% if (request.auth.username){ %>
+        <div class=navbar-text mr-md-2"><%= request.auth.username %></div>
+      <% } %>
+
+      <ul class="navbar-nav mr-md-2">
+        <% if (request.auth.username){ %>
+          <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+        <% } %>
+      </ul>
+
+    </div><!--/.nav-collapse -->
   </nav>
   <script>
     $(document).ready(function (event) {
       // determine active `.top-menu`
       let requestUrl = '<%= request.url %>'
       let maxHref = ''
-      if ($('.top-menu.active').length === 0) {
-        $('.top-menu').each(function () {
+      if ($('.nav-item.active, .dropdown-item.active').length === 0) {
+        // nav-item
+        $('.nav-item').each(function () {
           let href = $(this).children('a').attr('href')
           if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
             maxHref = href
           }
         })
-        $('.top-menu:has(a[href="' + maxHref + '"])').addClass('active')
+        // dropdown-item
+        $('.dropdown-item').each(function () {
+          let href = $(this).attr('href')
+          if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
+            maxHref = href
+          }
+        })
+        // add active for nav-item
+        $('.nav-item:has(a[href="' + maxHref + '"])').addClass('active')
+        // add active for dropdown-item
+        $('.dropdown-item[href="' + maxHref + '"]').addClass('active')
+        $('.dropdown-item').parent('div').parent('li').addClass('active')
       }
-      // also make `.top-menu` parent active
-      $('.top-menu.active').parent('ul').parent('li').addClass('active')
       // add additional padding
-      if ($('.navbar-fixed-top').length > 0) {
-        let paddingTop = $('.navbar-fixed-top').height() + 20 + 'px'
+      if ($('.fixed-top').length > 0) {
+        let paddingTop = $('.fixed-top').height() + 20 + 'px'
         $('body').css('padding-top', paddingTop)
       }
     })

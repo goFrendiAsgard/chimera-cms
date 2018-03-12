@@ -12,20 +12,22 @@ vars:
       selectGroups: ['superAdmin']
       initChain: '<%- chainPath %>cck.init.js'
       tabs:
-        config: '<span class="glyphicon glyphicon-cog"></span> Configs'
-        privilege: '<span class="glyphicon glyphicon-user"></span> Privileges'
-        init: '<span class="glyphicon glyphicon-play"></span> Init'
-        select: '<span class="glyphicon glyphicon-eye-open"></span> Select'
-        insert: '<span class="glyphicon glyphicon-plus"></span> Insert'
-        update: '<span class="glyphicon glyphicon-pencil"></span> Update'
-        delete: '<span class="glyphicon glyphicon-trash"></span> Delete'
+        config: '<span class="oi oi-cog"></span> Configs'
+        privilege: '<span class="oi oi-user"></span> Privileges'
+        init: '<span class="oi oi-play"></span> Init'
+        select: '<span class="oi oi-eye-open"></span> Select'
+        insert: '<span class="oi oi-plus"></span> Insert'
+        update: '<span class="oi oi-pencil"></span> Update'
+        delete: '<span class="oi oi-trash"></span> Delete'
       fields:
         name:
           notNull: 1
           unique: 1
+          bootstrapColWidth: 3
         collectionName: 
           caption: Collection Name
           notNull: 1
+          bootstrapColWidth: 3
         caption:
           hidden: ["tabular"]
         fields:
@@ -62,6 +64,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
+          bootstrapColWidth: 1
         updateGroups:
           caption: 'Update Privileges'
           inputTemplate: '<%- cck.input.checkBoxes %>'
@@ -70,6 +73,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
+          bootstrapColWidth: 1
         deleteGroups:
           caption: 'Delete Privileges'
           inputTemplate: '<%- cck.input.checkBoxes %>'
@@ -78,6 +82,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
+          bootstrapColWidth: 1
         selectGroups:
           caption: 'Select Privileges'
           inputTemplate: '<%- cck.input.checkBoxes %>'
@@ -86,6 +91,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
+          bootstrapColWidth: 1
         selectChain:
           caption: 'Select Chain'
           inputTemplate: '<%- cck.input.codeText %>'

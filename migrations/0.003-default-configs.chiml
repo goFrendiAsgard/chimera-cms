@@ -17,7 +17,7 @@ vars:
 
     - key: bootstrapNavClass
       defaultConfig: 1
-      value: 'navbar-default'
+      value: 'navbar-light navbar-expand-sm bg-light'
 
     - key: bootstrapTheme
       defaultConfig: 1
@@ -115,13 +115,15 @@ vars:
     - key: jumbotron
       defaultConfig: 1
       value: |
-        <div class="jumbotron col-sm-12">
-          <div class="col-sm-2">    
-            <img class="col-sm-12" src="<%%= config.logo %>" />
-          </div>
-          <div class="col-sm-10">
-            <h1><%%= config.title %></h1>      
-            <p><%%= config.jargon %></p>
+        <div class="jumbotron container">
+          <div class="row">
+            <div class="col-sm-2">    
+              <img class="col-sm-12" src="<%%= config.logo %>" />
+            </div>
+            <div class="col-sm-10">
+              <h1><%%= config.title %></h1>      
+              <p><%%= config.jargon %></p>
+            </div>
           </div>
         </div>
 
@@ -132,9 +134,9 @@ vars:
     - key: footer
       defaultConfig: 1
       value: |
-        <footer style="margin-bottom:20px; text-align:right; font-size:0.8em;">
+        <div style="margin-bottom:20px; text-align:right; font-size:0.8em;">
           Chimera web app &copy; 2018-tomorrowMorning
-        </footer>
+        </div>
 
     - key: showRightWidget
       defaultConfig: 1
@@ -156,7 +158,7 @@ vars:
           <div id="chat-messages" class="col-xs-12 well" style="height:150px;">
           </div>
           <textarea id="chat-box" class="form-control"></textarea>
-          <button id="chat-send" class="form-control btn btn-default">Send</button>
+          <button id="chat-send" class="form-control btn btn-secondary">Send</button>
         </div>
         <script>
           let socket = io.connect()

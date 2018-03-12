@@ -8,12 +8,13 @@
     "chimera-framework"
   ],
   "dependencies": {
+    "@icon/open-iconic": "^1.1.2-0",
     "ace-builds": "^1.2.9",
-    "bootstrap": "^3.3.7",
-    "chimera-framework": "0.0.63",
+    "bootstrap": "^4.0.0",
+    "chimera-framework": "0.0.64",
     "fs-extra": "^5.0.0",
     "jquery": "^3.2.1",
-    "jsonwebtoken": "^7.3.0",
+    "jsonwebtoken": "^8.2.0",
     "neo-async": "^2.5.0",
     "newman": "^3.9.1",
     "popper.js": "^1.12.9",
