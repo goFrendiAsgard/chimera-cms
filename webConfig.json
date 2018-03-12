@@ -1,0 +1,5 @@
+{
+  "mongoUrl": "mongodb://localhost/plugin-development",
+  "jwtSecret": "j1234",
+  "sessionSecret": "s1234"
+}
