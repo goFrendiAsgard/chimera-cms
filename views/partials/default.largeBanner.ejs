@@ -56,16 +56,16 @@
       // determine active `.top-menu`
       let requestUrl = '<%= request.url %>'
       let maxHref = ''
-      if ($('.nav-item.active, .dropdown-item.active').length === 0) {
+      if ($('nav .nav-item.active, nav .dropdown-item.active').length === 0) {
         // nav-item
-        $('.nav-item').each(function () {
+        $('nav .nav-item').each(function () {
           let href = $(this).children('a').attr('href')
           if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
             maxHref = href
           }
         })
         // dropdown-item
-        $('.dropdown-item').each(function () {
+        $('nav .dropdown-item').each(function () {
           let href = $(this).attr('href')
           if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
             maxHref = href
@@ -75,8 +75,9 @@
         $('.nav-item:has(a[href="' + maxHref + '"])').addClass('active')
         // add active for dropdown-item
         $('.dropdown-item[href="' + maxHref + '"]').addClass('active')
-        $('.dropdown-item[href="' + maxHref + '"]').parent('div').parent('li').addClass('active')
       }
+      // add active for dropdown-menu
+      $('nav .dropdown-item.active').parent('div').parent('li').addClass('active')
       // add additional padding
       if ($('.fixed-top').length > 0) {
         let paddingTop = $('.fixed-top').height() + 20 + 'px'
