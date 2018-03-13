@@ -18,9 +18,12 @@ textarea.cw-textarea {
   max-width: 100%;
 }
 .cw-modal-content{
-  height:95%;
+  height: 95%;
 }
 .cw-modal-body{
-  max-height:75%;
+  max-height: 75%;
   overflow-y: auto;
+}
+.btn{
+  margin-bottom: 5px;
 }
