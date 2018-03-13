@@ -2,3 +2,9 @@ node_modules/
 npm_debug.log
 .cache-require-paths.json
 .*.cjson
+views/simpleplugin/
+public/simpleplugin/
+chains/simpleplugin/
+views/total-kanban/
+public/total-kanban/
+chains/total-kanban/
