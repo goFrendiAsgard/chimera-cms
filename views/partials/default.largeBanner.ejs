@@ -37,7 +37,10 @@
       </ul>
 
       <% if (request.auth.username){ %>
-        <div class=navbar-text mr-md-2"><%= request.auth.username %></div>
+        <div class=navbar-text mr-md-2">
+          <span class="oi oi-person"></span>
+          <%= request.auth.username %>
+        </div>
       <% } %>
 
       <ul class="navbar-nav mr-md-2">

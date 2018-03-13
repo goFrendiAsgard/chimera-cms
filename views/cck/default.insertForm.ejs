@@ -41,7 +41,7 @@
 
   <div class="form-group row">
     <div class="">
-      <button class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>"><span class="oi oi-floppy-disk"></span> Save</button>
+      <button class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>">Save</button>
 
       <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
         <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>">Cancel</a>
