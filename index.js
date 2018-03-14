@@ -7,6 +7,7 @@ const web = require('chimera-framework/lib/web.js')
 const util = require('chimera-framework/lib/util.js')
 const cck = require('./cck.js')
 const helper = require('./helper.js')
+const express = require('express')
 
 // load webConfig
 let webConfig = helper.getWebConfig()
@@ -22,16 +23,21 @@ let socketIoClientPath = path.join(__dirname, 'node_modules/socket.io-client')
 let ejsPath = path.join(__dirname, 'node_modules/ejs')
 let iconPath = path.join(__dirname, 'node_modules/@icon')
 
-// define default middlewares (bootstrap, jquery, and JWT)
 webConfig.middlewares = 'middlewares' in webConfig ? webConfig.middlewares : []
 webConfig.middlewares.unshift(helper.jwtMiddleware)
+webConfig.middlewares.unshift({'/bootstrap': express.static(bootstrapPath)})
 webConfig.middlewares.unshift({'/bootstrap': staticCache(bootstrapPath, maxAgeOption)})
+webConfig.middlewares.unshift({'/@icon': express.static(iconPath)})
 webConfig.middlewares.unshift({'/@icon': staticCache(iconPath, maxAgeOption)})
-//webConfig.middlewares.unshift({'/css/fonts': staticCache(path.join(bootstrapPath, 'dist/fonts'), maxAgeOption)})
+webConfig.middlewares.unshift({'/jquery': express.static(jqueryPath)})
 webConfig.middlewares.unshift({'/jquery': staticCache(jqueryPath, maxAgeOption)})
+webConfig.middlewares.unshift({'/popper.js': express.static(popperPath)})
 webConfig.middlewares.unshift({'/popper.js': staticCache(popperPath, maxAgeOption)})
+webConfig.middlewares.unshift({'/ace-builds': express.static(acePath)})
 webConfig.middlewares.unshift({'/ace-builds': staticCache(acePath, maxAgeOption)})
+webConfig.middlewares.unshift({'/socket.io-client': express.static(socketIoClientPath)})
 webConfig.middlewares.unshift({'/socket.io-client': staticCache(socketIoClientPath, maxAgeOption)})
+webConfig.middlewares.unshift({'/ejs': express.static(ejsPath)})
 webConfig.middlewares.unshift({'/ejs': staticCache(ejsPath, maxAgeOption)})
 
 // add `helper`, `cck`, and helper.runChain to webConfig.vars.$
