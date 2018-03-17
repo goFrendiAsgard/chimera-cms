@@ -50,5 +50,7 @@ if (require.main === module) {
     // do nothing
   }
   // execute upgrade or downgrade
-  migrate(action, version, customWebConfig)
+  migrate(action, version, customWebConfig, (error, result) => {
+    // do nothing
+  })
 }
