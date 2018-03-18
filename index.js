@@ -26,7 +26,7 @@ webConfig.middlewares = 'middlewares' in webConfig ? webConfig.middlewares : []
 webConfig.middlewares.unshift(helper.jwtMiddleware)
 
 // expose public paths
-const staticPaths = {
+const publishedStaticPaths = {
   '/bootstrap': path.join(__dirname, 'node_modules/bootstrap'),
   '/jquery': path.join(__dirname, 'node_modules/jquery'),
   '/popper.js': path.join(__dirname, 'node_modules/popper.js'),
@@ -35,8 +35,8 @@ const staticPaths = {
   '/ejs': path.join(__dirname, 'node_modules/ejs'),
   '/@icon': path.join(__dirname, 'node_modules/@icon')
 }
-for (let publicPath in staticPaths) {
-  let physicalPath = staticPaths[publicPath]
+for (let publicPath in publishedStaticPaths) {
+  let physicalPath = publishedStaticPaths[publicPath]
   let staticObject = {}
   let staticCacheObject = {}
   staticObject[publicPath] = express.static(physicalPath)
