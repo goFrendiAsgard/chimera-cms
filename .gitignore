@@ -5,6 +5,7 @@ plugins/
 npm_debug.log
 .cache-require-paths.json
 .*.cjson
+public/uploads/*.*
 views/simpleplugin/
 public/simpleplugin/
 chains/simpleplugin/

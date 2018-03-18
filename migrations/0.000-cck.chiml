@@ -23,11 +23,11 @@ vars:
         name:
           notNull: 1
           unique: 1
-          bootstrapColWidth: 3
+          bootstrapColWidth: 2
         collectionName: 
           caption: Collection Name
           notNull: 1
-          bootstrapColWidth: 3
+          hidden: ['tabular']
         caption:
           hidden: ["tabular"]
         fields:
@@ -64,7 +64,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
-          bootstrapColWidth: 1
+          bootstrapColWidth: 2
         updateGroups:
           caption: 'Update Privileges'
           inputTemplate: '<%- cck.input.checkBoxes %>'
@@ -73,7 +73,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
-          bootstrapColWidth: 1
+          bootstrapColWidth: 2
         deleteGroups:
           caption: 'Delete Privileges'
           inputTemplate: '<%- cck.input.checkBoxes %>'
@@ -82,7 +82,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
-          bootstrapColWidth: 1
+          bootstrapColWidth: 2
         selectGroups:
           caption: 'Select Privileges'
           inputTemplate: '<%- cck.input.checkBoxes %>'
@@ -91,7 +91,7 @@ vars:
             loggedIn: loggedIn
             loggedOut: loggedOut
           tab: privilege
-          bootstrapColWidth: 1
+          bootstrapColWidth: 2
         selectChain:
           caption: 'Select Chain'
           inputTemplate: '<%- cck.input.codeText %>'
