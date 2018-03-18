@@ -10,10 +10,10 @@
   </div>
 <% } %>
 <div style="margin-bottom:1em">
-  <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/insert?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>"><span class="oi oi-plus"></span> Insert Again</a>
+  <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/insert?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Insert Again</a>
 
   <% if (status < 400 && isAuthorized(cckState.auth, cckState.schema.updateGroups) && result && '_id' in result) { %>
-    <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= result._id %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>"><span class="oi oi-pencil"></span> Edit</a>
+    <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= result._id %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Edit</a>
   <% } %>
 
   <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
