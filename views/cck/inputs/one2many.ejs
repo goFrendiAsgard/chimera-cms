@@ -54,7 +54,9 @@
     // Add new record
     $('#<%= inputId %>BtnAdd').click(function (event) {
       event.preventDefault()
-      let html = cwGetOne2ManyTableRow({}, fieldInfo.fields)
+      let fields = Object.keys(fieldInfo.fields)
+      let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfo.fields, true)
+      let html = cwGetOne2ManyTableRow({}, fieldInfo.fields, colWidth, actionWidth)
       $('#<%= inputId %>Table').append(html)
     })
 

@@ -10,7 +10,7 @@
   </div>
 <% } %>
 <div style="margin-bottom:1em">
-  <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>"><span class="oi oi-pencil"></span> Edit</a>
+  <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Edit</a>
 
   <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
     <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Back</a>

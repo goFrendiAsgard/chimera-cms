@@ -216,7 +216,9 @@ function cwGetOne2ManyTableRow (row, fieldInfoList, colWidth, actionWidth) {
     let value = fieldName in row ? row[fieldName] : ''
     let presentation = ejs.render(fieldInfo['inputTemplate'], { row, fieldName, fieldInfo, value })
     let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
-    html += '<td class="' + colClass + '" fieldName="' + fieldName + '">' + presentation + '</td>'
+    html += '<td class="' + colClass + '" fieldName="' + fieldName + '">'
+    html += '<div class="row container">' + presentation + '</div>'
+    html += '</td>'
   }
   let actionClass = 'col-' + actionWidth
   html += '<td class="' + actionClass + '">'
@@ -236,7 +238,7 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   let fields = Object.keys(fieldInfoList)
   let value = cwGetOne2ManyFieldValue(componentId)
   if (!Array.isArray(value)) { value = [] }
-  let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList)
+  let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, true)
   let html = '<table id="' + componentId + 'Table" class="table">'
   html += cwGetTableHeader(fields, fieldInfoList, true)
   for (let row of value) {
