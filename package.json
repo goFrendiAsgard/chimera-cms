@@ -16,9 +16,11 @@
     "jquery": "^3.2.1",
     "jsonwebtoken": "^8.2.0",
     "neo-async": "^2.5.0",
-    "newman": "^3.9.3",
     "popper.js": "^1.12.9",
     "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "newman": "^3.9.3"
   },
   "scripts": {
     "start": "node index.js",
