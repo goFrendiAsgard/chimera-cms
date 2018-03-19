@@ -141,11 +141,19 @@ vars:
     - key: showRightWidget
       defaultConfig: 1
       value: 0 
-
+    
     - key: rightWidget
       defaultConfig: 1
       value: |
-        <!-- Google translate plugin -->
+        <h4>Google Translate</h4>
+        <%%- render(config.widgetGoogleTranslate, {config, request}) %>
+        <br />
+        <h4>Chat</h4>
+        <%%- render(config.widgetSimpleChat, {config, request}) %>
+
+    - key: widgetGoogleTranslate
+      defaultConfig: 1
+      value: |
         <div id="google_translate_element"></div>
         <script type="text/javascript">
           function googleTranslateElementInit() {
@@ -153,9 +161,12 @@ vars:
           }
         </script>
         <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-        <!-- Socket.io example -->
-        <div style="margin-top:10px; margin-bottom:10px;">
-          <div id="chat-messages" class="col-xs-12 well" style="height:150px;">
+        
+    - key: widgetSimpleChat
+      defaultConfig: 1
+      value: |
+        <div class="row container">
+          <div id="chat-messages" class="col-sm-12 card" style="height:150px;">
           </div>
           <textarea id="chat-box" class="form-control"></textarea>
           <button id="chat-send" class="form-control btn btn-secondary">Send</button>

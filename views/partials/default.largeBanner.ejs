@@ -1,5 +1,5 @@
 <% if (config.showTopNav) { %>
-  <nav class="navbar <%= config.bootstrapNavClass ? config.bootstrapNavClass : 'navbar-light bg-light navbar-expand-sm' %>">
+  <nav id="topNav" class="navbar <%= config.bootstrapNavClass ? config.bootstrapNavClass : 'navbar-light bg-light navbar-expand-sm' %>">
 
     <a class="navbar-brand" href="/">
       <%= config.title %>
@@ -59,16 +59,16 @@
       // determine active `.top-menu`
       let requestUrl = '<%= request.url %>'
       let maxHref = ''
-      if ($('nav .nav-item.active, nav .dropdown-item.active').length === 0) {
+      if ($('#topNav .nav-item.active, nav .dropdown-item.active').length === 0) {
         // nav-item
-        $('nav .nav-item').each(function () {
+        $('#topNav .nav-item').each(function () {
           let href = $(this).children('a').attr('href')
           if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
             maxHref = href
           }
         })
         // dropdown-item
-        $('nav .dropdown-item').each(function () {
+        $('#topNav .dropdown-item').each(function () {
           let href = $(this).attr('href')
           if (requestUrl.indexOf(href) === 0 && href.length > maxHref.length) {
             maxHref = href
@@ -80,11 +80,13 @@
         $('.dropdown-item[href="' + maxHref + '"]').addClass('active')
       }
       // add active for dropdown-menu
-      $('nav .dropdown-item.active').parent('div').parent('li').addClass('active')
+      $('#topNav .dropdown-item.active').parent('div').parent('li').addClass('active')
       // add additional padding
-      if ($('.fixed-top').length > 0) {
-        let paddingTop = $('.fixed-top').height() + 20 + 'px'
+      if ($('#topNav.fixed-top').length > 0) {
+        let paddingTop = $('#topNav.fixed-top').height() + 20 + 'px'
         $('body').css('padding-top', paddingTop)
+      } else {
+        $('#topNav').css('margin-bottom', '20px')
       }
     })
   </script>
