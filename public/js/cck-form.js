@@ -149,8 +149,11 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
       // build the table
       let html = '<table class="table">'
       // table header
+      html += '<thead>'
       html += cwGetTableHeader(fields, fieldInfoList, true)
+      html += '</thead>'
       // table content
+      html += '<tbody>'
       for (let row of results) {
         html += '<tr class="row-data d-flex">'
         for (let fieldName of fields) {
@@ -160,12 +163,15 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
           let template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate
           let presentation = ejs.render(template, { row, fieldInfo, value, fieldName})
           let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
-          html += '<td class="' + colClass + '">' + presentation + '</td>'
+          html += '<td class="' + colClass + '">' 
+          html += '<div class="row container">' + presentation + '</div>'
+          html += '</td>'
         }
         let actionClass = 'col-' + actionWidth
         html += '<td class="' + actionClass + '"><a class="' + componentId + 'BtnSelect btn btn-secondary btn-sm" value="' +row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
         html += '</tr>'
       }
+      html += '</tbody>'
       // end of the table
       html += '</table>'
       $('#' + componentId + 'InputContainer').html(html)
@@ -191,7 +197,12 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
   let html = ''
   if (value.length > 0) {
     html += '<table class="table" style="font-size:small">'
+    // table header
+    html += '<thead>'
     html += cwGetTableHeader(fields, fieldInfoList)
+    html += '</thead>'
+    // table content
+    html += '<tbody>'
     for (let row of value) {
       html += '<tr class="d-flex">'
       for (let fieldName of fields) {
@@ -199,10 +210,13 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
         let value = row[fieldName]
         let presentation = ejs.render(fieldInfo['presentationTemplate'], { row, fieldName, fieldInfo, value })
         let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
-        html += '<td class="' + colClass + '">' + presentation + '</td>'
+        html += '<td class="' + colClass + '">'
+        html += '<div class="row container">' + presentation + '</div>'
+        html += '</td>'
       }
       html += '</tr>'
     }
+    html += '</tbody>'
     html += '</table>'
   }
   html = cwPreprocessValue(html)
@@ -240,10 +254,16 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   if (!Array.isArray(value)) { value = [] }
   let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, true)
   let html = '<table id="' + componentId + 'Table" class="table">'
+  // table header
+  html += '<thead>'
   html += cwGetTableHeader(fields, fieldInfoList, true)
+  html += '</thead>'
+  // table content
+  html += '<tbody>'
   for (let row of value) {
     html += cwGetOne2ManyTableRow(row, fieldInfoList, colWidth, actionWidth)
   }
+  html += '</tbody>'
   html += '</table>'
   $('#' + componentId + 'InputContainer').html(html)
   cwInitAce()

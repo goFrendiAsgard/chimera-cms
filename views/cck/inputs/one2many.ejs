@@ -3,9 +3,9 @@
 <div id="<%= inputId %>UploadContainer" style="display:none;"></div>
 
 <!-- Presentation -->
-<div id="<%= inputId %>PresentationContainer" class="col-md-9" style="padding-left:0px"><%= value %></div>
+<div id="<%= inputId %>PresentationContainer" class="col-md-11" style="padding-left:0px"><%= value %></div>
 <!-- Trigger the modal with a button -->
-<div class="col-md-3" style="padding-right:0px">
+<div class="col-md-1" style="padding-right:0px">
   <a id="<%= inputId %>BtnShowModal" class="btn btn-sm btn-secondary float-right" data-toggle="modal" data-target="#<%= inputId %>ModalContainer" href="#"><span class="oi oi-pencil"></span></a>
 </div>
 
@@ -111,8 +111,10 @@
         for (let fieldName in fieldInfo.fields) {
           if ($(this).children('td[fieldName="' + fieldName + '"]').length === 0) { continue }
           let td = $(this).children('td[fieldName="' + fieldName + '"]')[0]
-          if ($(td).children('[name="' + fieldName + '"]').length === 0) { continue }
-          let input = $(td).children('[name="' + fieldName + '"]')[0]
+          if ($(td).children('div.container').length === 0) { continue }
+          let container = $(td).children('div.container')[0]
+          if ($(container).children('[name="' + fieldName + '"]').length === 0) { continue }
+          let input = $(container).children('[name="' + fieldName + '"]')[0]
           // copy file input into uploadContainer
           if ($(input).attr('type') === 'file') {
             $(input).attr('name', '<%= fieldName %>.' + rowIndex + '.' + fieldName)
