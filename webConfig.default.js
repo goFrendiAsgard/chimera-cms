@@ -2,12 +2,22 @@
 
 const path = require('path')
 
-let basePath = path.join(__dirname, '/')
-let chainPath = path.join(__dirname, 'chains') + '/'
-let viewPath = path.join(__dirname, 'views') + '/'
-let migrationPath = path.join(__dirname, 'migrations') + '/'
-let staticPath = path.join(__dirname, 'public') + '/'
-let faviconPath = path.join(__dirname, 'public/favicon.ico')
+const basePath = path.join(__dirname, '/')
+const chainPath = path.join(__dirname, 'chains') + '/'
+const viewPath = path.join(__dirname, 'views') + '/'
+const migrationPath = path.join(__dirname, 'migrations') + '/'
+const staticPath = path.join(__dirname, 'public') + '/'
+const faviconPath = path.join(__dirname, 'public/favicon.ico')
+const customStaticRoutes = {
+  '/bootstrap': path.join(__dirname, 'node_modules/bootstrap'),
+  '/jquery': path.join(__dirname, 'node_modules/jquery'),
+  '/popper.js': path.join(__dirname, 'node_modules/popper.js'),
+  '/ace-builds': path.join(__dirname, 'node_modules/ace-builds'),
+  '/socket.io-client': path.join(__dirname, 'node_modules/socket.io-client'),
+  '/ejs': path.join(__dirname, 'node_modules/ejs'),
+  '/@icon': path.join(__dirname, 'node_modules/@icon')
+}
+
 
 function socketHandler (socket) {
   socket.on('chat-send', (data) => {
@@ -23,6 +33,7 @@ const webConfig = {
   migrationPath,
   staticPath,
   faviconPath,
+  customStaticRoutes,
   socketHandler,
   port: 3000,
   staticMaxAge: 365 * 24 * 60 * 60,

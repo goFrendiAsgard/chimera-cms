@@ -62,7 +62,6 @@ module.exports = (ins, vars, callback) => {
             caption: 'Children',
             inputTemplate: getTemplate(config.cck.input.one2many),
             presentationTemplate: getTemplate(config.cck.presentation.one2many),
-            bootstrapColWidth: 4,
             fields: {
               caption: {
                 caption: 'Caption',
