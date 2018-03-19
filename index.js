@@ -25,22 +25,12 @@ webConfig.vars.$.runChain = helper.runChain
 webConfig.middlewares = 'middlewares' in webConfig ? webConfig.middlewares : []
 webConfig.middlewares.unshift(helper.jwtMiddleware)
 
-// expose public paths
-const publishedStaticPaths = {
-  '/bootstrap': path.join(__dirname, 'node_modules/bootstrap'),
-  '/jquery': path.join(__dirname, 'node_modules/jquery'),
-  '/popper.js': path.join(__dirname, 'node_modules/popper.js'),
-  '/ace-builds': path.join(__dirname, 'node_modules/ace-builds'),
-  '/socket.io-client': path.join(__dirname, 'node_modules/socket.io-client'),
-  '/ejs': path.join(__dirname, 'node_modules/ejs'),
-  '/@icon': path.join(__dirname, 'node_modules/@icon')
-}
-for (let publicPath in publishedStaticPaths) {
-  let physicalPath = publishedStaticPaths[publicPath]
+for (let publishedPath in webConfig.customStaticRoutes) {
+  let physicalPath = webConfig.customStaticRoutes[publishedPath]
   let staticObject = {}
   let staticCacheObject = {}
-  staticObject[publicPath] = express.static(physicalPath)
-  staticCacheObject[publicPath] = staticCache(physicalPath, maxAgeOption)
+  staticObject[publishedPath] = express.static(physicalPath)
+  staticCacheObject[publishedPath] = staticCache(physicalPath, maxAgeOption)
   webConfig.middlewares.unshift(staticObject)
   webConfig.middlewares.unshift(staticCacheObject)
 }

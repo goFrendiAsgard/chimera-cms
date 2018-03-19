@@ -10,7 +10,7 @@ const util = require('chimera-framework/lib/util.js')
 const mongo = require('chimera-framework/lib/mongo.js')
 const core = require('chimera-framework/lib/core.js')
 
-const configExceptionKeys = ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler', 'port']
+const configExceptionKeys = ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler', 'port', 'customStaticRoutes']
 
 module.exports = {
   hashPassword,
