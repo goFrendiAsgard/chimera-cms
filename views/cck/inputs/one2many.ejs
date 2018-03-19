@@ -57,7 +57,10 @@
       let fields = Object.keys(fieldInfo.fields)
       let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfo.fields, true)
       let html = cwGetOne2ManyTableRow({}, fieldInfo.fields, colWidth, actionWidth)
-      $('#<%= inputId %>Table').append(html)
+      // add to tbody
+      $('#<%= inputId %>Table>tbody').append(html)
+      // scroll tbody down
+      $('#<%= inputId %>Table>tbody').scrollTop($('#<%= inputId %>Table>tbody')[0].scrollHeight)
     })
 
     // Cut Row
@@ -106,7 +109,7 @@
       // build value
       let value = []
       let rowIndex = 0
-      $('#<%= inputId %>Table tr.row-data').each(function () {
+      $('#<%= inputId %>Table tbody tr.row-data').each(function () {
         let row = {}
         for (let fieldName in fieldInfo.fields) {
           if ($(this).children('td[fieldName="' + fieldName + '"]').length === 0) { continue }
