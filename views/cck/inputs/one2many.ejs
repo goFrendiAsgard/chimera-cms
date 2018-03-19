@@ -57,7 +57,10 @@
       let fields = Object.keys(fieldInfo.fields)
       let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfo.fields, true)
       let html = cwGetOne2ManyTableRow({}, fieldInfo.fields, colWidth, actionWidth)
-      $('#<%= inputId %>Table').append(html)
+      // add to tbody
+      $('#<%= inputId %>Table>tbody').append(html)
+      // scroll tbody down
+      $('#<%= inputId %>Table>tbody').scrollTop($('#<%= inputId %>Table>tbody')[0].scrollHeight)
     })
 
     // Cut Row
