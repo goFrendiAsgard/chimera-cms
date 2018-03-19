@@ -27,3 +27,11 @@ textarea.cw-textarea {
 .btn{
   margin-bottom: 5px;
 }
+.cw-table tbody {
+  /*height:300px;*/
+  overflow-y:auto; 
+  display:block;
+}
+.cw-table thead {
+  display:block;
+}
