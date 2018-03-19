@@ -56,7 +56,7 @@
 <% defaultColWidth = defaultColWidth < 1 ? 1 : defaultColWidth %>
 
 <% if (results.length > 0) { %>
-  <table class="table">
+  <table class="table cw-table">
     <thead>
       <tr class="d-flex">
         <% for (let fieldName of cckState.fieldNames) { %>
@@ -69,7 +69,7 @@
         <th class="col-<%= defaultColWidth %>">Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody style="max-height:500px;">
       <% for (let row of results) { %>
         <tr class="<%= row._deleted ? "table-danger" : "" %> d-flex">
           <!-- Content -->

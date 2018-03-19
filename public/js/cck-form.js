@@ -147,13 +147,13 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
       let fieldInfoList = response.metadata.fieldInfo
       let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, true)
       // build the table
-      let html = '<table class="table">'
+      let html = '<table class="table cw-table">'
       // table header
       html += '<thead>'
       html += cwGetTableHeader(fields, fieldInfoList, true)
       html += '</thead>'
       // table content
-      html += '<tbody>'
+      html += '<tbody style="max-height:300px;">'
       for (let row of results) {
         html += '<tr class="row-data d-flex">'
         for (let fieldName of fields) {
@@ -196,13 +196,13 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
   let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList)
   let html = ''
   if (value.length > 0) {
-    html += '<table class="table" style="font-size:small">'
+    html += '<table class="table cw-table" style="font-size:small">'
     // table header
     html += '<thead>'
     html += cwGetTableHeader(fields, fieldInfoList)
     html += '</thead>'
     // table content
-    html += '<tbody>'
+    html += '<tbody style="max-height:300px;">'
     for (let row of value) {
       html += '<tr class="d-flex">'
       for (let fieldName of fields) {
@@ -253,13 +253,13 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   let value = cwGetOne2ManyFieldValue(componentId)
   if (!Array.isArray(value)) { value = [] }
   let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, true)
-  let html = '<table id="' + componentId + 'Table" class="table">'
+  let html = '<table id="' + componentId + 'Table" class="table cw-table">'
   // table header
   html += '<thead>'
   html += cwGetTableHeader(fields, fieldInfoList, true)
   html += '</thead>'
   // table content
-  html += '<tbody>'
+  html += '<tbody style="max-height:300px;">'
   for (let row of value) {
     html += cwGetOne2ManyTableRow(row, fieldInfoList, colWidth, actionWidth)
   }
