@@ -120,24 +120,24 @@
     <ul class="pagination">
 
       <!-- prev -->
-      <li class="<%= pageNumber === 0 ? 'disabled' : '' %>">
-        <a href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber - 1) * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>" aria-label="Previous">
+      <li class="page-item <%= pageNumber === 0 ? 'disabled' : '' %>">
+        <a class="page-link" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber - 1) * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
 
       <!-- pages -->
       <% for (let i = 0; i < pageCount; i++) { %>
-        <li class="<%= i === pageNumber ? 'active' : '' %>">
-          <a href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= i * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
+        <li class="page-item <%= i === pageNumber ? 'active' : '' %>">
+          <a class="page-link" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= i * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">
             <%= i + 1%>
           </a>
         </li>
       <% } %>
 
       <!-- next -->
-      <li class="<%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
-        <a href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber + 1) * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>" aria-label="Next">
+      <li class="page-item <%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
+        <a class="page-link" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber + 1) * cckState.limit %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
