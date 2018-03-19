@@ -1,0 +1,8 @@
+verbose: 2
+vars:
+  dbName: 'myApp'
+ins:
+  - dbName
+do:
+  - "('-d', dbName, '-o', 'dbDump') -> mongodump"
+  - "('build', '-f', 'dockerfile', '-t', 'cms-docker', _chain_cwd) -> docker"

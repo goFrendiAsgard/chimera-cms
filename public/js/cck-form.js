@@ -51,6 +51,15 @@ function cwSwitchTab (tab) {
   $('*[data-tab="' + tab + '"], *[data-tab=""]').show()
 }
 
+function cwAfterLoadTable () {
+  cwInitAce()
+  cwAdjustDflexTables()
+  setTimeout(function () {
+    cwInitAce()
+    cwAdjustDflexTables()
+  }, 300)
+}
+
 function cwPreprocessValue (value) {
   if (typeof value === 'null' || typeof value === 'undefined' || (typeof value === 'string' && value.trim() === '')) {
     return '<i>[Not set]</i>'
@@ -93,6 +102,7 @@ function cwLoadMany2OnePresentationContainer(componentId, componentFieldInfo) {
       }
       html = cwPreprocessValue(html)
       $('#' + componentId + 'PresentationContainer').html(html)
+      cwAfterLoadTable()
     }
   })
 }
@@ -112,6 +122,7 @@ function cwGetColWidthAndActionWidth (fields, fieldInfoList, addAction) {
   unsetWidthFieldCount = unsetWidthFieldCount < 1 ? 1 : unsetWidthFieldCount
   unsetWidthGridGridCount = unsetWidthGridCount < 1 ? 1 : unsetWidthGridCount
   let colWidth = Math.floor(unsetWidthGridCount / unsetWidthFieldCount)
+  colWidth = colWidth < 1 ? 1 : colWidth
   let actionWidth = addAction ? 12 - (setWidth + (colWidth * unsetWidthFieldCount)) : 0
   actionWidth = actionWidth < 1 ? 1 : actionWidth
   return {colWidth, actionWidth}
@@ -175,6 +186,7 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
       // end of the table
       html += '</table>'
       $('#' + componentId + 'InputContainer').html(html)
+      cwAfterLoadTable()
     }
   })
 }
@@ -221,6 +233,7 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
   }
   html = cwPreprocessValue(html)
   $('#' + componentId + 'PresentationContainer').html(html)
+  cwAfterLoadTable()
 }
 
 function cwGetOne2ManyTableRow (row, fieldInfoList, colWidth, actionWidth) {
@@ -266,7 +279,7 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   html += '</tbody>'
   html += '</table>'
   $('#' + componentId + 'InputContainer').html(html)
-  cwInitAce()
+  cwAfterLoadTable()
 }
 
 $(document).ready(function () {

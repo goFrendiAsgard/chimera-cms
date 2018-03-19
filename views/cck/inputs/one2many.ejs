@@ -59,6 +59,7 @@
       let html = cwGetOne2ManyTableRow({}, fieldInfo.fields, colWidth, actionWidth)
       // add to tbody
       $('#<%= inputId %>Table>tbody').append(html)
+      cwAdjustDflexTables()
       // scroll tbody down
       $('#<%= inputId %>Table>tbody').scrollTop($('#<%= inputId %>Table>tbody')[0].scrollHeight)
     })
