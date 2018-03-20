@@ -1,4 +1,4 @@
-verbose: 1
+verbose: 2
 do:
 
   # get configuration from webConfig
@@ -31,10 +31,10 @@ do:
   - |(_chain_cwd + 'dockerDump/webConfig.json', webConfig) -> [$.util.writePrettyJsonFile]
 
   # build docker image
-  - do: |docker build -t chimera-cms .
+  - |docker build -t chimera-cms .
 
   # docker compose up
-  - do: |docker-compose up
+  - |docker-compose up
 
   # dump dbName
   # - |('-d', dbName, '-o', 'dockerDump') -> mongodump
