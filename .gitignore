@@ -1,4 +1,4 @@
-dbDump/
+dockerDump/
 package-lock.json
 webConfig.js
 webConfig.json
