@@ -1,4 +1,3 @@
-verbose: 2
 do:
 
   # get configuration from webConfig
@@ -30,14 +29,16 @@ do:
   - |({port: webPort, mongoUrl: 'mongodb://localhost:' + mongoPort + '/' + dbName}) --> webConfig
   - |(_chain_cwd + 'dockerDump/webConfig.json', webConfig) -> [$.util.writePrettyJsonFile]
 
+  # create dbImport.sh
+  # mongorestore --host 192.168.1.2 --port 3017 --db mongodevdb --username mongodevdb --password YourSecretPwd --drop /backup/dump
+  |('mongorestore --host localhost --port ' + mongoPort + ' --db ' + dbName + ' --drop /dockerDump') --> importCommand
+  |(_chain_cwd + 'dbImport.sh', importCommand) -> [$.loadJs('fs', 'writeFile')]
+
+  # dump dbName
+  - |('-d', dbName, '-o', 'dockerDump') -> mongodump
+
   # build docker image
   - |docker build -t chimera-cms .
 
   # docker compose up
   - |docker-compose up
-
-  # dump dbName
-  # - |('-d', dbName, '-o', 'dockerDump') -> mongodump
-
-  # build docker image
-  #- |('--build-arg', 'dbName=' + dbName, '-f', 'dockerfile', '-t', 'cms-docker', _chain_cwd) -> docker build
