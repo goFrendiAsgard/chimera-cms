@@ -9,6 +9,7 @@ RUN npm install
 COPY . .
 RUN cp dockerDump/webConfig.json webConfig.json
 RUN cp dockerDump/dbImport.sh dbImport.sh 
+RUN chmod 755 ./dbImport.sh
 RUN ./dbImport.sh
 #Expose port and start application
 EXPOSE 8080
