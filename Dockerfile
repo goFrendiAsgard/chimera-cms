@@ -1,8 +1,7 @@
+FROM mongo
 FROM node:carbon
 # Create app directory
 WORKDIR /usr/src/app
-# install mongodb (we will need mongo client)
-RUN sudo apt-get install mongodb
 # Install app dependencies
 COPY package*.json ./
 RUN npm install

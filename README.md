@@ -1,12 +1,35 @@
-# Chimera Web Application 
+# Chimera CMS
 
 ## Prerequisites
 Before run the application, you need to make sure you have following softwares installed in your computer:
-* Node.Js
-* npm
+* Node.Js + npm
 * Mongodb
 
-## TODO
+## Installation
+
+### Using chimera-init-cms 
+
+* Ensure you have Chimera-framework installed as global. You can install chimera-framework by invoking `npm install --global chimera-framework`
+* Ensure you have git installed. You can install git by invoking `apt-get install git`
+* Invoke `chimera-init-cms <your-project-name>`
+* Start the server from inside `<your-project-name>` directory
+  ```
+  cd <your-project-name>
+  npm start
+  ```
+
+### Using git clone
+
+* Ensure you have git installed. You can install git by invoking `apt-get install git`
+* Invoke `git clone git@github.com:goFrendiAsgard/chimera-cms.git`
+* Do migration and start the server from inside `chimera-cms` directory
+  ```bash
+  cd chimera-cms
+  npm run-script migrate up
+  npm start
+  ```
+
+## Commonly used command
 * Run migration by invoking `npm run-script migrate`
 * Start the server by invoking `npm start`
 
@@ -28,6 +51,18 @@ Before run the application, you need to make sure you have following softwares i
 * Run the test (`npm test`)
 
 ## Docker
-* Build docker image (`docker build -f dockerfile -t cms-docker .`)
-* Run docker image (`docker run --rm -it -p 3000:3000 cms-docker`)
-* For more information, you can refer to [this](https://blog.hasura.io/an-exhaustive-guide-to-writing-dockerfiles-for-node-js-web-apps-bbee6bd2f3c4) article.
+
+## Compose docker images
+* Install chimera-cms (refer to the installation guide)
+* Start the server and do any necessary modifications.
+* Ensure you have docker and docker-compose installed. You can docker and docker-compose by invoking `sudo apt-get install docker docker-compose`
+* Compose docker images by invoking `chimera build-docker.chiml`
+
+## Run docker containers
+* Perform `docker-compose up`
+
+## Stop docker containers
+* Perform `docker-compose down`
+
+## Reference
+* [Docker compose with Node.js and MongoDB](https://medium.com/@kahana.hagai/docker-compose-with-node-js-and-mongodb-dbdadab5ce0a)
