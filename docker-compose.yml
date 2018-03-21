@@ -1,13 +1,17 @@
 version: "2"
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: chimera-cms.dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - mongo
   mongo:
-    image: mongo
+    build:
+      context: .
+      dockerfile: chimera-db.dockerfile
     ports:
       - "27018:27018"
     volumes:

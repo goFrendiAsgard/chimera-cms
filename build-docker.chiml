@@ -36,4 +36,5 @@ do:
   - |('-d', dbName, '-o', 'dockerDump') -> mongodump
 
   # build docker image
-  - |docker build -t chimera-cms .
+  - |docker build -t chimera-db -f chimera-db.dockerfile .
+  - |docker build -t chimera-cms -f chimera-cms.dockerfile .
