@@ -9,6 +9,7 @@ services:
     depends_on:
       - mongo
   mongo:
+    #image: mongo
     build:
       context: .
       dockerfile: chimera-db.dockerfile
