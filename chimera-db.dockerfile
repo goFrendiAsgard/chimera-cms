@@ -5,5 +5,6 @@ WORKDIR /usr/src/app
 COPY . .
 RUN cp dockerDump/dbImport.sh dbImport.sh && chmod 755 dbImport.sh
 # Expose port and start application
-EXPOSE 27017
-CMD ['./dbImport.sh']
+EXPOSE 27018
+CMD ['ls']
+#CMD ['./dbImport.sh']
