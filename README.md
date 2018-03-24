@@ -55,14 +55,19 @@ Before run the application, you need to make sure you have following softwares i
 ## Compose docker images
 * Install chimera-cms (refer to the installation guide)
 * Start the server and do any necessary modifications.
-* Ensure you have docker and docker-compose installed. You can docker and docker-compose by invoking `sudo apt-get install docker docker-compose`
+* Ensure you have docker and docker-compose installed. You can compose those docker images by invoking `sudo apt-get install docker docker-compose`
 * Compose docker images by invoking `chimera build-docker.chiml`
 
 ## Run docker containers
-* Perform `docker-compose up`
+* Perform `docker-compose up -build`
 
 ## Stop docker containers
 * Perform `docker-compose down`
+
+## Access and run chimera-db-seed
+* Run `docker container ls` to see list of containers
+* Run `docker exec -it <container-id> bash`, where `<container-id>` is container id of `chimera-mongo`
+* Run `./dbImport.sh`
 
 ## Reference
 * [Docker compose with Node.js and MongoDB](https://medium.com/@kahana.hagai/docker-compose-with-node-js-and-mongodb-dbdadab5ce0a)

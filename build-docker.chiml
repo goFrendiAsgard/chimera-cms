@@ -10,31 +10,16 @@ do:
   - |(mongoUrl, '/') -> {$.split} -> mongoUrlPart
   - |(mongoUrlPart[mongoUrlPart.length - 1]) --> dbName
 
-  # get ymlObj from docker-compose.yml
-  - |(_chain_cwd + 'docker-compose.yml', 'utf8') -> [$.loadJs('fs', 'readFile')] -> ymlContent
-  - |(ymlContent) -> {$.loadJs('js-yaml', 'safeLoad')} -> ymlObj
-
-  # get mongoPort
-  - |(ymlObj.services.mongo.ports[0], ':') -> {$.split} -> mongoPortPart
-  - |(mongoPortPart[1]) --> mongoPort
-
-  # get webPort
-  - |(ymlObj.services.web.ports[0], ':') -> {$.split} -> webPortPart
-  - |(webPortPart[1]) --> webPort
-
-  # create webConfig.json
+  # create /dockerDump
   - |('-p', _chain_cwd + 'dockerDump') -> mkdir
-  - |({port: webPort, mongoUrl: 'mongodb://localhost:' + mongoPort + '/' + dbName}) --> webConfig
-  - |(_chain_cwd + 'dockerDump/webConfig.json', webConfig) -> [$.util.writePrettyJsonFile]
 
   # create dbImport.sh
-  # mongorestore --host 192.168.1.2 --port 3017 --db mongodevdb --username mongodevdb --password YourSecretPwd --drop /backup/dump
-  - |('mongorestore --host localhost --port ' + mongoPort + ' --db ' + dbName + ' --drop /dockerDump') --> importCommand
+  - |('mongorestore --host localhost --port 27017 --db ' + dbName + ' --drop /dockerDump') --> importCommand
   - |(_chain_cwd + '/dockerDump/dbImport.sh', importCommand) -> [$.loadJs('fs', 'writeFile')]
 
   # dump dbName
   - |('-d', dbName, '-o', 'dockerDump') -> mongodump
 
   # build docker image
-  - |docker build -t chimera-db -f chimera-db.dockerfile .
-  - |docker build -t chimera-cms -f chimera-cms.dockerfile .
+  #- |docker build -t chimera-db -f chimera-db.dockerfile .
+  #- |docker build -t chimera-cms -f chimera-cms.dockerfile .
