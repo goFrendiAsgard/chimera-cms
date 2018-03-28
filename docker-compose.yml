@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: chimera-cms.dockerfile
     ports:
-      - "3000:8080"
+      - "3000:3000"
     depends_on:
       - chimera-mongo
   chimera-mongo:
@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: chimera-mongo.dockerfile
     ports:
-      - "27017:27018"
+      - "27018:27018"
     volumes:
       - data-volume:/data/db
 volumes:

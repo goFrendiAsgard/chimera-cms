@@ -14,7 +14,7 @@ do:
   - |('-p', _chain_cwd + 'dockerDump') -> mkdir
 
   # create dbImport.sh
-  - |('mongorestore --host localhost --port 27017 --db ' + dbName + ' --drop /dockerDump') --> importCommand
+  - |('mongorestore --host localhost --port 27017 --db ' + dbName + ' --drop ./dockerDump') --> importCommand
   - |(_chain_cwd + '/dockerDump/dbImport.sh', importCommand) -> [$.loadJs('fs', 'writeFile')]
 
   # dump dbName
