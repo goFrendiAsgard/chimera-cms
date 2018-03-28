@@ -1,0 +1,22 @@
+version: "2"
+services:
+  chimera-cms:
+    container_name: chimera-cms
+    build:
+      context: .
+      dockerfile: chimera-cms.dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - chimera-mongo
+  chimera-mongo:
+    container_name: chimera-mongo
+    build:
+      context: .
+      dockerfile: chimera-mongo.dockerfile
+    ports:
+      - "27018:27018"
+    volumes:
+      - data-volume:/data/db
+volumes:
+  data-volume:

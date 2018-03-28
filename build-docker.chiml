@@ -1,8 +1,25 @@
-verbose: 2
-vars:
-  dbName: 'myApp'
-ins:
-  - dbName
 do:
-  - "('-d', dbName, '-o', 'dbDump') -> mongodump"
-  - "('build', '-f', 'dockerfile', '-t', 'cms-docker', _chain_cwd) -> docker"
+
+  # get configuration from webConfig
+  - |{$.loadJs(_chain_cwd + 'helper.js', 'getWebConfig')} -> webConfig
+
+  # get mongoUrl
+  - |(webConfig.mongoUrl) --> mongoUrl
+
+  # get dbName
+  - |(mongoUrl, '/') -> {$.split} -> mongoUrlPart
+  - |(mongoUrlPart[mongoUrlPart.length - 1]) --> dbName
+
+  # create /dockerDump
+  - |('-p', _chain_cwd + 'dockerDump') -> mkdir
+
+  # create dbImport.sh
+  - |('mongorestore --host localhost --port 27017 --db ' + dbName + ' --drop ./dockerDump') --> importCommand
+  - |(_chain_cwd + '/dockerDump/dbImport.sh', importCommand) -> [$.loadJs('fs', 'writeFile')]
+
+  # dump dbName
+  - |('-d', dbName, '-o', 'dockerDump') -> mongodump
+
+  # build docker image
+  #- |docker build -t chimera-db -f chimera-db.dockerfile .
+  #- |docker build -t chimera-cms -f chimera-cms.dockerfile .
