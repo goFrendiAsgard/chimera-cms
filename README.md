@@ -52,22 +52,26 @@ Before run the application, you need to make sure you have following softwares i
 
 ## Docker
 
-## Compose docker images
-* Install chimera-cms (refer to the installation guide)
-* Start the server and do any necessary modifications.
-* Ensure you have docker and docker-compose installed. You can compose those docker images by invoking `sudo apt-get install docker docker-compose`
-* Compose docker images by invoking `chimera build-docker.chiml`
-
 ## Run docker containers
-* Perform `docker-compose up -build`
+* Install chimera-cms (refer to the installation guide)
+* Ensure you have docker and docker-compose installed. You can compose those docker images by invoking `sudo apt-get install docker docker-compose`
+* Perform `docker-compose up`
+
+## Migration
+### Using container id
+* Run `docker container ls` to see list of containers, take note for either `CONTAINER ID` or `NAMES`
+* Run `docker exec -it <container-id-or-name> bash`, where `<container-id-or-name>` is either container id or container name of `chimeracms_cms`
+* Run `node migrate.js`
 
 ## Stop docker containers
 * Perform `docker-compose down`
 
-## Access and run chimera-db-seed
-* Run `docker container ls` to see list of containers
-* Run `docker exec -it <container-id> bash`, where `<container-id>` is container id of `chimera-mongo`
-* Run `./dbImport.sh`
+## Possible solutions
+### Change connection string
+* Run `docker inspect mongo`, take note the `IPAddress`
+* Run `docker exec -it <cms-conteiner-id> bash`
+* Run `vim webConfig.json` or `nano webConfig.json`
+* Edit the mongoUrl into `mongodb://<mongo-IPAddress>:27017/test`
 
 ## Reference
 * [Docker compose with Node.js and MongoDB](https://medium.com/@kahana.hagai/docker-compose-with-node-js-and-mongodb-dbdadab5ce0a)

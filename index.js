@@ -25,6 +25,7 @@ webConfig.vars.$.runChain = helper.runChain
 webConfig.middlewares = 'middlewares' in webConfig ? webConfig.middlewares : []
 webConfig.middlewares.unshift(helper.jwtMiddleware)
 
+// set published static file routes
 for (let publishedPath in webConfig.customStaticRoutes) {
   let physicalPath = webConfig.customStaticRoutes[publishedPath]
   let staticObject = {}
