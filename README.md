@@ -72,5 +72,10 @@ Before run the application, you need to make sure you have following softwares i
 * Run `vim webConfig.json` or `nano webConfig.json`
 * Edit the mongoUrl into `mongodb://<mongo-IPAddress>:27017/test`
 
+## Publishing a docker image
+* Run `docker build -t username/repo -f cms.dockerfile .`
+* Run `docker login`
+* Run `docker push username/repo`
+
 ## Reference
 * [Docker compose with Node.js and MongoDB](https://medium.com/@kahana.hagai/docker-compose-with-node-js-and-mongodb-dbdadab5ce0a)
