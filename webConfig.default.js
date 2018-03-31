@@ -52,10 +52,11 @@ const webConfig = {
   startupHook: path.join(chainPath, 'core.hook.startup.js'),
   beforeRequestHook: path.join(chainPath, 'core.hook.beforeRequest.js'),
   afterRequestHook: path.join(chainPath, 'core.hook.afterRequest.js'),
+  fallbackHook: path.join(chainPath, 'core.fallback.js'),
   // list of express middlewares function
   middlewares: [],
   // mongoUrl database
-  mongoUrl: 'mongodb://localhost/chimera-web-app',
+  mongoUrl: 'mongodb://localhost/chimera-cms',
   // verbosity level
   verbose: 0,
   // error view tempalate

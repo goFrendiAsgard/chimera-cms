@@ -1,0 +1,51 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Error</title>
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Ops, something went wrong</h1>
+    <h2>What happened</h2>
+    <p>
+      Chimera-CMS rely on mongodb to store configurations and routes. Right now, Chimera-CMS cannot retrieve any database migration
+      information
+    </p>
+    <h2>What you can do</h2>
+    <ul>
+      <li>Make sure your mongoUrl is correct. Typically, mongoUrl is located on
+        <code>webConfig.json</code>
+      </li>
+      <li>Make sure you have perform migration. To perform migration, invoke
+        <code>node migrate.js up</code>
+      </li>
+      <li>If none of them works, you can:
+        <ul>
+          <li>Visit
+            <a target="blank" href="https://gitter.im/chimera-framework/Lobby">chimera-framework gitter room</a>
+          </li>
+          <li>Open
+            <a target="blank" href="https://github.com/goFrendiAsgard/chimera-cms/issues">an issue</a> in Chimera-CMS repository</li>
+        </ul>
+      </li>
+    </ul>
+    <h2>Are you running our docker container?</h2>
+    <p>
+      If you are running a docker container, you can invoke
+      <code>docker exec -it &lt;container-id-or-name&gt; bash</code> to run bash. You can then perform the necessary steps to fix
+      the problem.
+    </p>
+    <p>
+      We've already install
+      <code>vim</code> and
+      <code>nano</code> text-editor. You can invoke
+      <code>vim webConfig.json</code> or
+      <code>nano webConfig.json</code> to edit
+      <code>webConfig.json</code>.
+    </p>
+  </div>
+</body>

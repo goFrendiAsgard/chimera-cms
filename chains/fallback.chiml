@@ -1,6 +1,0 @@
-ins: state
-out: response
-do:
-  - response.errorMessage <-- 'Database Connection Failed' 
-  - response.status <-- 500
-  
