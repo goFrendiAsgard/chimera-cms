@@ -10,9 +10,9 @@ do:
         do:
 
           # ask superAdmin username and password
-          - "('SuperAdmin username: ') -> [$.prompt] -> superAdminUsername"
-          - "('SuperAdmin email: ') -> [$.prompt] -> superAdminEmail"
-          - "('SuperAdmin password: ') -> [$.prompt] -> superAdminPassword"
+          - "('SuperAdmin username:') -> [$.prompt] -> superAdminUsername"
+          - "('SuperAdmin email   :') -> [$.prompt] -> superAdminEmail"
+          - "('SuperAdmin password:') -> [$.prompt] -> superAdminPassword"
 
           # create hashed object and salt
           - "(superAdminPassword) -> {$.helper.hashPassword} -> hashObject"

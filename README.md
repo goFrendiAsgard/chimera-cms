@@ -58,7 +58,6 @@ Before run the application, you need to make sure you have following softwares i
 * Perform `docker-compose up`
 
 ## Migration
-### Using container id
 * Run `docker container ls` to see list of containers, take note for either `CONTAINER ID` or `NAMES`
 * Run `docker exec -it <container-id-or-name> bash`, where `<container-id-or-name>` is either container id or container name of `chimeracms_cms`
 * Run `node migrate.js`
@@ -66,10 +65,10 @@ Before run the application, you need to make sure you have following softwares i
 ## Stop docker containers
 * Perform `docker-compose down`
 
-## Possible solutions
+## Possible solutions (if something doesn't work)
 ### Change connection string
 * Run `docker inspect mongo`, take note the `IPAddress`
-* Run `docker exec -it <cms-conteiner-id> bash`
+* Run `docker exec -it <cms-container-id-or-name> bash`
 * Run `vim webConfig.json` or `nano webConfig.json`
 * Edit the mongoUrl into `mongodb://<mongo-IPAddress>:27017/test`
 

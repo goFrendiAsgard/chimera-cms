@@ -14,12 +14,14 @@ module.exports = (ins, vars, callback) => {
         route: '/',
         method: 'all',
         groups: ['loggedIn', 'loggedOut'],
-        chain: path.join(state.config.chainPath, 'fallback.chiml')
+        chain: path.join(state.config.chainPath, 'index.chiml')
       }]
-      state.fallback = true
+      state.response.status = 500
+      state.response.errorMessage = 'Database Connection Failed'
       return callback(null, state)
     }
     dbTest.close()
+    // inject state
     $.helper.injectState(state, callback)
   })
 }

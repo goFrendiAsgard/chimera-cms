@@ -10,7 +10,7 @@ const util = require('chimera-framework/lib/util.js')
 const mongo = require('chimera-framework/lib/mongo.js')
 const core = require('chimera-framework/lib/core.js')
 
-const configExceptionKeys = ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler', 'port', 'customStaticRoutes']
+const configExceptionKeys = ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler', 'port', 'customStaticRoutes', 'fallbackHook']
 
 module.exports = {
   hashPassword,
@@ -190,8 +190,14 @@ function mongoExecute (collectionName, fn, ...args) {
 
 function injectState (state, callback) {
   let cck = require('./cck.js')
-  let configDocs, routeDocs
+  let configDocs, routeDocs, migrationDocs
   let dbActions = [
+    (next) => {
+      mongoExecute('chimera_migrations', 'find', {}, (error, docs) => {
+        migrationDocs = docs
+        next(error, docs)
+      })
+    },
     (next) => {
       mongoExecute('web_configs', 'find', {}, (error, docs) => {
         configDocs = docs
@@ -208,6 +214,14 @@ function injectState (state, callback) {
   async.parallel(dbActions, (error, result) => {
     if (error) {
       return callback(error, state)
+    }
+    if (migrationDocs.length === 0) {
+      routeDocs.push({
+        route: '/',
+        method: 'all',
+        chain: state.config.fallbackHook,
+        groups: ['loggedIn', 'loggedOut']
+      })
     }
     // render configuration from database
     let configActions = []

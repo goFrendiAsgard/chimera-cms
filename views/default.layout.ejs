@@ -11,19 +11,21 @@
     <header>
       <%- partial.largeBanner %>
     </header>
+    <% let leftWidgetExists = partial.leftWidget && partial.leftWidget.trim().length > 0 %>
+    <% let rightWidgetExists = partial.rightWidget && partial.rightWidget.trim().length > 0 %>
     <main role="main" class="container">
       <div class="row">
-        <% if (partial.leftWidget.trim().length > 0) { %>
+        <% if (leftWidgetExists) { %>
           <div class="col-sm-3">
             <%- partial.leftWidget %>
           </div>
         <% } %>
-        <div class="<%= partial.leftWidget && partial.rightWidget? 'col-sm-6': (partial.leftWidget || partial.rightWidget? 'col-sm-9': 'col-sm-12')%>">
+        <div class="<%= leftWidgetExists && rightWidgetExists? 'col-sm-6': (leftWidgetExists || rightWidgetExists? 'col-sm-9': 'col-sm-12')%>">
           <%- partial.smallBanner %>
           <%- content %>
           <%- partial.smallFooter %>
         </div>
-        <% if (partial.rightWidget.trim().length > 0) { %>
+        <% if (rightWidgetExists) { %>
           <div class="col-sm-3">
             <%- partial.rightWidget %>
           </div>
