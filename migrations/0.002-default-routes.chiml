@@ -7,7 +7,7 @@ do:
             - name: 'Landing page'
               route: '/'
               method: 'all'
-              chain: '<%= chainPath %>index.chiml'
+              chain: '<%= chainPath %>index.js'
               groups: ['loggedIn', 'loggedOut']
               defaultRoute: 1
             - name: 'Login API'
