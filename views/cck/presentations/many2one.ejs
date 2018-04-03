@@ -1,6 +1,6 @@
 <% let inputId = fieldName + (new Date()).getTime() + Math.floor((Math.random() * 100000)) %>
 <input id="<%= inputId %>" rowId="<%= row._id %>" type="hidden" value="<%= value %>" />
-<div id="<%= inputId %>PresentationContainer" class="row"><%= value %></div>
+<div id="<%= inputId %>PresentationContainer" width="100%"><%= value %></div>
 
 <script>
   $(document).ready(function () {
