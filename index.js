@@ -1,7 +1,6 @@
 'use strict'
 
 const staticCache = require('express-static-cache')
-const path = require('path')
 const process = require('process')
 const web = require('chimera-framework/lib/web.js')
 const util = require('chimera-framework/lib/util.js')
@@ -11,7 +10,7 @@ const express = require('express')
 
 // load webConfig
 let webConfig = helper.getWebConfig()
-const maxAgeOption = {maxAge: webConfig.staticMaxAge || (365 * 24 * 60 * 60) }
+const maxAgeOption = {maxAge: webConfig.staticMaxAge || (365 * 24 * 60 * 60)}
 const port = webConfig.port || process.env.PORT || 3000
 
 // add `helper`, `cck`, and helper.runChain to webConfig.vars.$
