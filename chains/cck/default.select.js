@@ -4,6 +4,7 @@ module.exports = (ins, vars, callback) => {
 
   let collectionName = cckState.schema.collectionName
   let user = cckState.auth.id
+  let fields = cckState.fields
   let limit = parseInt(cckState.limit)
   let skip = parseInt(cckState.offset)
   let showHistory = parseInt(cckState.showHistory)
@@ -11,7 +12,7 @@ module.exports = (ins, vars, callback) => {
 
   let dbConfig = {collectionName, dbOption: {excludeDeleted, showHistory, user}}
   let filter = $.cck.getCombinedFilter(cckState.filter, cckState.data)
-  $.helper.mongoExecute(dbConfig, 'find', filter, {limit, skip}, (error, results) => {
+  $.helper.mongoExecute(dbConfig, 'find', filter, {limit, skip, fields}, (error, results) => {
     if (error) {
       return callback(error, null)
     }
