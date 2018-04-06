@@ -36,7 +36,6 @@ const defaultInitialState = {
     userMessage: '',
     developerMessage: ''
   },
-  // state: {},
   schema: {},
   q: null,
   k: null,
