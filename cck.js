@@ -234,10 +234,12 @@ function getRoutes () {
   let chainPath = webConfig.chainPath
   return [
     {route: '/api/:version/:schemaName', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut']},
+    {route: '/api/:version/:schemaName.json', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/api/:version/:schemaName', method: 'post', chain: path.join(chainPath, 'cck/core.insert.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/api/:version/:schemaName', method: 'put', chain: path.join(chainPath, 'cck/core.update.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/api/:version/:schemaName', method: 'delete', chain: path.join(chainPath, 'cck/core.delete.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/api/:version/:schemaName/:id', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut']},
+    {route: '/api/:version/:schemaName.json/:id', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/api/:version/:schemaName/:id', method: 'put', chain: path.join(chainPath, 'cck/core.update.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/api/:version/:schemaName/:id', method: 'delete', chain: path.join(chainPath, 'cck/core.delete.js'), groups: ['loggedIn', 'loggedOut']},
     {route: '/data/:schemaName', method: 'all', chain: path.join(chainPath, 'cck/core.show.js'), groups: ['loggedIn', 'loggedOut']},
@@ -285,12 +287,17 @@ function getQ (request) {
   return q
 }
 
-function getK (request) {
-  return getFromRequest(request, '_k')
-}
-
-function getIncludeFieldInfo (request) {
-  return getFromRequest(request, '_includeFieldInfo')
+function getFields (request) {
+  let fields = getFromRequest(request, 'fields')
+  if (!fields) {
+    return {}
+  }
+  let fieldNames = fields.split(',')
+  let projection = {}
+  for (let fieldName of fieldNames) {
+    projection[fieldName] = 1
+  }
+  return projection
 }
 
 function getFilter (q, k, fieldNames, documentId) {
@@ -322,12 +329,13 @@ function getInitialCckState (state, callback) {
     let apiVersion = request.params.version ? request.params.version : null
     let schemaName = request.params.schemaName ? request.params.schemaName : null
     let documentId = request.params.id ? helper.getNormalizedDocId(request.params.id) : null
-    let q = getQ(request)
-    let k = getK(request)
-    let includeFieldInfo = getIncludeFieldInfo(request)
     let auth = request.auth
     let limit = parseInt(getFromRequest(request, 'limit', 50))
     let offset = parseInt(getFromRequest(request, 'offset', 0))
+    let q = getQ(request)
+    let fields = getFields(request)
+    let k = getFromRequest(request, '_k')
+    let includeFieldInfo = getFromRequest(request, '_includeFieldInfo')
     let excludeDeleted = parseInt(getFromRequest(request, '_excludeDeleted', 1))
     let showHistory = parseInt(getFromRequest(request, '_showHistory', 0))
     let authId = 'id' in request.auth ? request.auth.id : ''
@@ -345,7 +353,7 @@ function getInitialCckState (state, callback) {
         data = helper.getParsedNestedJson(data)
         let caption = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
         // compose initialState
-        let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
+        let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, fields, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
         return executeInitChain(initialState, state, error, callback)
       })
     })
