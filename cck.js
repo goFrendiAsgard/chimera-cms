@@ -446,7 +446,6 @@ function getPreprocessedSingleData (data, files, fieldNames, config) {
 }
 
 function getSingleData (request, fieldNames, config, callback) {
-  let uploadPath = getUploadPath(config)
   let rawData = util.getPatchedObject(request.query, request.body)
   let rawFiles = request.files
   let {data, actions} = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
@@ -456,7 +455,6 @@ function getSingleData (request, fieldNames, config, callback) {
 }
 
 function getMultipleData (request, fieldNames, config, callback) {
-  let uploadPath = getUploadPath(config)
   let allData = []
   let allActions = []
   for (let i = 0; i < request.body.length; i++) {
