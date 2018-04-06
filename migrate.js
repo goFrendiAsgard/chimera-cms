@@ -15,7 +15,7 @@ function migrate (action, version, customWebConfig, callback) {
   // load webConfig
   if (util.isRealObject(customWebConfig)) {
     webConfig = util.getPatchedObject(webConfig, customWebConfig)
-  } 
+  }
   // add `helper` and `cck` to webConfig.vars.$
   webConfig.vars = 'vars' in webConfig ? webConfig.vars : {}
   webConfig.vars.$ = '$' in webConfig.vars ? webConfig.vars.$ : {}
@@ -32,7 +32,7 @@ function migrate (action, version, customWebConfig, callback) {
       }
     }
     if (util.isFunction(callback)) {
-      callback (error, result)
+      callback(error, result)
     }
   })
 }

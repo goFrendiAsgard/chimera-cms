@@ -1,6 +1,6 @@
 /* eslint-env jquery */
-function cwAdjustDflexTables() {
-  $('tr.d-flex').each(function() {
+function cwAdjustDflexTables () {
+  $('tr.d-flex').each(function () {
     let allowedWidth = $(this).width()
     let totalWidth = 0
     $(this).children('th, td').each(function () {

@@ -18,7 +18,6 @@ const customStaticRoutes = {
   '/@icon': path.join(__dirname, 'node_modules/@icon')
 }
 
-
 function socketHandler (socket) {
   socket.on('chat-send', (data) => {
     socket.emit('chat-broadcast', data) // send data back to sender

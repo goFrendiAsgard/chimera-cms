@@ -90,7 +90,7 @@ const defaultFieldData = {
   options: {}
 }
 
-function getPreprocessedCckStateData(cckState, processor) {
+function getPreprocessedCckStateData (cckState, processor) {
   if (util.isRealObject(cckState.data)) {
     cckState.data = processor(cckState.data, cckState)
   } else if (util.isArray(cckState.data)) {
@@ -101,7 +101,7 @@ function getPreprocessedCckStateData(cckState, processor) {
   return cckState
 }
 
-function getPreprocessedCckStateResult(cckState, processor) {
+function getPreprocessedCckStateResult (cckState, processor) {
   if ('result' in cckState.result) {
     cckState.result.result = processor(cckState.result.result, cckState)
   } else if ('results' in cckState.result) {
@@ -112,7 +112,7 @@ function getPreprocessedCckStateResult(cckState, processor) {
   return cckState
 }
 
-function renderFieldTemplate(schemaInfo, fieldName, templateNames, row) {
+function renderFieldTemplate (schemaInfo, fieldName, templateNames, row) {
   let fieldInfo = schemaInfo.fields[fieldName]
   let realTemplateName
   if (util.isArray(templateNames)) {
@@ -129,11 +129,11 @@ function renderFieldTemplate(schemaInfo, fieldName, templateNames, row) {
   return ejs.render(fieldInfo[realTemplateName], { row, fieldName, fieldInfo, value })
 }
 
-function getSchemaCreationData(row) {
+function getSchemaCreationData (row) {
   return util.getPatchedObject(defaultSavedSchemaData, row)
 }
 
-function createSchema(config, callback) {
+function createSchema (config, callback) {
   let data
   if (util.isArray(config)) {
     data = []
@@ -146,7 +146,7 @@ function createSchema(config, callback) {
   return helper.mongoExecute(cckCollectionName, 'insert', data, callback)
 }
 
-function removeSchema(config, callback) {
+function removeSchema (config, callback) {
   let filterKeys = ['_id', 'name']
   let filter = {}
   if (util.isArray(config)) {
@@ -161,7 +161,7 @@ function removeSchema(config, callback) {
   return helper.mongoExecute(cckCollectionName, 'remove', filter, callback)
 }
 
-function getRealTemplateValue(template, config) {
+function getRealTemplateValue (template, config) {
   try {
     let value = ejs.render(template, config)
     if (fs.existsSync(value)) {
@@ -174,7 +174,7 @@ function getRealTemplateValue(template, config) {
   }
 }
 
-function getCompleteSchemaFields(schemaFields, config) {
+function getCompleteSchemaFields (schemaFields, config) {
   for (let field in schemaFields) {
     let fieldData = util.getPatchedObject(defaultFieldData, schemaFields[field])
     // define default caption
@@ -194,7 +194,7 @@ function getCompleteSchemaFields(schemaFields, config) {
   return schemaFields
 }
 
-function preprocessSchema(schema, config) {
+function preprocessSchema (schema, config) {
   schema = getTrimmedObject(schema)
   config = util.isNullOrUndefined(config) ? helper.getWebConfig() : config
   let completeSchema = util.getPatchedObject(defaultSchemaData, schema)
@@ -216,7 +216,7 @@ function preprocessSchema(schema, config) {
   return completeSchema
 }
 
-function findSchema(filter, config, callback) {
+function findSchema (filter, config, callback) {
   return helper.mongoExecute(cckCollectionName, 'find', filter, function (error, result) {
     if (error) {
       return callback(error, null)
@@ -229,7 +229,7 @@ function findSchema(filter, config, callback) {
   })
 }
 
-function getRoutes() {
+function getRoutes () {
   let webConfig = helper.getWebConfig()
   let chainPath = webConfig.chainPath
   return [
@@ -250,7 +250,7 @@ function getRoutes() {
   ]
 }
 
-function getCombinedFilter(filter1, filter2) {
+function getCombinedFilter (filter1, filter2) {
   if (!filter1) { filter1 = {} }
   if (!filter2) { filter2 = {} }
   let filter1KeyCount = Object.keys(filter1).length
@@ -267,7 +267,7 @@ function getCombinedFilter(filter1, filter2) {
   return { $and: [filter1, filter2] }
 }
 
-function getFromRequest(request, key, defaultValue = null) {
+function getFromRequest (request, key, defaultValue = null) {
   if (key in request.query) {
     return request.query[key]
   }
@@ -277,7 +277,7 @@ function getFromRequest(request, key, defaultValue = null) {
   return defaultValue
 }
 
-function getQ(request) {
+function getQ (request) {
   let q = getFromRequest(request, '_q')
   if (util.isRealObject(q) || util.isArray(q)) {
     return JSON.stringify(q)
@@ -285,15 +285,15 @@ function getQ(request) {
   return q
 }
 
-function getK(request) {
+function getK (request) {
   return getFromRequest(request, '_k')
 }
 
-function getIncludeFieldInfo(request) {
+function getIncludeFieldInfo (request) {
   return getFromRequest(request, '_includeFieldInfo')
 }
 
-function getFilter(q, k, fieldNames, documentId) {
+function getFilter (q, k, fieldNames, documentId) {
   let queryFilter = helper.getObjectFromJson(q)
   let keywordFilter = {}
   if (k) {
@@ -312,7 +312,7 @@ function getFilter(q, k, fieldNames, documentId) {
   return filter
 }
 
-function getInitialCckState(state, callback) {
+function getInitialCckState (state, callback) {
   try {
     let { config, request } = state
     let basePath = config.basePath ? config.basePath : null
@@ -354,7 +354,7 @@ function getInitialCckState(state, callback) {
   }
 }
 
-function getSchemaWithDeleted(schema, config, excludeDeleted) {
+function getSchemaWithDeleted (schema, config, excludeDeleted) {
   if (excludeDeleted === 0) {
     let options = { 0: 'Not Deleted', 1: 'Deleted' }
     let inputTemplate = getRealTemplateValue('<%- cck.input.option %>', config)
@@ -368,7 +368,7 @@ function getSchemaWithDeleted(schema, config, excludeDeleted) {
   return schema
 }
 
-function executeInitChain(initialState, state, error, callback) {
+function executeInitChain (initialState, state, error, callback) {
   if (initialState.schema.initChain) {
     return helper.runChain(initialState.schema.initChain, initialState, state, (error, newInitialState) => {
       callback(error, newInitialState)
@@ -377,7 +377,7 @@ function executeInitChain(initialState, state, error, callback) {
   return callback(error, initialState)
 }
 
-function getUnset(data) {
+function getUnset (data) {
   let unset = {}
   for (let key in data) {
     if (data[key] === '') {
@@ -388,7 +388,7 @@ function getUnset(data) {
   return unset
 }
 
-function getTrimmedObject(obj) {
+function getTrimmedObject (obj) {
   obj = util.getDeepCopiedObject(obj)
   if (util.isRealObject(obj)) {
     for (let key in obj) {
@@ -406,15 +406,15 @@ function getTrimmedObject(obj) {
   return obj
 }
 
-function getFileName(fileName) {
+function getFileName (fileName) {
   return Date.now() + fileName
 }
 
-function getUploadPath(config) {
+function getUploadPath (config) {
   return path.join(config.staticPath, 'uploads') + '/'
 }
 
-function getPreprocessedSingleData(data, files, fieldNames, config) {
+function getPreprocessedSingleData (data, files, fieldNames, config) {
   let actions = []
   let uploadPath = getUploadPath(config)
   data = helper.getSubObject(data, fieldNames)
@@ -445,7 +445,7 @@ function getPreprocessedSingleData(data, files, fieldNames, config) {
   return { data, actions }
 }
 
-function getSingleData(request, fieldNames, config, callback) {
+function getSingleData (request, fieldNames, config, callback) {
   let rawData = util.getPatchedObject(request.query, request.body)
   let rawFiles = request.files
   let { data, actions } = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
@@ -454,7 +454,7 @@ function getSingleData(request, fieldNames, config, callback) {
   })
 }
 
-function getMultipleData(request, fieldNames, config, callback) {
+function getMultipleData (request, fieldNames, config, callback) {
   let allData = []
   let allActions = []
   for (let i = 0; i < request.body.length; i++) {
@@ -476,14 +476,14 @@ function getMultipleData(request, fieldNames, config, callback) {
   })
 }
 
-function getData(request, fieldNames, config, callback) {
+function getData (request, fieldNames, config, callback) {
   if (util.isArray(request.body)) {
     return getMultipleData(request, fieldNames, config, callback)
   }
   return getSingleData(request, fieldNames, config, callback)
 }
 
-function getAllowedFieldNames(fieldNames) {
+function getAllowedFieldNames (fieldNames) {
   let allowedFieldNames = util.getDeepCopiedObject(fieldNames)
   for (let field of ['_id', '_muser', '_mtime', '_deleted', '_history']) {
     if (allowedFieldNames.indexOf(field) < 0) {
@@ -493,7 +493,7 @@ function getAllowedFieldNames(fieldNames) {
   return allowedFieldNames
 }
 
-function getPresentationDocument(document, fieldNames, callback) {
+function getPresentationDocument (document, fieldNames, callback) {
   let allowedFieldNames = getAllowedFieldNames(fieldNames)
   if (util.isArray(document)) {
     let actions = []
@@ -517,7 +517,7 @@ function getPresentationDocument(document, fieldNames, callback) {
   return getSinglePresentationDocument(document, allowedFieldNames, callback)
 }
 
-function getSinglePresentationDocument(row, allowedFieldNames, callback) {
+function getSinglePresentationDocument (row, allowedFieldNames, callback) {
   let newRow = helper.getSubObject(row, allowedFieldNames)
   return callback(null, newRow)
 }

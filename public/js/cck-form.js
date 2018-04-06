@@ -11,7 +11,7 @@ function cwInitAce () {
       let mode = textarea.data('editor') ? textarea.data('editor') : 'ejs'
       let editDiv = $('<div>', {
         position: 'absolute',
-        //width: textarea.width(),
+        // width: textarea.width(),
         height: textarea.height(),
         'class': textarea.attr('class')
       }).insertBefore(textarea)
@@ -23,7 +23,7 @@ function cwInitAce () {
         showGutter: true,
         fontSize: 14,
         minLines: 5,
-        maxLines: 35,
+        maxLines: 35
       })
       editor.$blockScrolling = Infinity
       editor.setTheme('ace/theme/github')
@@ -34,7 +34,7 @@ function cwInitAce () {
       editor.getSession().on('change', function () {
         textarea.val(editor.getSession().getValue())
       })
-      textarea.change(function(event) {
+      textarea.change(function (event) {
         editor.setValue($(this).val(), 1)
       })
       textarea.attr('rendered', '1')
@@ -67,7 +67,7 @@ function cwPreprocessValue (value) {
   return value
 }
 
-function cwLoadMany2OnePresentationContainer(componentId, componentFieldInfo) {
+function cwLoadMany2OnePresentationContainer (componentId, componentFieldInfo) {
   let {ref, keyField, fields} = componentFieldInfo
   let value = $('#' + componentId).val()
   let q = {}
@@ -109,7 +109,7 @@ function cwLoadMany2OnePresentationContainer(componentId, componentFieldInfo) {
 
 function cwGetColWidthAndActionWidth (fields, fieldInfoList, addAction) {
   let unsetWidthFieldCount = fields.length
-  let unsetWidthGridCount = addAction? 11 : 12
+  let unsetWidthGridCount = addAction ? 11 : 12
   let setWidth = 0
   for (let fieldName of fields) {
     let fieldInfo = fieldInfoList[fieldName]
@@ -145,7 +145,7 @@ function cwGetTableHeader (fields, fieldInfoList, addAction = false) {
   return html
 }
 
-function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
+function cwLoadMany2OneInputContainer (componentId, componentFieldInfo) {
   $('#' + componentId + 'InputContainer').html('')
   let {ref, keyField, fields} = componentFieldInfo
   let keyword = $('#' + componentId + 'SearchBox').val()
@@ -174,12 +174,12 @@ function cwLoadMany2OneInputContainer(componentId, componentFieldInfo) {
           let template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate
           let presentation = ejs.render(template, { row, fieldInfo, value, fieldName})
           let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
-          html += '<td class="' + colClass + '">' 
+          html += '<td class="' + colClass + '">'
           html += '<div class="row container">' + presentation + '</div>'
           html += '</td>'
         }
         let actionClass = 'col-' + actionWidth
-        html += '<td class="' + actionClass + '"><a class="' + componentId + 'BtnSelect btn btn-secondary btn-sm" value="' +row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
+        html += '<td class="' + actionClass + '"><a class="' + componentId + 'BtnSelect btn btn-secondary btn-sm" value="' + row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
         html += '</tr>'
       }
       html += '</tbody>'
@@ -297,5 +297,4 @@ $(document).ready(function () {
     cwSwitchTab(tab)
     event.preventDefault()
   })
-
 })
