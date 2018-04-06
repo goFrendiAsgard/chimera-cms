@@ -36,7 +36,6 @@ const defaultInitialState = {
     userMessage: '',
     developerMessage: ''
   },
-  //state: {},
   schema: {},
   q: null,
   k: null,
@@ -91,7 +90,7 @@ const defaultFieldData = {
   options: {}
 }
 
-function getPreprocessedCckStateData (cckState, processor) {
+function getPreprocessedCckStateData(cckState, processor) {
   if (util.isRealObject(cckState.data)) {
     cckState.data = processor(cckState.data, cckState)
   } else if (util.isArray(cckState.data)) {
@@ -102,7 +101,7 @@ function getPreprocessedCckStateData (cckState, processor) {
   return cckState
 }
 
-function getPreprocessedCckStateResult (cckState, processor) {
+function getPreprocessedCckStateResult(cckState, processor) {
   if ('result' in cckState.result) {
     cckState.result.result = processor(cckState.result.result, cckState)
   } else if ('results' in cckState.result) {
@@ -113,7 +112,7 @@ function getPreprocessedCckStateResult (cckState, processor) {
   return cckState
 }
 
-function renderFieldTemplate (schemaInfo, fieldName, templateNames, row) {
+function renderFieldTemplate(schemaInfo, fieldName, templateNames, row) {
   let fieldInfo = schemaInfo.fields[fieldName]
   let realTemplateName
   if (util.isArray(templateNames)) {
@@ -127,14 +126,14 @@ function renderFieldTemplate (schemaInfo, fieldName, templateNames, row) {
     realTemplateName = templateNames
   }
   let value = row[fieldName]
-  return ejs.render(fieldInfo[realTemplateName], {row, fieldName, fieldInfo, value})
+  return ejs.render(fieldInfo[realTemplateName], { row, fieldName, fieldInfo, value })
 }
 
-function getSchemaCreationData (row) {
+function getSchemaCreationData(row) {
   return util.getPatchedObject(defaultSavedSchemaData, row)
 }
 
-function createSchema (config, callback) {
+function createSchema(config, callback) {
   let data
   if (util.isArray(config)) {
     data = []
@@ -147,7 +146,7 @@ function createSchema (config, callback) {
   return helper.mongoExecute(cckCollectionName, 'insert', data, callback)
 }
 
-function removeSchema (config, callback) {
+function removeSchema(config, callback) {
   let filterKeys = ['_id', 'name']
   let filter = {}
   if (util.isArray(config)) {
@@ -155,14 +154,14 @@ function removeSchema (config, callback) {
     for (let row of config) {
       data.push(helper.getSubObject(getSchemaCreationData(row), filterKeys))
     }
-    filter = {$or: data}
+    filter = { $or: data }
   } else {
     filter = helper.getSubObject(getSchemaCreationData(config), filterKeys)
   }
   return helper.mongoExecute(cckCollectionName, 'remove', filter, callback)
 }
 
-function getRealTemplateValue (template, config) {
+function getRealTemplateValue(template, config) {
   try {
     let value = ejs.render(template, config)
     if (fs.existsSync(value)) {
@@ -175,7 +174,7 @@ function getRealTemplateValue (template, config) {
   }
 }
 
-function getCompleteSchemaFields (schemaFields, config) {
+function getCompleteSchemaFields(schemaFields, config) {
   for (let field in schemaFields) {
     let fieldData = util.getPatchedObject(defaultFieldData, schemaFields[field])
     // define default caption
@@ -195,7 +194,7 @@ function getCompleteSchemaFields (schemaFields, config) {
   return schemaFields
 }
 
-function preprocessSchema (schema, config) {
+function preprocessSchema(schema, config) {
   schema = getTrimmedObject(schema)
   config = util.isNullOrUndefined(config) ? helper.getWebConfig() : config
   let completeSchema = util.getPatchedObject(defaultSchemaData, schema)
@@ -217,7 +216,7 @@ function preprocessSchema (schema, config) {
   return completeSchema
 }
 
-function findSchema (filter, config, callback) {
+function findSchema(filter, config, callback) {
   return helper.mongoExecute(cckCollectionName, 'find', filter, function (error, result) {
     if (error) {
       return callback(error, null)
@@ -230,28 +229,28 @@ function findSchema (filter, config, callback) {
   })
 }
 
-function getRoutes () {
+function getRoutes() {
   let webConfig = helper.getWebConfig()
   let chainPath = webConfig.chainPath
   return [
-    {route: '/api/:version/:schemaName', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/api/:version/:schemaName', method: 'post', chain: path.join(chainPath, 'cck/core.insert.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/api/:version/:schemaName', method: 'put', chain: path.join(chainPath, 'cck/core.update.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/api/:version/:schemaName', method: 'delete', chain: path.join(chainPath, 'cck/core.delete.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/api/:version/:schemaName/:id', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/api/:version/:schemaName/:id', method: 'put', chain: path.join(chainPath, 'cck/core.update.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/api/:version/:schemaName/:id', method: 'delete', chain: path.join(chainPath, 'cck/core.delete.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName', method: 'all', chain: path.join(chainPath, 'cck/core.show.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName/insert', method: 'get', chain: path.join(chainPath, 'cck/core.insertForm.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName/update/:id', method: 'get', chain: path.join(chainPath, 'cck/core.updateForm.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName/insert', method: 'post', chain: path.join(chainPath, 'cck/core.insertAction.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName/update/:id', method: 'post', chain: path.join(chainPath, 'cck/core.updateAction.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName/delete/:id', method: 'all', chain: path.join(chainPath, 'cck/core.deleteAction.js'), groups: ['loggedIn', 'loggedOut']},
-    {route: '/data/:schemaName/:id', method: 'all', chain: path.join(chainPath, 'cck/core.show.js'), groups: ['loggedIn', 'loggedOut']}
+    { route: '/api/:version/:schemaName', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/api/:version/:schemaName', method: 'post', chain: path.join(chainPath, 'cck/core.insert.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/api/:version/:schemaName', method: 'put', chain: path.join(chainPath, 'cck/core.update.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/api/:version/:schemaName', method: 'delete', chain: path.join(chainPath, 'cck/core.delete.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/api/:version/:schemaName/:id', method: 'get', chain: path.join(chainPath, 'cck/core.select.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/api/:version/:schemaName/:id', method: 'put', chain: path.join(chainPath, 'cck/core.update.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/api/:version/:schemaName/:id', method: 'delete', chain: path.join(chainPath, 'cck/core.delete.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName', method: 'all', chain: path.join(chainPath, 'cck/core.show.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName/insert', method: 'get', chain: path.join(chainPath, 'cck/core.insertForm.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName/update/:id', method: 'get', chain: path.join(chainPath, 'cck/core.updateForm.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName/insert', method: 'post', chain: path.join(chainPath, 'cck/core.insertAction.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName/update/:id', method: 'post', chain: path.join(chainPath, 'cck/core.updateAction.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName/delete/:id', method: 'all', chain: path.join(chainPath, 'cck/core.deleteAction.js'), groups: ['loggedIn', 'loggedOut'] },
+    { route: '/data/:schemaName/:id', method: 'all', chain: path.join(chainPath, 'cck/core.show.js'), groups: ['loggedIn', 'loggedOut'] }
   ]
 }
 
-function getCombinedFilter (filter1, filter2) {
+function getCombinedFilter(filter1, filter2) {
   if (!filter1) { filter1 = {} }
   if (!filter2) { filter2 = {} }
   let filter1KeyCount = Object.keys(filter1).length
@@ -265,10 +264,10 @@ function getCombinedFilter (filter1, filter2) {
   if (filter2KeyCount === 0) {
     return filter1
   }
-  return {$and: [filter1, filter2]}
+  return { $and: [filter1, filter2] }
 }
 
-function getFromRequest (request, key, defaultValue = null) {
+function getFromRequest(request, key, defaultValue = null) {
   if (key in request.query) {
     return request.query[key]
   }
@@ -278,7 +277,7 @@ function getFromRequest (request, key, defaultValue = null) {
   return defaultValue
 }
 
-function getQ (request) {
+function getQ(request) {
   let q = getFromRequest(request, '_q')
   if (util.isRealObject(q) || util.isArray(q)) {
     return JSON.stringify(q)
@@ -286,36 +285,36 @@ function getQ (request) {
   return q
 }
 
-function getK (request) {
+function getK(request) {
   return getFromRequest(request, '_k')
 }
 
-function getIncludeFieldInfo (request) {
+function getIncludeFieldInfo(request) {
   return getFromRequest(request, '_includeFieldInfo')
 }
 
-function getFilter (q, k, fieldNames, documentId) {
+function getFilter(q, k, fieldNames, documentId) {
   let queryFilter = helper.getObjectFromJson(q)
   let keywordFilter = {}
   if (k) {
     keywordFilter = []
     for (let fieldName of fieldNames) {
       let singleFilter = {}
-      singleFilter[fieldName] = {$regex: new RegExp(k), $options: 'i'}
+      singleFilter[fieldName] = { $regex: new RegExp(k), $options: 'i' }
       keywordFilter.push(singleFilter)
     }
-    keywordFilter = {$or: keywordFilter}
+    keywordFilter = { $or: keywordFilter }
   }
   let filter = getCombinedFilter(queryFilter, keywordFilter)
   if (documentId) {
-    filter = getCombinedFilter({'_id': documentId}, filter)
+    filter = getCombinedFilter({ '_id': documentId }, filter)
   }
   return filter
 }
 
-function getInitialCckState (state, callback) {
+function getInitialCckState(state, callback) {
   try {
-    let {config, request} = state
+    let { config, request } = state
     let basePath = config.basePath ? config.basePath : null
     let chainPath = config.chainPath ? config.chainPath : null
     let viewPath = config.viewPath ? config.viewPath : null
@@ -334,7 +333,7 @@ function getInitialCckState (state, callback) {
     let authId = 'id' in request.auth ? request.auth.id : ''
     auth.id = helper.getNormalizedDocId(authId)
     // get schema and fieldNames from the database
-    findSchema({name: schemaName}, config, (error, schemas) => {
+    findSchema({ name: schemaName }, config, (error, schemas) => {
       if (error) { return callback(error, null) }
       if (schemas.length === 0) { return callback(new Error('cckError: Undefined schema ' + schemaName), null) }
       let schema = getSchemaWithDeleted(schemas[0], config, excludeDeleted)
@@ -344,9 +343,9 @@ function getInitialCckState (state, callback) {
         let unset = getUnset(data)
         let filter = getFilter(q, k, fieldNames, documentId)
         data = helper.getParsedNestedJson(data)
-        let caption  = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
+        let caption = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
         // compose initialState
-        let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
+        let initialState = util.getPatchedObject(defaultInitialState, { auth, documentId, apiVersion, q, k, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath })
         return executeInitChain(initialState, state, error, callback)
       })
     })
@@ -355,21 +354,21 @@ function getInitialCckState (state, callback) {
   }
 }
 
-function getSchemaWithDeleted (schema, config, excludeDeleted) {
+function getSchemaWithDeleted(schema, config, excludeDeleted) {
   if (excludeDeleted === 0) {
-    let options = {0: 'Not Deleted', 1: 'Deleted'}
+    let options = { 0: 'Not Deleted', 1: 'Deleted' }
     let inputTemplate = getRealTemplateValue('<%- cck.input.option %>', config)
     let presentationTemplate = getRealTemplateValue('<%- cck.presentation.option %>', config)
     let caption = 'Deletion Status'
     if (fs.existsSync(inputTemplate)) {
       inputTemplate = fs.readFileSync(inputTemplate, 'utf8')
     }
-    schema.fields['_deleted'] = util.getPatchedObject(defaultFieldData, {inputTemplate, presentationTemplate, options, caption})
+    schema.fields['_deleted'] = util.getPatchedObject(defaultFieldData, { inputTemplate, presentationTemplate, options, caption })
   }
   return schema
 }
 
-function executeInitChain (initialState, state, error, callback) {
+function executeInitChain(initialState, state, error, callback) {
   if (initialState.schema.initChain) {
     return helper.runChain(initialState.schema.initChain, initialState, state, (error, newInitialState) => {
       callback(error, newInitialState)
@@ -378,7 +377,7 @@ function executeInitChain (initialState, state, error, callback) {
   return callback(error, initialState)
 }
 
-function getUnset (data) {
+function getUnset(data) {
   let unset = {}
   for (let key in data) {
     if (data[key] === '') {
@@ -389,7 +388,7 @@ function getUnset (data) {
   return unset
 }
 
-function getTrimmedObject (obj) {
+function getTrimmedObject(obj) {
   obj = util.getDeepCopiedObject(obj)
   if (util.isRealObject(obj)) {
     for (let key in obj) {
@@ -407,15 +406,15 @@ function getTrimmedObject (obj) {
   return obj
 }
 
-function getFileName (fileName) {
+function getFileName(fileName) {
   return Date.now() + fileName
 }
 
-function getUploadPath (config) {
+function getUploadPath(config) {
   return path.join(config.staticPath, 'uploads') + '/'
 }
 
-function getPreprocessedSingleData (data, files, fieldNames, config) {
+function getPreprocessedSingleData(data, files, fieldNames, config) {
   let actions = []
   let uploadPath = getUploadPath(config)
   data = helper.getSubObject(data, fieldNames)
@@ -443,21 +442,19 @@ function getPreprocessedSingleData (data, files, fieldNames, config) {
       }
     }
   }
-  return {data, actions}
+  return { data, actions }
 }
 
-function getSingleData (request, fieldNames, config, callback) {
-  let uploadPath = getUploadPath(config)
+function getSingleData(request, fieldNames, config, callback) {
   let rawData = util.getPatchedObject(request.query, request.body)
   let rawFiles = request.files
-  let {data, actions} = getPreprocessedSingleData (rawData, rawFiles, fieldNames, config)
+  let { data, actions } = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
   return async.parallel(actions, (error, result) => {
     callback(error, data)
   })
 }
 
-function getMultipleData (request, fieldNames, config, callback) {
-  let uploadPath = getUploadPath(config)
+function getMultipleData(request, fieldNames, config, callback) {
   let allData = []
   let allActions = []
   for (let i = 0; i < request.body.length; i++) {
@@ -468,7 +465,7 @@ function getMultipleData (request, fieldNames, config, callback) {
         rawFiles[fieldName] = request.files[fieldName][i]
       }
     }
-    let {data, actions} = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
+    let { data, actions } = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
     allData.push(data)
     for (let action of actions) {
       allActions.push(action)
@@ -479,14 +476,14 @@ function getMultipleData (request, fieldNames, config, callback) {
   })
 }
 
-function getData (request, fieldNames, config, callback) {
+function getData(request, fieldNames, config, callback) {
   if (util.isArray(request.body)) {
     return getMultipleData(request, fieldNames, config, callback)
   }
   return getSingleData(request, fieldNames, config, callback)
 }
 
-function getAllowedFieldNames (fieldNames) {
+function getAllowedFieldNames(fieldNames) {
   let allowedFieldNames = util.getDeepCopiedObject(fieldNames)
   for (let field of ['_id', '_muser', '_mtime', '_deleted', '_history']) {
     if (allowedFieldNames.indexOf(field) < 0) {
@@ -496,7 +493,7 @@ function getAllowedFieldNames (fieldNames) {
   return allowedFieldNames
 }
 
-function getPresentationDocument (document, fieldNames, callback) {
+function getPresentationDocument(document, fieldNames, callback) {
   let allowedFieldNames = getAllowedFieldNames(fieldNames)
   if (util.isArray(document)) {
     let actions = []
@@ -520,7 +517,7 @@ function getPresentationDocument (document, fieldNames, callback) {
   return getSinglePresentationDocument(document, allowedFieldNames, callback)
 }
 
-function getSinglePresentationDocument (row, allowedFieldNames, callback) {
+function getSinglePresentationDocument(row, allowedFieldNames, callback) {
   let newRow = helper.getSubObject(row, allowedFieldNames)
   return callback(null, newRow)
 }
