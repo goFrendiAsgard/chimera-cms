@@ -36,7 +36,7 @@ const defaultInitialState = {
     userMessage: '',
     developerMessage: ''
   },
-  //state: {},
+  // state: {},
   schema: {},
   q: null,
   k: null,
@@ -344,7 +344,7 @@ function getInitialCckState (state, callback) {
         let unset = getUnset(data)
         let filter = getFilter(q, k, fieldNames, documentId)
         data = helper.getParsedNestedJson(data)
-        let caption  = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
+        let caption = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
         // compose initialState
         let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
         return executeInitChain(initialState, state, error, callback)
@@ -450,7 +450,7 @@ function getSingleData (request, fieldNames, config, callback) {
   let uploadPath = getUploadPath(config)
   let rawData = util.getPatchedObject(request.query, request.body)
   let rawFiles = request.files
-  let {data, actions} = getPreprocessedSingleData (rawData, rawFiles, fieldNames, config)
+  let {data, actions} = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
   return async.parallel(actions, (error, result) => {
     callback(error, data)
   })

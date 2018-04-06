@@ -22,7 +22,7 @@ module.exports = (ins, vars, callback) => {
     return data
   }
   // preprocess cckState
-  try{
+  try {
     // remove password from fieldNames
     removePasswordField(cckState)
     // hash password(s)

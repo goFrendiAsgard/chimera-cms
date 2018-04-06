@@ -30,7 +30,6 @@ function getPluginSpecialDirectory (pluginName, directory) {
   return path.join(__dirname, 'plugins', pluginName, directory)
 }
 
-
 function install (pluginName, callback) {
   const migrationPath = getMigrationPath(pluginName)
   createCmsDirectory(pluginName, (error) => {
@@ -59,7 +58,7 @@ function createCmsDirectory (pluginName, callback) {
     let src = getNodeModuleSpecialDirectory(pluginName, directory)
     actions.push((next) => {
       fse.pathExists(src, (error, exists) => {
-        if (error || !exists) { return next (error)}
+        if (error || !exists) { return next(error) }
         let dst = getCmsSpecialDirectory(pluginName, directory)
         return fse.copy(src, dst, next)
       })
@@ -74,7 +73,7 @@ function removeCmsDirectory (pluginName, callback) {
     let dst = getCmsSpecialDirectory(pluginName, directory)
     actions.push((next) => {
       fse.pathExists(dst, (error, exists) => {
-        if (error || !exists) { return next (error)}
+        if (error || !exists) { return next(error) }
         fse.remove(dst, next)
       })
     })

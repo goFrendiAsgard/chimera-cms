@@ -8,7 +8,7 @@ function getTemplate (template) {
   return template
 }
 
-function restrictDelete(row) {
+function restrictDelete (row) {
   if (row.defaultConfig) {
     row._restrictDelete = true
   }
@@ -23,7 +23,7 @@ module.exports = (ins, vars, callback) => {
   // prepare
   try {
     if ('results' in cckState.result) {
-      for (let i=0; i<cckState.result.results.length; i++) {
+      for (let i = 0; i < cckState.result.results.length; i++) {
         cckState.result.results[i] = restrictDelete(cckState.result.results[i])
       }
     } else if ('result' in cckState.result) {

@@ -275,7 +275,7 @@ function injectState (state, callback) {
   })
 }
 
-function renderValue(value, webConfig) {
+function renderValue (value, webConfig) {
   if (util.isString(value) && value.indexOf('<%') > -1) {
     return ejs.render(value, webConfig)
   }
