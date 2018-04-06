@@ -448,11 +448,7 @@ function getPreprocessedSingleData (data, files, fieldNames, config) {
 function getSingleData (request, fieldNames, config, callback) {
   let rawData = util.getPatchedObject(request.query, request.body)
   let rawFiles = request.files
-<<<<<<< HEAD
-  let { data, actions } = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
-=======
   let {data, actions} = getPreprocessedSingleData(rawData, rawFiles, fieldNames, config)
->>>>>>> development
   return async.parallel(actions, (error, result) => {
     callback(error, data)
   })
