@@ -1,13 +1,13 @@
 {
 	"info": {
+		"_postman_id": "5372bdd6-1068-48ac-8824-b9a7de8098de",
 		"name": "test-web",
-		"_postman_id": "0a9702fa-abb1-13a9-8681-ae81a2f5a036",
-		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Authentication",
+			"description": null,
 			"item": [
 				{
 					"name": "GET: Index - not login",
@@ -165,13 +165,11 @@
 							"query": [
 								{
 									"key": "user",
-									"value": "admin",
-									"equals": true
+									"value": "admin"
 								},
 								{
 									"key": "password",
-									"value": "admin",
-									"equals": true
+									"value": "admin"
 								}
 							]
 						},
@@ -323,13 +321,11 @@
 							"query": [
 								{
 									"key": "user",
-									"value": "root",
-									"equals": true
+									"value": "root"
 								},
 								{
 									"key": "password",
-									"value": "admin",
-									"equals": true
+									"value": "admin"
 								}
 							]
 						},
@@ -386,13 +382,11 @@
 							"query": [
 								{
 									"key": "user",
-									"value": "admin",
-									"equals": true
+									"value": "admin"
 								},
 								{
 									"key": "password",
-									"value": "root",
-									"equals": true
+									"value": "root"
 								}
 							]
 						},
@@ -680,6 +674,7 @@
 		},
 		{
 			"name": "CCK API: POST",
+			"description": null,
 			"item": [
 				{
 					"name": "POST: cck tests - insert testKey1",
@@ -865,6 +860,7 @@
 		},
 		{
 			"name": "CCK API: GET",
+			"description": null,
 			"item": [
 				{
 					"name": "GET: cck tests - all",
@@ -872,7 +868,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e1059011-6de3-41ec-aa0f-7445d2dbf210",
+								"id": "c1fc6180-85cb-4ae6-b5bf-27bd5eff9dea",
 								"type": "text/javascript",
 								"exec": [
 									"var responseJSON, results, firstResult;",
@@ -887,8 +883,11 @@
 									"}",
 									"console.log(responseJSON);",
 									"tests['response contains `results`'] = _.has(responseJSON, 'results');",
+									"resultset = responseJSON.metadata.resultset;",
 									"results = responseJSON.results;",
 									"firstResult = results[0];",
+									"tests['count should be 3'] = resultset.count === 3;",
+									"tests['offset should be 0'] = resultset.offset === 0;",
 									"tests['results contains 3 rows'] = results.length === 3;",
 									"tests['firstResult has id'] = ('_id' in firstResult);",
 									"tests['firstResult does not have history'] = !('_history' in firstResult);",
@@ -923,12 +922,87 @@
 					"response": []
 				},
 				{
-					"name": "GET: cck tests - limit showHistory",
+					"name": "GET: cck tests - limit offset and _showHistory",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "51da0599-b1c8-433a-8265-ac2c0fa41cef",
+								"id": "0b1eb1ca-847d-4319-840b-38bff04c90f8",
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON, results, firstResult;",
+									"",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"console.log(responseJSON);",
+									"tests['response contains `results`'] = _.has(responseJSON, 'results');",
+									"results = responseJSON.results;",
+									"resultset = responseJSON.metadata.resultset;",
+									"firstResult = results[0];",
+									"tests['count should be 3'] = resultset.count === 3;",
+									"tests['limit should be 2'] = resultset.limit === 2;",
+									"tests['offset should be 1'] = resultset.offset === 1;",
+									"tests['results contains 3 fields'] = results.length === 2;",
+									"tests['firstResult has id'] = ('_id' in firstResult);",
+									"tests['firstResult key should be testKey2'] = firstResult.key === 'testKey2';",
+									"tests['firstResult has history'] = ('_history' in firstResult);",
+									"tests['firstResult history is correct'] = firstResult._history[0].key = firstResult.key;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/tests?limit=2&offset=1&_showHistory=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"tests"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								},
+								{
+									"key": "_showHistory",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Login API"
+					},
+					"response": []
+				},
+				{
+					"name": "GET: cck tests - field projection and filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "801905f4-6e8f-4f01-9957-07101bd6c43f",
 								"type": "text/javascript",
 								"exec": [
 									"var responseJSON, results, firstResult;",
@@ -945,10 +1019,11 @@
 									"tests['response contains `results`'] = _.has(responseJSON, 'results');",
 									"results = responseJSON.results;",
 									"firstResult = results[0];",
-									"tests['results contains 3 fields'] = results.length === 2;",
+									"tests['results contains 1 row'] = results.length === 1;",
+									"tests['first result value is testValue 2'] = firstResult.value === 'testValue2'",
 									"tests['firstResult has id'] = ('_id' in firstResult);",
-									"tests['firstResult has history'] = ('_history' in firstResult);",
-									"tests['firstResult history is correct'] = firstResult._history[0].key = firstResult.key;",
+									"tests['firstResult has no history'] = !('_history' in firstResult);",
+									"tests['firstResult has no key'] = !('key' in firstResult);",
 									""
 								]
 							}
@@ -957,9 +1032,12 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?limit=2&_showHistory=1",
+							"raw": "http://localhost:3000/api/v1/tests?fields=_id,value&key=testKey2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -972,14 +1050,128 @@
 							],
 							"query": [
 								{
-									"key": "limit",
-									"value": "2",
-									"equals": true
+									"key": "fields",
+									"value": "_id,value"
 								},
 								{
-									"key": "_showHistory",
-									"value": "1",
-									"equals": true
+									"key": "key",
+									"value": "testKey2"
+								}
+							]
+						},
+						"description": "Login API"
+					},
+					"response": []
+				},
+				{
+					"name": "GET: cck tests - by _k",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e12db54c-8b76-4857-ae54-3476f6744f7c",
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON, result;",
+									"",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"console.log(responseJSON);",
+									"tests['response contains `results`'] = _.has(responseJSON, 'results');",
+									"firstResult = responseJSON.results[0];",
+									"tests['firstResult key should be `testKey3`'] = firstResult.key === 'testKey3'"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/tests?_k=ue3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"tests"
+							],
+							"query": [
+								{
+									"key": "_k",
+									"value": "ue3"
+								}
+							]
+						},
+						"description": "Login API"
+					},
+					"response": []
+				},
+				{
+					"name": "GET: cck tests - by _q",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8702b8b2-10f0-47cd-a2a9-435b77394a69",
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON, result;",
+									"",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"console.log(responseJSON);",
+									"tests['response contains `results`'] = _.has(responseJSON, 'results');",
+									"firstResult = responseJSON.results[0];",
+									"secondResult = responseJSON.results[1];",
+									"tests['firstResult key should be `testKey1`'] = firstResult.key === 'testKey1';",
+									"tests['secondResult key should be `testKey3`'] = secondResult.key === 'testKey3';"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/tests?_q={\"$or\":[{\"key\":\"testKey1\"},{\"key\":\"testKey3\"}]}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"tests"
+							],
+							"query": [
+								{
+									"key": "_q",
+									"value": "{\"$or\":[{\"key\":\"testKey1\"},{\"key\":\"testKey3\"}]}"
 								}
 							]
 						},
@@ -1099,6 +1291,7 @@
 		},
 		{
 			"name": "CCK API: UPDATE",
+			"description": null,
 			"item": [
 				{
 					"name": "POST: cck tests - update all",
@@ -1288,6 +1481,7 @@
 		},
 		{
 			"name": "CCK API: DELETE",
+			"description": null,
 			"item": [
 				{
 					"name": "POST: cck tests - delete one (soft)",
@@ -1500,8 +1694,7 @@
 							"query": [
 								{
 									"key": "_excludeDeleted",
-									"value": "0",
-									"equals": true
+									"value": "0"
 								}
 							]
 						},
@@ -1562,8 +1755,7 @@
 							"query": [
 								{
 									"key": "_excludeDeleted",
-									"value": "0",
-									"equals": true
+									"value": "0"
 								}
 							]
 						}
@@ -1620,8 +1812,7 @@
 							"query": [
 								{
 									"key": "_excludeDeleted",
-									"value": "0",
-									"equals": true
+									"value": "0"
 								}
 							]
 						},
