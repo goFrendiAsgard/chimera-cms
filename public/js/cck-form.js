@@ -2,6 +2,44 @@
 
 if (typeof $ === 'undefined') {
   var ace = {}
+  var ejs = {}
+}
+
+function cwAjaxifyForm (formId, options = {}) {
+  let form = $('#' + formId)
+  let method = ('method' in options ? options.method : form.attr('method') ? form.attr('method') : 'get').toUpperCase()
+  let action = 'action' in options ? options.action : form.attr('action') ? form.attr('action') : ''
+  let success = 'success' in options ? options.success : function (data, textStatus, jqXhr) {console.log(data)}
+  let error = 'error' in options ? options.error : function (jqXhr, textStatus, errorThrown) {console.error(errorThrown)}
+  let dataType = 'dataType' in options ? options.dataType : 'html'
+  form.submit(function (event) {
+    event.preventDefault()
+    var data = new FormData(document.getElementById(formId))
+    $.ajax({
+      url: action,
+      method: method,
+      data: data,
+      dataType: dataType,
+      contentType: false,
+      processData: false,
+      cache: false,
+      success: success,
+      error: error
+    })
+  })
+}
+
+function cwAdjustDflexTables () {
+  $('tr.d-flex').each(function () {
+    let allowedWidth = $(this).width()
+    let totalWidth = 0
+    $(this).children('th, td').each(function () {
+      totalWidth += $(this).outerWidth()
+    })
+    if (totalWidth > allowedWidth) {
+      $(this).children('th, td').removeClass('col-1 col-2 col-3 col-4 col-5 col-6 col-7 col-8 col-9 col-10 col-11 col-12').addClass('col')
+    }
+  })
 }
 
 function cwInitAce () {
@@ -61,7 +99,7 @@ function cwAfterLoadTable () {
 }
 
 function cwPreprocessValue (value) {
-  if (typeof value === 'null' || typeof value === 'undefined' || (typeof value === 'string' && value.trim() === '')) {
+  if (value === null || typeof value === 'undefined' || (typeof value === 'string' && value.trim() === '')) {
     return '<i>[Not set]</i>'
   }
   return value
@@ -120,7 +158,7 @@ function cwGetColWidthAndActionWidth (fields, fieldInfoList, addAction) {
     }
   }
   unsetWidthFieldCount = unsetWidthFieldCount < 1 ? 1 : unsetWidthFieldCount
-  unsetWidthGridGridCount = unsetWidthGridCount < 1 ? 1 : unsetWidthGridCount
+  unsetWidthGridCount = unsetWidthGridCount < 1 ? 1 : unsetWidthGridCount
   let colWidth = Math.floor(unsetWidthGridCount / unsetWidthFieldCount)
   colWidth = colWidth < 1 ? 1 : colWidth
   let actionWidth = addAction ? 12 - (setWidth + (colWidth * unsetWidthFieldCount)) : 0
@@ -169,10 +207,9 @@ function cwLoadMany2OneInputContainer (componentId, componentFieldInfo) {
         html += '<tr class="row-data d-flex">'
         for (let fieldName of fields) {
           let fieldInfo = fieldInfoList[fieldName]
-          let caption = fieldInfo.caption
           let value = row[fieldName]
           let template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate
-          let presentation = ejs.render(template, { row, fieldInfo, value, fieldName})
+          let presentation = ejs.render(template, {row, fieldInfo, value, fieldName})
           let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
           html += '<td class="' + colClass + '">'
           html += '<div class="row container">' + presentation + '</div>'
@@ -285,6 +322,9 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
 $(document).ready(function () {
   // init aceEditors
   cwInitAce()
+
+  // adjust dflex tables
+  cwAdjustDflexTables()
 
   // handle tabs
   if ($('#form-tabs li.active a').attr('href')) {

@@ -52,3 +52,60 @@
     </div>
   </div>
 </form>
+
+<div id="cw-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update</h5>
+      </div>
+      <div class="modal-body">
+        <div id="cw-modal-alert" class="alert" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <a id="cw-btn-re-edit" class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Edit</a>
+        <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
+          <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Back</a>
+        <% } else { %>
+          <a class="btn btn-secondary" href="/">Back</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // button re-edit
+    $('#cw-btn-re-edit').click(function (event) {
+      event.preventDefault()
+      $('#cw-modal').modal('hide')
+    })
+    // ajaxify
+    cwAjaxifyForm('cw-form', {
+      method: 'PUT',
+      action: '/api/v1/<%= cckState.schemaName %>/<%= cckState.documentId %>',
+      dataType: 'json',
+      success: function (data, textStatus, jqXhr) {
+        if (data.status < 400) {
+          $('#cw-modal-alert').removeClass('alert-danger')
+          $('#cw-modal-alert').addClass('alert-success')
+          $('#cw-modal-alert').html('<strong>Success</strong>' + data.userMessage)
+        } else {
+          $('#cw-modal-alert').removeClass('alert-success')
+          $('#cw-modal-alert').addClass('alert-danger')
+          $('#cw-modal-alert').html('<strong>Failed</strong>' + data.userMessage)
+          console.log(data)
+        }
+        $('#cw-modal').modal('show')
+      },
+      error: function (jqXhr, textStatus, errorThrown) {
+        $('#cw-modal-alert').removeClass('alert-success')
+        $('#cw-modal-alert').addClass('alert-danger')
+        $('#cw-modal-alert').html('<strong>Failed</strong>' + textStatus)
+        console.error(errorThrown)
+        $('#cw-modal').modal('show')
+      }
+    })
+  })
+</script>

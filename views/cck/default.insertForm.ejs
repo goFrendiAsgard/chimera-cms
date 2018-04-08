@@ -52,3 +52,65 @@
     </div>
   </div>
 </form>
+
+<div id="cw-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Insert</h5>
+      </div>
+      <div class="modal-body">
+        <div id="cw-modal-alert" class="alert" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/insert?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Insert Again</a>
+
+        <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups)) { %>
+          <a id="cw-btn-re-edit" class="btn btn-secondary btn-lg" style="display:none;" href="">Edit</a>
+        <% } %>
+
+        <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
+          <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Back</a>
+        <% } else { %>
+          <a class="btn btn-secondary" href="/">Back</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // ajaxify
+    cwAjaxifyForm('cw-form', {
+      method: 'POST',
+      action: '/api/v1/<%= cckState.schemaName %>',
+      dataType: 'json',
+      success: function (data, textStatus, jqXhr) {
+        $('#cw-btn-re-edit').hide()
+        if (data.status < 400) {
+          $('#cw-modal-alert').removeClass('alert-danger')
+          $('#cw-modal-alert').addClass('alert-success')
+          $('#cw-modal-alert').html('<strong>Success</strong>' + data.userMessage)
+          if ('_id' in data.result) {
+            $('#cw-btn-re-edit').attr('href', '/data/<%= cckState.schemaName %>/update/' + data.result._id + '?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>')
+            $('#cw-btn-re-edit').show()
+          }
+        } else {
+          $('#cw-modal-alert').removeClass('alert-success')
+          $('#cw-modal-alert').addClass('alert-danger')
+          $('#cw-modal-alert').html('<strong>Failed</strong>' + data.userMessage)
+          console.log(data)
+        }
+        $('#cw-modal').modal('show')
+      },
+      error: function (jqXhr, textStatus, errorThrown) {
+        $('#cw-modal-alert').removeClass('alert-success')
+        $('#cw-modal-alert').addClass('alert-danger')
+        $('#cw-modal-alert').html('<strong>Failed</strong>' + textStatus)
+        console.error(errorThrown)
+        $('#cw-modal').modal('show')
+      }
+    })
+  })
+</script>
