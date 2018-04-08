@@ -280,7 +280,7 @@ function getFromRequest (request, key, defaultValue = null) {
 }
 
 function getQ (request) {
-  let q = getFromRequest(request, '_q')
+  let q = getFromRequest(request, 'q')
   if (util.isRealObject(q) || util.isArray(q)) {
     return JSON.stringify(q)
   }
@@ -334,10 +334,10 @@ function getInitialCckState (state, callback) {
     let offset = parseInt(getFromRequest(request, 'offset', 0))
     let q = getQ(request)
     let fields = getFields(request)
-    let k = getFromRequest(request, '_k')
-    let includeFieldInfo = getFromRequest(request, '_includeFieldInfo')
-    let excludeDeleted = parseInt(getFromRequest(request, '_excludeDeleted', 1))
-    let showHistory = parseInt(getFromRequest(request, '_showHistory', 0))
+    let k = getFromRequest(request, 'k')
+    let includeFieldInfo = getFromRequest(request, 'includeFieldInfo')
+    let excludeDeleted = parseInt(getFromRequest(request, 'excludeDeleted', 1))
+    let showHistory = parseInt(getFromRequest(request, 'showHistory', 0))
     let authId = 'id' in request.auth ? request.auth.id : ''
     auth.id = helper.getNormalizedDocId(authId)
     // get schema and fieldNames from the database
