@@ -1,3 +1,8 @@
+<script src="/ace-builds/src-min-noconflict/ace.js"></script>
+<script src="/js/cck-form.js"></script>
+<script src="/js/cck-form-show.js"></script>
+<script src="/ejs/ejs.min.js"></script>
+
 <!-- cckState container -->
 <textarea id="cw-cckState" style="display:none;"><%= JSON.stringify(cckState) %></textarea>
 
@@ -91,21 +96,14 @@
   <%% } %>
 </textarea>
 
-<script src="/ace-builds/src-min-noconflict/ace.js"></script>
-<script src="/js/cck-form.js"></script>
-<script src="/ejs/ejs.min.js"></script>
-
 <!-- Caption -->
 <h3><%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
 
 <div style="margin-bottom:1em">
-
-  <% if (cckState._customHtmlComponents) { %>
-    <%- cckState._customHtmlComponents %>
-  <% } %>
-
+  <!-- Custom HTML components -->
+  <%- cckState._customHtmlComponents ? cckState._customHtmlComponents : '' %>
+  <!-- Search form -->
   <form action="/data/<%= cckState.schemaName %>" class="form-horizontal">
-
     <div class="row">
       <div class="col">
         <input id="cw-input-excludeDeleted" type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
@@ -115,12 +113,12 @@
         <input id="cw-input-k" type="text" class="form-control" name="k" placeholder="Keyword" value="<%= cckState.k %>" />
       </div>
       <div class="col">
+        <!-- Search button -->
         <button id="cw-btn-search" class="btn btn-sm btn-secondary" name="search" value="1"><span class="oi oi-magnifying-glass"></button>
-
+        <!-- Toggle show all Button -->
         <a id="cw-btn-toggle-show-all" class="btn btn-sm btn-secondary" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
           <span id="cw-icon-toggle-show-all" class="oi <%= cckState.excludeDeleted == 1 ? 'oi-ellipses' : 'oi-eye' %>"></span>
         </a>
-
         <!-- Insert Button -->
         <% if (isAuthorized(cckState.auth, cckState.schema.insertGroups)) { %>
           <a id="button-insert" class="btn btn-sm btn-secondary" href="/data/<%= cckState.schemaName %>/insert?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
@@ -128,10 +126,8 @@
           </a>
         <% } %>
       </div>
-
     </div>
   </form>
-
 </div>
 
 <table class="table cw-table">
@@ -148,11 +144,11 @@
     </tr>
   </thead>
   <tbody id="cw-result-container" style="max-height:20em;">
-    <!-- Results -->
+    <!-- Results will be loaded here -->
   </tbody>
 </table>
 
-<div id="cw-pagination"><!-- Pagination --></div>
+<div id="cw-pagination"><!-- Pagination will be loaded here --></div>
 
 <div id="cw-delete-modal" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -171,100 +167,5 @@
 </div>
 
 <script>
-  var cckState, rowTemplate, paginationTemplate
-
-  function render (cckState, rowTemplate, paginationTemplate, data) {
-    data = (typeof data === 'undefined' || data === null) ? JSON.parse($('#cw-initial-data').val()) : data
-    let renderedResults = cwRenderResults(cckState, rowTemplate, data)
-    let renderedPagination = cwRenderPagination(cckState, paginationTemplate, data)
-    $('#cw-result-container').html(renderedResults)
-    $('#cw-pagination').html(renderedPagination)
-    cwAdjustDflexTables()
-  }
-
-  function reload () {
-    cckState.excludeDeleted = $('#cw-input-excludeDeleted').val()
-    cckState.limit = $('#cw-input-limit').val()
-    cckState.offset = $('#cw-input-offset').val()
-    cckState.q = $('#cw-input-q').val()
-    cckState.k = $('#cw-input-k').val()
-    $.ajax({
-      url: '/api/v1/' + cckState.schemaName + '?excludeDeleted=' + cckState.excludeDeleted + '&limit=' + cckState.limit + '&offset=' + cckState.offset + '&q=' + cckState.q + '&k=' + cckState.k,
-      method: 'get',
-      dataType: 'json',
-      success: function (data, textStatus, jqXhr) {
-        if (data.status < 400) {
-          render(cckState, rowTemplate, paginationTemplate, data)
-          if (cckState.excludeDeleted == 1) {
-            $('#cw-icon-toggle-show-all').removeClass('oi-eye')
-            $('#cw-icon-toggle-show-all').addClass('oi-ellipses')
-          } else {
-            $('#cw-icon-toggle-show-all').removeClass('oi-ellipses')
-            $('#cw-icon-toggle-show-all').addClass('oi-eye')
-          }
-        } else {
-          console.error(textStatus)
-        }
-      },
-      error: function(jqXhr, textStatus, errorThrown) {
-        console.error(errorThrown)
-      }
-    })
-  }
-
-  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k').change(function (event) {
-    reload()
-  })
-
-  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k').keypress(function (event) {
-    if (event.keyCode == 13) {
-      event.preventDefault()
-      reload()
-    }
-  })
-
-  $('#cw-btn-toggle-show-all').click(function(event){
-    event.preventDefault()
-    $('#cw-input-excludeDeleted').val(cckState.excludeDeleted == 1 ? 0 : 1)
-    reload()
-  })
-
-  $(document).ready(function(event) {
-    cckState = JSON.parse($('#cw-cckState').val())
-    rowTemplate = $('#cw-row-template').val()
-    paginationTemplate = $('#cw-pagination-template').val()
-    render(cckState, rowTemplate, paginationTemplate)
-  })
-
-  $('body').on('click', '.cw-btn-delete', function(event) {
-    event.preventDefault()
-    let rowId = $(this).attr('rowid')
-    console.log(rowId)
-    $.ajax({
-      url: '/api/v1/' + cckState.schemaName + '/' + rowId + '?excludeDeleted=' + cckState.excludeDeleted,
-      method: 'delete',
-      dataType: 'json',
-      success: function (data, textStatus, jqXhr) {
-        if (data.status < 400) {
-          $('#cw-delete-modal-alert').removeClass('alert-danger')
-          $('#cw-delete-modal-alert').addClass('alert-success')
-          $('#cw-delete-modal-alert').html('<strong>Success</strong>' + data.userMessage)
-          $('#cw-row-' + rowId).remove()
-        } else {
-          $('#cw-delete-modal-alert').removeClass('alert-success')
-          $('#cw-delete-modal-alert').addClass('alert-danger')
-          $('#cw-delete-modal-alert').html('<strong>Failed</strong>' + data.userMessage)
-          console.log(data)
-        }
-        $('#cw-delete-modal').modal('show')
-      },
-      error: function(jqXhr, textStatus, errorThrown) {
-        $('#cw-delete-modal-alert').removeClass('alert-success')
-        $('#cw-delete-modal-alert').addClass('alert-danger')
-        $('#cw-delete-modal-alert').html('<strong>Failed</strong>' + textStatus)
-        console.error(errorThrown)
-        $('#cw-delete-modal').modal('show')
-      }
-    })
-  })
+  cwAjaxifyShow()
 </script>

@@ -18,7 +18,6 @@
     "neo-async": "^2.5.0",
     "popper.js": "^1.12.9",
     "s": "^0.1.1",
-    "simpleplugin": "file:../simpleplugin/simpleplugin-0.0.0.tgz",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {
