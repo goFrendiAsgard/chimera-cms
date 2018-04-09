@@ -3,14 +3,15 @@
 if (typeof $ === 'undefined') {
   var ace = {}
   var ejs = {}
+  var FormData = {}
 }
 
 function cwAjaxifyForm (formId, options = {}) {
   let form = $('#' + formId)
   let method = ('method' in options ? options.method : form.attr('method') ? form.attr('method') : 'get').toUpperCase()
   let action = 'action' in options ? options.action : form.attr('action') ? form.attr('action') : ''
-  let success = 'success' in options ? options.success : function (data, textStatus, jqXhr) {console.log(data)}
-  let error = 'error' in options ? options.error : function (jqXhr, textStatus, errorThrown) {console.error(errorThrown)}
+  let success = 'success' in options ? options.success : function (data, textStatus, jqXhr) { console.log(data) }
+  let error = 'error' in options ? options.error : function (jqXhr, textStatus, errorThrown) { console.error(errorThrown) }
   let dataType = 'dataType' in options ? options.dataType : 'html'
   form.submit(function (event) {
     event.preventDefault()
@@ -31,7 +32,7 @@ function cwAjaxifyForm (formId, options = {}) {
 
 function cwAdjustDflexTables () {
   $('tr.d-flex').each(function () {
-    let allowedWidth = $(this).width()
+    let allowedWidth = $(this).outerWidth()
     let totalWidth = 0
     $(this).children('th, td').each(function () {
       totalWidth += $(this).outerWidth()
@@ -145,39 +146,16 @@ function cwLoadMany2OnePresentationContainer (componentId, componentFieldInfo) {
   })
 }
 
-function cwGetColWidthAndActionWidth (fields, fieldInfoList, addAction) {
-  let unsetWidthFieldCount = fields.length
-  let unsetWidthGridCount = addAction ? 11 : 12
-  let setWidth = 0
-  for (let fieldName of fields) {
-    let fieldInfo = fieldInfoList[fieldName]
-    if (fieldInfo.bootstrapColWidth) {
-      unsetWidthFieldCount -= 1
-      unsetWidthGridCount -= parseInt(fieldInfo.bootstrapColWidth)
-      setWidth += parseInt(fieldInfo.bootstrapColWidth)
-    }
-  }
-  unsetWidthFieldCount = unsetWidthFieldCount < 1 ? 1 : unsetWidthFieldCount
-  unsetWidthGridCount = unsetWidthGridCount < 1 ? 1 : unsetWidthGridCount
-  let colWidth = Math.floor(unsetWidthGridCount / unsetWidthFieldCount)
-  colWidth = colWidth < 1 ? 1 : colWidth
-  let actionWidth = addAction ? 12 - (setWidth + (colWidth * unsetWidthFieldCount)) : 0
-  actionWidth = actionWidth < 1 ? 1 : actionWidth
-  return {colWidth, actionWidth}
-}
-
 function cwGetTableHeader (fields, fieldInfoList, addAction = false) {
-  let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, addAction)
   // table header
   let html = '<tr class="d-flex">'
   for (let fieldName of fields) {
     let fieldInfo = fieldInfoList[fieldName]
-    let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
+    let colClass = fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col'
     html += '<th class="' + colClass + '">' + fieldInfoList[fieldName].caption + '</th>'
   }
   if (addAction) {
-    let actionClass = 'col-' + actionWidth
-    html += '<th class="' + actionClass + '">Action</th>'
+    html += '<th class="col">Action</th>'
   }
   html += '</tr>'
   return html
@@ -194,7 +172,6 @@ function cwLoadMany2OneInputContainer (componentId, componentFieldInfo) {
     success: function (response) {
       let results = response.results
       let fieldInfoList = response.metadata.fieldInfo
-      let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, true)
       // build the table
       let html = '<table class="table cw-table">'
       // table header
@@ -210,13 +187,12 @@ function cwLoadMany2OneInputContainer (componentId, componentFieldInfo) {
           let value = row[fieldName]
           let template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate
           let presentation = ejs.render(template, {row, fieldInfo, value, fieldName})
-          let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
+          let colClass = fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col'
           html += '<td class="' + colClass + '">'
           html += '<div class="row container">' + presentation + '</div>'
           html += '</td>'
         }
-        let actionClass = 'col-' + actionWidth
-        html += '<td class="' + actionClass + '"><a class="' + componentId + 'BtnSelect btn btn-secondary btn-sm" value="' + row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
+        html += '<td class="col"><a class="' + componentId + 'BtnSelect btn btn-secondary btn-sm" value="' + row[keyField] + '" href="#" data-toggle="modal" data-target="#' + componentId + 'ModalContainer"><span class="oi oi-check"></span></a></td>'
         html += '</tr>'
       }
       html += '</tbody>'
@@ -242,7 +218,6 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
   let fieldInfoList = componentFieldInfo.fields
   let fields = Object.keys(fieldInfoList)
   let value = cwGetOne2ManyFieldValue(componentId)
-  let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList)
   let html = ''
   if (value.length > 0) {
     html += '<table class="table cw-table" style="font-size:small">'
@@ -257,8 +232,9 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
       for (let fieldName of fields) {
         let fieldInfo = fieldInfoList[fieldName]
         let value = row[fieldName]
-        let presentation = ejs.render(fieldInfo['presentationTemplate'], { row, fieldName, fieldInfo, value })
-        let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
+        let template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate
+        let presentation = ejs.render(template, { row, fieldName, fieldInfo, value })
+        let colClass = fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col'
         html += '<td class="' + colClass + '">'
         html += '<div class="row container">' + presentation + '</div>'
         html += '</td>'
@@ -273,19 +249,18 @@ function cwLoadOne2ManyPresentationContainer (componentId, componentFieldInfo) {
   cwAfterLoadTable()
 }
 
-function cwGetOne2ManyTableRow (row, fieldInfoList, colWidth, actionWidth) {
+function cwGetOne2ManyTableRow (row, fieldInfoList) {
   let html = '<tr class="row-data d-flex">'
   for (let fieldName in fieldInfoList) {
     let fieldInfo = fieldInfoList[fieldName]
     let value = fieldName in row ? row[fieldName] : ''
     let presentation = ejs.render(fieldInfo['inputTemplate'], { row, fieldName, fieldInfo, value })
-    let colClass = 'col-' + (fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : colWidth)
+    let colClass = fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col'
     html += '<td class="' + colClass + '" fieldName="' + fieldName + '">'
     html += '<div class="row container">' + presentation + '</div>'
     html += '</td>'
   }
-  let actionClass = 'col-' + actionWidth
-  html += '<td class="' + actionClass + '">'
+  html += '<td class="col">'
   html += '<a class="btnPasteBeforeRow btnAction btn btn-sm btn-secondary" style="display:none;" href="#"><span class="oi oi-chevron-top"></span></a>&nbsp;'
   html += '<a class="btnPasteAfterRow btnAction btn btn-sm btn-secondary" style="display:none;" href="#"><span class="oi oi-chevron-bottom"></span></a>&nbsp;'
   html += '<a class="btnCancelCutRow btnAction btn btn-sm btn-secondary" style="display:none;" href="#"><span class="oi oi-action-undo"></span></a>&nbsp;'
@@ -302,7 +277,6 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   let fields = Object.keys(fieldInfoList)
   let value = cwGetOne2ManyFieldValue(componentId)
   if (!Array.isArray(value)) { value = [] }
-  let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfoList, true)
   let html = '<table id="' + componentId + 'Table" class="table cw-table">'
   // table header
   html += '<thead>'
@@ -311,12 +285,26 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   // table content
   html += '<tbody style="max-height:300px;">'
   for (let row of value) {
-    html += cwGetOne2ManyTableRow(row, fieldInfoList, colWidth, actionWidth)
+    html += cwGetOne2ManyTableRow(row, fieldInfoList)
   }
   html += '</tbody>'
   html += '</table>'
   $('#' + componentId + 'InputContainer').html(html)
   cwAfterLoadTable()
+}
+
+function cwRenderResults (cckState, rowTemplate, data) {
+  let html = ''
+  let results = data.results
+  for (let row of results) {
+    html += ejs.render(rowTemplate, {cckState, row})
+  }
+  return html
+}
+
+function cwRenderPagination (cckState, paginationTemplate, data) {
+  let metadata = data.metadata
+  return ejs.render(paginationTemplate, {cckState, metadata})
 }
 
 $(document).ready(function () {

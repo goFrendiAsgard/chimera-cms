@@ -1,4 +1,4 @@
-<h3><%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
+<h3>New <%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
 
 <script src="/ace-builds/src-min-noconflict/ace.js"></script>
 <script src="/js/cck-form.js"></script>
@@ -70,9 +70,9 @@
         <% } %>
 
         <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
-          <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Back</a>
+          <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Finish</a>
         <% } else { %>
-          <a class="btn btn-secondary" href="/">Back</a>
+          <a class="btn btn-secondary" href="/">Finish</a>
         <% } %>
       </div>
     </div>

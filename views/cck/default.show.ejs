@@ -1,7 +1,101 @@
+<!-- cckState container -->
+<textarea id="cw-cckState" style="display:none;"><%= JSON.stringify(cckState) %></textarea>
+
+<!-- result container -->
+<textarea id="cw-initial-data" style="display:none;"><%= JSON.stringify({metadata, results}) %></textarea>
+
+<!-- row template definition (row, cckState) -->
+<textarea id="cw-row-template" style="display:none;">
+  <!-- Variable declarations -->
+  <%% let fieldName, fieldInfo, template %>
+  <tr id="cw-row-<%%= row._id %>" class="<%%= row._deleted ? "table-danger" : "" %> d-flex">
+
+    <!-- Content -->
+    <% for (let fieldName of cckState.fieldNames) { %>
+      <% let fieldInfo = cckState.schema.fields[fieldName] %>
+      <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
+
+      <%% fieldName = '<%=fieldName%>' %%>
+      <%% fieldInfo = cckState.schema.fields[fieldName] %>
+      <%% template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate %>
+      <td class="<%= fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col' %>">
+        <%%- ejs.render(template, {row, fieldName, fieldInfo, value:row[fieldName]}) %>
+      </td>
+
+    <% } %>
+
+    <td class="col">
+      <%% if (row._customHtmlComponents) { %>
+        <%%- row._customHtmlComponents %>
+      <%% } %>
+      <!-- Detail Button -->
+      <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
+        <a class="cw-btn-detail btn btn-sm btn-secondary button-detail" rowId="<%%=row._id%>" href="/data/<%= cckState.schemaName %>/<%%=row._id%>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>">
+          <span class="oi oi-file"></span>
+        </a>
+      <% } %>
+      <!-- Update Button -->
+      <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups)) { %>
+      <%% if (!row._restrictUpdate) { %>
+        <a class="cw-btn-update btn btn-sm btn-secondary button-update" rowId="<%%=row._id%>" href="/data/<%= cckState.schemaName %>/update/<%%=row._id%>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>">
+          <span class="oi oi-pencil"></span>
+        </a>
+      <%% } %>
+      <% } %>
+      <!-- Delete Button -->
+      <% if (isAuthorized(cckState.auth, cckState.schema.deleteGroups)) { %>
+      <%% if (!row._restrictDelete) { %>
+        <a class="cw-btn-delete btn btn-sm btn-secondary button-delete" rowId="<%%=row._id%>" href="/data/<%= cckState.schemaName %>/delete/<%%=row._id%>?excludeDeleted=<%%= row._deleted ? 0 : 1%>&limit=<%%= cckState.limit %>">
+          <span class="oi oi-trash"></span>
+        </a>
+      <%% } %>
+      <% } %>
+    </td>
+  </tr>
+</textarea>
+
+<!-- template definition (row, cckState) -->
+<textarea id="cw-pagination-template" style="display:none;">
+  <%% let pageCount = Math.round(metadata.resultset.count / cckState.limit) %>
+
+  <%% if (pageCount > 1) { %>
+    <%% let pageNumber = Math.round(metadata.resultset.offset / cckState.limit) %>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+
+        <!-- prev -->
+        <li class="page-item <%%= pageNumber === 0 ? 'disabled' : '' %>">
+          <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= (pageNumber - 1) * cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+
+        <!-- pages -->
+        <%% for (let i = 0; i < pageCount; i++) { %>
+          <li class="page-item <%%= i === pageNumber ? 'active' : '' %>">
+            <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= i * cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>">
+              <%%= i + 1%>
+            </a>
+          </li>
+        <%% } %>
+
+        <!-- next -->
+        <li class="page-item <%%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
+          <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= (pageNumber + 1) * cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  <%% } %>
+</textarea>
+
 <script src="/ace-builds/src-min-noconflict/ace.js"></script>
 <script src="/js/cck-form.js"></script>
 <script src="/ejs/ejs.min.js"></script>
 
+<!-- Caption -->
 <h3><%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
 
 <div style="margin-bottom:1em">
@@ -14,16 +108,17 @@
 
     <div class="row">
       <div class="col">
-        <input type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
-        <input type="hidden" name="limit" value="<%= cckState.limit %>" />
-        <input type="hidden" name="q" value="<%= cckState.q %>" />
-        <input type="text" class="form-control" name="k" placeholder="Keyword" value="<%= cckState.k %>" />
+        <input id="cw-input-excludeDeleted" type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
+        <input id="cw-input-limit" type="hidden" name="limit" value="<%= cckState.limit %>" />
+        <input id="cw-input-offset" type="hidden" name="offset" value="<%= cckState.offset %>" />
+        <input id="cw-input-q" type="hidden" name="q" value="<%= cckState.q %>" />
+        <input id="cw-input-k" type="text" class="form-control" name="k" placeholder="Keyword" value="<%= cckState.k %>" />
       </div>
       <div class="col">
-        <button class="btn btn-sm btn-secondary" name="search" value="1"><span class="oi oi-magnifying-glass"></button>
+        <button id="cw-btn-search" class="btn btn-sm btn-secondary" name="search" value="1"><span class="oi oi-magnifying-glass"></button>
 
-        <a id="button-show-all" class="btn btn-sm btn-secondary" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
-          <span class="oi <%= cckState.excludeDeleted == 1 ? 'oi-ellipses' : 'oi-eye' %>"></span>
+        <a id="cw-btn-toggle-show-all" class="btn btn-sm btn-secondary" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
+          <span id="cw-icon-toggle-show-all" class="oi <%= cckState.excludeDeleted == 1 ? 'oi-ellipses' : 'oi-eye' %>"></span>
         </a>
 
         <!-- Insert Button -->
@@ -39,109 +134,137 @@
 
 </div>
 
-<% let totalWidth = 12 %>
-<% let definedWidth = 0 %>
-<% let undefinedWidthCount = 1 %>
-<% for (let fieldName of cckState.fieldNames) { %>
-  <% let fieldInfo = cckState.schema.fields[fieldName] %>
-  <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
-  <% if (fieldInfo.bootstrapColWidth) { %>
-    <% totalWidth -= parseInt(fieldInfo.bootstrapColWidth) %>
-    <% definedWidth += parseInt(fieldInfo.bootstrapColWidth) %>
-  <% } else { %>
-    <% undefinedWidthCount += 1 %>
-  <% } %>
-<% } %>
-<% let defaultColWidth = undefinedWidthCount === 0 ? 1 : Math.round(totalWidth/undefinedWidthCount) %>
-<% defaultColWidth = defaultColWidth < 1 ? 1 : defaultColWidth %>
-
-<% if (results.length > 0) { %>
-  <table class="table cw-table">
-    <thead>
-      <tr class="d-flex">
-        <% for (let fieldName of cckState.fieldNames) { %>
-          <% let fieldInfo = cckState.schema.fields[fieldName] %>
-          <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
-          <th class="col-<%= fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : defaultColWidth %>">
-            <%= fieldInfo.caption %>
-          </th>
-        <% } %>
-        <th class="col-<%= defaultColWidth %>">Action</th>
-      </tr>
-    </thead>
-    <tbody style="max-height:20em;">
-      <% for (let row of results) { %>
-        <tr class="<%= row._deleted ? "table-danger" : "" %> d-flex">
-          <!-- Content -->
-          <% for (let fieldName of cckState.fieldNames) { %>
-            <% let fieldInfo = cckState.schema.fields[fieldName] %>
-            <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
-            <td class="col-<%= fieldInfo.bootstrapColWidth ? fieldInfo.bootstrapColWidth : defaultColWidth %>">
-              <%- renderFieldTemplate(cckState.schema, fieldName, ['tabularPresentationTemplate', 'presentationTemplate'], row) %>
-            </td>
-          <% } %>
-
-          <td class="col-<%= defaultColWidth %>">
-            <% if (row._customHtmlComponents) { %>
-              <%- row._customHtmlComponents %>
-            <% } %>
-            <!-- Detail Button -->
-            <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
-              <a class="btn btn-sm btn-secondary button-detail" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/<%=row._id%>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
-                <span class="oi oi-file"></span>
-              </a>
-            <% } %>
-            <!-- Update Button -->
-            <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups) && !row._restrictUpdate) { %>
-              <a class="btn btn-sm btn-secondary button-update" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/update/<%=row._id%>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">
-                <span class="oi oi-pencil"></span>
-              </a>
-            <% } %>
-            <!-- Delete Button -->
-            <% if (isAuthorized(cckState.auth, cckState.schema.deleteGroups) && !row._restrictDelete) { %>
-              <a class="btn btn-sm btn-secondary button-delete" rowId="<%=row._id%>" href="/data/<%= cckState.schemaName %>/delete/<%=row._id%>?excludeDeleted=<%= row._deleted ? 0 : 1%>&limit=<%= cckState.limit %>">
-                <span class="oi oi-trash"></span>
-              </a>
-            <% } %>
-          </td>
-        </tr>
+<table class="table cw-table">
+  <thead>
+    <tr class="d-flex">
+      <% for (let fieldName of cckState.fieldNames) { %>
+        <% let fieldInfo = cckState.schema.fields[fieldName] %>
+        <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
+        <th class="<%= fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col' %>">
+          <%= fieldInfo.caption %>
+        </th>
       <% } %>
-    </tbody>
-  </table>
-<% } else { %>
-  <div class="alert alert-warning"><b>No Data</b></div>
-<% } %>
+      <th class="col">Action</th>
+    </tr>
+  </thead>
+  <tbody id="cw-result-container" style="max-height:20em;">
+    <!-- Results -->
+  </tbody>
+</table>
 
-<% let pageCount = Math.round(metadata.resultset.count / cckState.limit) %>
+<div id="cw-pagination"><!-- Pagination --></div>
 
-<% if (pageCount > 1) { %>
-  <% let pageNumber = Math.round(metadata.resultset.offset / cckState.limit) %>
-  <nav aria-label="Page navigation">
-    <ul class="pagination">
+<div id="cw-delete-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete</h5>
+      </div>
+      <div class="modal-body">
+        <div id="cw-delete-modal-alert" class="alert" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <a id="cw-btn-close" class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Ok</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-      <!-- prev -->
-      <li class="page-item <%= pageNumber === 0 ? 'disabled' : '' %>">
-        <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber - 1) * cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
+<script>
+  var cckState, rowTemplate, paginationTemplate
 
-      <!-- pages -->
-      <% for (let i = 0; i < pageCount; i++) { %>
-        <li class="page-item <%= i === pageNumber ? 'active' : '' %>">
-          <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= i * cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
-            <%= i + 1%>
-          </a>
-        </li>
-      <% } %>
+  function render (cckState, rowTemplate, paginationTemplate, data) {
+    data = (typeof data === 'undefined' || data === null) ? JSON.parse($('#cw-initial-data').val()) : data
+    let renderedResults = cwRenderResults(cckState, rowTemplate, data)
+    let renderedPagination = cwRenderPagination(cckState, paginationTemplate, data)
+    $('#cw-result-container').html(renderedResults)
+    $('#cw-pagination').html(renderedPagination)
+    cwAdjustDflexTables()
+  }
 
-      <!-- next -->
-      <li class="page-item <%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
-        <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= (pageNumber + 1) * cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
+  function reload () {
+    cckState.excludeDeleted = $('#cw-input-excludeDeleted').val()
+    cckState.limit = $('#cw-input-limit').val()
+    cckState.offset = $('#cw-input-offset').val()
+    cckState.q = $('#cw-input-q').val()
+    cckState.k = $('#cw-input-k').val()
+    $.ajax({
+      url: '/api/v1/' + cckState.schemaName + '?excludeDeleted=' + cckState.excludeDeleted + '&limit=' + cckState.limit + '&offset=' + cckState.offset + '&q=' + cckState.q + '&k=' + cckState.k,
+      method: 'get',
+      dataType: 'json',
+      success: function (data, textStatus, jqXhr) {
+        if (data.status < 400) {
+          render(cckState, rowTemplate, paginationTemplate, data)
+          if (cckState.excludeDeleted == 1) {
+            $('#cw-icon-toggle-show-all').removeClass('oi-eye')
+            $('#cw-icon-toggle-show-all').addClass('oi-ellipses')
+          } else {
+            $('#cw-icon-toggle-show-all').removeClass('oi-ellipses')
+            $('#cw-icon-toggle-show-all').addClass('oi-eye')
+          }
+        } else {
+          console.error(textStatus)
+        }
+      },
+      error: function(jqXhr, textStatus, errorThrown) {
+        console.error(errorThrown)
+      }
+    })
+  }
 
-    </ul>
-  </nav>
-<% } %>
+  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k').change(function (event) {
+    reload()
+  })
+
+  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k').keypress(function (event) {
+    if (event.keyCode == 13) {
+      event.preventDefault()
+      reload()
+    }
+  })
+
+  $('#cw-btn-toggle-show-all').click(function(event){
+    event.preventDefault()
+    $('#cw-input-excludeDeleted').val(cckState.excludeDeleted == 1 ? 0 : 1)
+    reload()
+  })
+
+  $(document).ready(function(event) {
+    cckState = JSON.parse($('#cw-cckState').val())
+    rowTemplate = $('#cw-row-template').val()
+    paginationTemplate = $('#cw-pagination-template').val()
+    render(cckState, rowTemplate, paginationTemplate)
+  })
+
+  $('body').on('click', '.cw-btn-delete', function(event) {
+    event.preventDefault()
+    let rowId = $(this).attr('rowid')
+    console.log(rowId)
+    $.ajax({
+      url: '/api/v1/' + cckState.schemaName + '/' + rowId + '?excludeDeleted=' + cckState.excludeDeleted,
+      method: 'delete',
+      dataType: 'json',
+      success: function (data, textStatus, jqXhr) {
+        if (data.status < 400) {
+          $('#cw-delete-modal-alert').removeClass('alert-danger')
+          $('#cw-delete-modal-alert').addClass('alert-success')
+          $('#cw-delete-modal-alert').html('<strong>Success</strong>' + data.userMessage)
+          $('#cw-row-' + rowId).remove()
+        } else {
+          $('#cw-delete-modal-alert').removeClass('alert-success')
+          $('#cw-delete-modal-alert').addClass('alert-danger')
+          $('#cw-delete-modal-alert').html('<strong>Failed</strong>' + data.userMessage)
+          console.log(data)
+        }
+        $('#cw-delete-modal').modal('show')
+      },
+      error: function(jqXhr, textStatus, errorThrown) {
+        $('#cw-delete-modal-alert').removeClass('alert-success')
+        $('#cw-delete-modal-alert').addClass('alert-danger')
+        $('#cw-delete-modal-alert').html('<strong>Failed</strong>' + textStatus)
+        console.error(errorThrown)
+        $('#cw-delete-modal').modal('show')
+      }
+    })
+  })
+</script>
