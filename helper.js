@@ -44,18 +44,23 @@ function loadEjs (fileName, data) {
   return content
 }
 
+function embedFilename (responseData, filename) {
+  if (util.isRealObject(responseData)) {
+    responseData.filename = filename
+  }
+  return responseData
+}
+
 function renderContent (responseData, view, viewPath) {
   let relativeView = path.join(viewPath, view)
   if (fs.existsSync(view)) {
-    responseData.filename = view
+    responseData = embedFilename(responseData, view)
     return loadEjs(view, responseData)
   } else if (fs.existsSync(relativeView)) {
-    responseData.filename = relativeView
+    responseData = embedFilename(responseData, relativeView)
     return loadEjs(relativeView, responseData)
   } else {
-    if (util.isRealObject(responseData)) {
-      responseData.filename = path.join(viewPath, 'index.ejs')
-    }
+    responseData = embedFilename(responseData, path.join(viewPath, 'index.ejs'))
     return ejs.render(view, responseData)
   }
 }
