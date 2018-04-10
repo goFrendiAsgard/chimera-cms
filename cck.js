@@ -319,6 +319,50 @@ function getFilter (q, k, fieldNames, documentId) {
   return filter
 }
 
+function getLimit (request) {
+  let limit = parseInt(getFromRequest(request, 'limit', 50))
+  limit = isNaN(limit) ? 50 : limit
+  return limit
+}
+
+function getOffset (request) {
+  let offset = parseInt(getFromRequest(request, 'offset', 0))
+  offset = isNaN(offset) ? 1 : offset
+  return offset
+}
+
+function getTrueSortOrder (sortOrder) {
+  if (sortOrder === '-1' || (util.isString(sortOrder) && sortOrder.toLowerCase() === 'desc')) {
+    sortOrder = -1
+  } else if (sortOrder === '1' || (util.isString(sortOrder) && sortOrder.toLowerCase() === 'asc')) {
+    sortOrder = 1
+  }
+  if (sortOrder !== 1 && sortOrder !== -1) {
+    sortOrder = 1
+  }
+  return sortOrder
+}
+
+function getSort (request) {
+  let sort = getFromRequest(request, 'sort', null)
+  let sortedBy = getFromRequest(request, 'sortedBy', '_id')
+  let sortOrder = getFromRequest(request, 'sortOrder', 1)
+  sortOrder = getTrueSortOrder(sortOrder)
+  let defaultSort = {}
+  defaultSort[sortedBy] = sortOrder
+  if (!util.isArray(sort) && !util.isRealObject(sort)) {
+    try {
+      sort = JSON.parse(sort)
+      if (!util.isArray(sort) && !util.isRealObject(sort)) {
+        sort = defaultSort
+      }
+    } catch (error) {
+      sort = defaultSort
+    }
+  }
+  return sort
+}
+
 function getInitialCckState (state, callback) {
   try {
     let {config, request} = state
@@ -330,8 +374,9 @@ function getInitialCckState (state, callback) {
     let schemaName = request.params.schemaName ? request.params.schemaName : null
     let documentId = request.params.id ? helper.getNormalizedDocId(request.params.id) : null
     let auth = request.auth
-    let limit = parseInt(getFromRequest(request, 'limit', 50))
-    let offset = parseInt(getFromRequest(request, 'offset', 0))
+    let limit = getLimit(request)
+    let offset = getOffset(request)
+    let sort = getSort(request)
     let q = getQ(request)
     let fields = getFields(request)
     let k = getFromRequest(request, 'k')
@@ -353,7 +398,7 @@ function getInitialCckState (state, callback) {
         data = helper.getParsedNestedJson(data)
         let caption = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
         // compose initialState
-        let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, fields, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
+        let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, fields, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, sort, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
         return executeInitChain(initialState, state, error, callback)
       })
     })

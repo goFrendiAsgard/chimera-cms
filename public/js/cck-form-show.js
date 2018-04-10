@@ -66,6 +66,12 @@ function cwAjaxifyShow () {
     cwReload()
   })
 
+  $('body').on('click', '.cw-page-item .cw-page-link', function (event) {
+    event.preventDefault()
+    $('#cw-input-offset').val($(this).attr('offset'))
+    cwReload()
+  })
+
   $(document).ready(function (event) {
     cckState = JSON.parse($('#cw-cckState').val())
     rowTemplate = $('#cw-row-template').val()
