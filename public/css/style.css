@@ -38,3 +38,9 @@ textarea.cw-textarea {
   overflow-y: auto;
   display: block;
 }
+.cw-hidden {
+  display: none;
+}
+.cw-sort {
+  cursor: pointer;
+}

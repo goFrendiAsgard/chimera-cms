@@ -17,6 +17,7 @@ function cwAjaxifyShow () {
     $('#cw-result-container').html(renderedResults)
     $('#cw-pagination').html(renderedPagination)
     cwAdjustDflexTables()
+    cwAdjustSortIcon()
   }
 
   function cwReload () {
@@ -25,22 +26,18 @@ function cwAjaxifyShow () {
     cckState.offset = $('#cw-input-offset').val()
     cckState.q = $('#cw-input-q').val()
     cckState.k = $('#cw-input-k').val()
+    cckState.sort = $('#cw-input-sort').val()
+    let urlQuery = '?excludeDeleted=' + cckState.excludeDeleted + '&limit=' + cckState.limit + '&offset=' + cckState.offset + '&q=' + cckState.q + '&k=' + cckState.k + '&sort=' + cckState.sort
     $.ajax({
-      url: '/api/v1/' + cckState.schemaName + '?excludeDeleted=' + cckState.excludeDeleted + '&limit=' + cckState.limit + '&offset=' + cckState.offset + '&q=' + cckState.q + '&k=' + cckState.k,
+      url: '/api/v1/' + cckState.schemaName + urlQuery,
       method: 'get',
       dataType: 'json',
       success: function (data, textStatus, jqXhr) {
         if (data.status < 400) {
           cwRender(cckState, rowTemplate, paginationTemplate, data)
-          if (cckState.excludeDeleted == 1) {
-            $('#cw-icon-toggle-show-all').removeClass('oi-eye')
-            $('#cw-icon-toggle-show-all').addClass('oi-ellipses')
-          } else {
-            $('#cw-icon-toggle-show-all').removeClass('oi-ellipses')
-            $('#cw-icon-toggle-show-all').addClass('oi-eye')
-          }
+          history.pushState({}, '', '/data/' + cckState.schemaName + '/' + urlQuery)
         } else {
-          console.error(textStatus)
+          console.log(textStatus)
         }
       },
       error: function (jqXhr, textStatus, errorThrown) {
@@ -49,20 +46,62 @@ function cwAjaxifyShow () {
     })
   }
 
-  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k').change(function (event) {
+  function cwGetSort () {
+    let sort
+    try {
+      sort = JSON.parse($('#cw-input-sort').val())
+    } catch (error) {
+      sort = {}
+    }
+    if (!(typeof sort === 'object')) {
+      sort = {}
+    }
+    return sort
+  }
+
+  function cwAdjustSortIcon () {
+    let sort = cwGetSort()
+    $('.cw-sort').each(function () {
+      let fieldName = $(this).attr('field')
+      let state = fieldName in sort ? sort[fieldName] : 0
+      if (state === -1 || state === '-1') {
+        $('.cw-sort-icon[field="' + fieldName + '"]').html('&#9652')
+      } else if (state === 1 || state === '1') {
+        $('.cw-sort-icon[field="' + fieldName + '"]').html('&#9662')
+      } else {
+        $('.cw-sort-icon[field="' + fieldName + '"]').html('')
+      }
+    })
+  }
+
+  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k, #cw-input-sort').change(function (event) {
     cwReload()
   })
 
-  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k').keypress(function (event) {
+  $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k, #cw-input-sort').keypress(function (event) {
     if (event.keyCode === 13) {
       event.preventDefault()
       cwReload()
     }
   })
 
-  $('#cw-btn-toggle-show-all').click(function (event) {
+  $('.cw-sort').click(function (event) {
+    let fieldName = $(this).attr('field')
+    let sort = cwGetSort()
+    let state = fieldName in sort ? sort[fieldName] : 0
+    state = (state === 1 || state === '1') ? -1 : state + 1
+    if (state === 0 || state === '0') {
+      delete sort[fieldName]
+    } else {
+      sort[fieldName] = state
+    }
+    $('#cw-input-sort').val(JSON.stringify(sort))
+    cwReload()
+  })
+
+  $('body').on('click', '.cw-page-item .cw-page-link', function (event) {
     event.preventDefault()
-    $('#cw-input-excludeDeleted').val(cckState.excludeDeleted == 1 ? 0 : 1)
+    $('#cw-input-offset').val($(this).attr('offset'))
     cwReload()
   })
 
@@ -73,10 +112,26 @@ function cwAjaxifyShow () {
     cwRender(cckState, rowTemplate, paginationTemplate)
   })
 
+  $('#cw-btn-close-delete-modal').click(function (event) {
+    event.preventDefault()
+    $('#cw-delete-modal').modal('hide')
+  })
+
+  $('#cw-btn-close-advance-search-modal').click(function (event) {
+    event.preventDefault()
+    $('#cw-advance-search-modal').modal('hide')
+  })
+
+  $('#cw-advance-search-modal').on('hidden.bs.modal', function (event) {
+    $('#cw-input-excludeDeleted').val($('#cw-advance-excludeDeleted').is(':checked') ? 1 : 0)
+    $('#cw-input-limit').val($('#cw-advance-limit').val())
+    $('#cw-input-q').val($('#cw-advance-q').val())
+    cwReload()
+  })
+
   $('body').on('click', '.cw-btn-delete', function (event) {
     event.preventDefault()
     let rowId = $(this).attr('rowid')
-    console.log(rowId)
     $.ajax({
       url: '/api/v1/' + cckState.schemaName + '/' + rowId + '?excludeDeleted=' + cckState.excludeDeleted,
       method: 'delete',

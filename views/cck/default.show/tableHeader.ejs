@@ -3,8 +3,8 @@
     <% for (let fieldName of cckState.fieldNames) { %>
       <% let fieldInfo = cckState.schema.fields[fieldName] %>
       <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
-      <th class="<%= fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col' %>">
-        <%= fieldInfo.caption %>
+      <th class="cw-sort <%= fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col' %>" field="<%=fieldName%>">
+        <%= fieldInfo.caption %> <span class="cw-sort-icon" field="<%=fieldName%>"></span>
       </th>
     <% } %>
     <th class="col">Action</th>

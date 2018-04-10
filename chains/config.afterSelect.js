@@ -44,7 +44,7 @@ module.exports = (ins, vars, callback) => {
             caption: 'Caption',
             inputTemplate: getTemplate(config.cck.input.text),
             presentationTemplate: getTemplate(config.cck.presentation.text),
-            bootstrapColWidth: 2
+            bootstrapColWidth: 1
           },
           url: {
             caption: 'URL',

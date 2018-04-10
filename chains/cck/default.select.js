@@ -9,10 +9,16 @@ module.exports = (ins, vars, callback) => {
   let skip = parseInt(cckState.offset)
   let showHistory = parseInt(cckState.showHistory)
   let excludeDeleted = parseInt(cckState.excludeDeleted)
+  let sort = cckState.sort
+  try {
+    sort = JSON.parse(sort)
+  } catch (error) {
+    sort = {}
+  }
 
   let dbConfig = {collectionName, dbOption: {excludeDeleted, showHistory, user}}
   let filter = $.cck.getCombinedFilter(cckState.filter, cckState.data)
-  $.helper.mongoExecute(dbConfig, 'find', filter, {limit, skip, fields}, (error, results) => {
+  $.helper.mongoExecute(dbConfig, 'find', filter, {limit, skip, sort, fields}, (error, results) => {
     if (error) {
       return callback(error, null)
     }

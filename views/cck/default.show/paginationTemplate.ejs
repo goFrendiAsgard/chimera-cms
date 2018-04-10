@@ -2,28 +2,44 @@
 
 <%% if (pageCount > 1) { %>
   <%% let pageNumber = Math.round(metadata.resultset.offset / cckState.limit) %>
+  <%% let offset %>
   <nav aria-label="Page navigation">
     <ul class="pagination">
 
+      <li class="page-item disabled">
+        <span class="page-link">Page <%%= pageNumber + 1 %> of <%%= pageCount %></span>
+      </li>
+
       <!-- prev -->
-      <li class="page-item <%%= pageNumber === 0 ? 'disabled' : '' %>">
-        <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= (pageNumber - 1) * cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" aria-label="Previous">
+      <%% offset = (pageNumber - 1) * cckState.limit %>
+      <li class="cw-page-item page-item <%%= pageNumber === 0 ? 'disabled' : '' %>">
+        <a class="cw-page-link page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= offset %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" aria-label="Previous" offset="<%%= offset %>">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
 
       <!-- pages -->
-      <%% for (let i = 0; i < pageCount; i++) { %>
-        <li class="page-item <%%= i === pageNumber ? 'active' : '' %>">
-          <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= i * cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>">
+      <%% let min, max %>
+      <%% if (pageNumber < 5) {%>
+      <%%   min = 0; max = min + 10 > pageCount ? pageCount : min + 10 %>
+      <%% } else if (pageNumber > pageCount-5) { %>
+      <%%   max = pageCount; min = max - 10 < 0 ? 0 : max - 10 %>
+      <%% } else { %>
+      <%%   min = pageNumber - 5; max = pageNumber + 5 %>
+      <%% } %>
+      <%% for (let i = min; i < max; i++) { %>
+        <%% offset = i * cckState.limit %>
+        <li class="cw-page-item page-item <%%= i === pageNumber ? 'active' : '' %>">
+          <a class="cw-page-link page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= offset %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" offset="<%%= offset %>">
             <%%= i + 1%>
           </a>
         </li>
       <%% } %>
 
       <!-- next -->
-      <li class="page-item <%%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
-        <a class="page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= (pageNumber + 1) * cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" aria-label="Next">
+      <%% offset = (pageNumber + 1) * cckState.limit %>
+      <li class="cw-page-item page-item <%%= pageNumber === (pageCount - 1) ? 'disabled' : '' %>">
+        <a class="cw-page-link page-link" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&offset=<%%= offset %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>" aria-label="Next" offset="<%%= offset %>">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

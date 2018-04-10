@@ -2,7 +2,7 @@
 <script src="/js/cck-form.js"></script>
 <script src="/ejs/ejs.min.js"></script>
 
-<div style="display:none">
+<div class="cw-hidden">
   <textarea id="cw-cckState"><%= JSON.stringify(cckState) %></textarea>
   <textarea id="cw-initial-data"><%= JSON.stringify({metadata, results}) %></textarea>
   <textarea id="cw-row-template"><%- include default.show/rowTemplate.ejs %></textarea>
