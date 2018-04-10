@@ -4,22 +4,60 @@
       <input id="cw-input-excludeDeleted" type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
       <input id="cw-input-limit" type="hidden" name="limit" value="<%= cckState.limit %>" />
       <input id="cw-input-offset" type="hidden" name="offset" value="<%= cckState.offset %>" />
-      <input id="cw-input-q" type="hidden" name="q" value="<%= cckState.q %>" />
       <input id="cw-input-k" type="text" class="form-control" name="k" placeholder="Search" value="<%= cckState.k %>" />
+      <input id="cw-input-sort" type="hidden" name="sort" value="<%= cckState.sort %>" />
+      <input id="cw-input-q" type="hidden" name="q" value="<%= cckState.q %>" />
     </div>
     <div class="col">
       <!-- Search button -->
-      <button id="cw-btn-search" class="btn btn-sm btn-secondary" name="search" value="1"><span class="oi oi-magnifying-glass"></button>
+      <button id="cw-btn-search" class="btn btn-sm btn-secondary"><span class="oi oi-magnifying-glass"></button>
       <!-- Toggle show all Button -->
-      <a id="cw-btn-toggle-show-all" class="btn btn-sm btn-secondary" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted == 1 ? 0 : 1 %>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
-        <span id="cw-icon-toggle-show-all" class="oi <%= cckState.excludeDeleted == 1 ? 'oi-ellipses' : 'oi-eye' %>"></span>
+      <a id="cw-btn-toggle-advance-search" class="btn btn-sm btn-secondary" href="#" data-toggle="modal" data-target="#cw-advance-search-modal">
+        <span class="oi oi-cog"></span>
       </a>
       <!-- Insert Button -->
       <% if (isAuthorized(cckState.auth, cckState.schema.insertGroups)) { %>
-        <a id="button-insert" class="btn btn-sm btn-secondary" href="/data/<%= cckState.schemaName %>/insert?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
+        <a id="button-insert" class="btn btn-sm btn-primary" href="/data/<%= cckState.schemaName %>/insert?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&q=<%= cckState.q %>&k=<%= cckState.k %>">
           <span class="oi oi-plus"></span>
         </a>
       <% } %>
     </div>
   </div>
 </form>
+
+<div id="cw-advance-search-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Advance Filter</h5>
+      </div>
+      <div class="modal-body">
+        <!-- Exclude Delete -->
+        <div class="form-group">
+          <input type="checkbox" id="cw-advance-excludeDeleted" value="1" <%= cckState.excludeDeleted ? "checked" : "" %>>
+          <label for="cw-advance-excludeDeleted">Exclude deleted data</label>
+        </div>
+        <!-- Limit -->
+        <div class="form-group">
+          <label for="cw-advance-limit">Data per page</label>
+          <% let options = [5, 10, 50, 100] %>
+          <% if (options.indexOf(cckState.limit) == -1) { options.push(cckState.limit); } %>
+          <select class="form-control" id="cw-advance-limit">
+            <% for (let option of options) { %>
+              <option value="<%=option%>" <%= cckState.limit == option ? 'selected' : '' %>><%=option%></option>
+            <% } %>
+          </select>
+        </div>
+        <!-- Query -->
+        <div class="form-group">
+          <label for="cw-advance-q">Query</label>
+          <textarea class="form-control" id="cw-advance-q"><%= cckState.q %></textarea>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <a id="cw-btn-close-advance-search-modal" class="btn btn-secondary btn-lg" href="#">Ok</a>
+      </div>
+    </div>
+  </div>
+</div>

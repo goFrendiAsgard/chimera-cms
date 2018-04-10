@@ -345,11 +345,13 @@ function getTrueSortOrder (sortOrder) {
 
 function getSort (request) {
   let sort = getFromRequest(request, 'sort', null)
-  let sortedBy = getFromRequest(request, 'sortedBy', '_id')
+  let sortedBy = getFromRequest(request, 'sortedBy', null)
   let sortOrder = getFromRequest(request, 'sortOrder', 1)
   sortOrder = getTrueSortOrder(sortOrder)
   let defaultSort = {}
-  defaultSort[sortedBy] = sortOrder
+  if (!util.isNullOrUndefined(sortedBy)) {
+    defaultSort[sortedBy] = sortOrder
+  }
   if (!util.isArray(sort) && !util.isRealObject(sort)) {
     try {
       sort = JSON.parse(sort)
@@ -359,6 +361,14 @@ function getSort (request) {
     } catch (error) {
       sort = defaultSort
     }
+  }
+  for (let fieldName in sort) {
+    if (sort[fieldName] !== -1 && sort[fieldName] !== 1 && sort[fieldName] !== '-1' && sort[fieldName] !== '1') {
+      delete sort[fieldName]
+    }
+  }
+  if (util.isArray(sort) || util.isRealObject(sort)) {
+    return JSON.stringify(sort)
   }
   return sort
 }
