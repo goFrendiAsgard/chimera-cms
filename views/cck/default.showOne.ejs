@@ -44,11 +44,11 @@
       <% } %>
 
       <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups) && !result._restrictUpdate) { %>
-        <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= cckState.offset %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">Edit</a>
+        <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= cckState.offset %>&q=<%= cckState.q %>&k=<%= cckState.k %>">Edit</a>
       <% } %>
 
       <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
-        <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?_excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= cckState.offset %>&_q=<%= cckState.q %>&_k=<%= cckState.k %>">Back</a>
+        <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>&offset=<%= cckState.offset %>&q=<%= cckState.q %>&k=<%= cckState.k %>">Back</a>
       <% } else { %>
         <a class="btn btn-secondary btn-lg" href="/">Back</a>
       <% } %>

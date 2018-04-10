@@ -1,0 +1,12 @@
+<thead>
+  <tr class="d-flex">
+    <% for (let fieldName of cckState.fieldNames) { %>
+      <% let fieldInfo = cckState.schema.fields[fieldName] %>
+      <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
+      <th class="<%= fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col' %>">
+        <%= fieldInfo.caption %>
+      </th>
+    <% } %>
+    <th class="col">Action</th>
+  </tr>
+</thead>

@@ -22,7 +22,7 @@ const notUniqueResponse = {
   status: 400,
   data: {
     status: 400,
-    developerMessage: 'Duplicate value, record might be exists. Make sure with _excludeDeleted=0 query request',
+    developerMessage: 'Duplicate value, record might be exists. Make sure with excludeDeleted=0 query request',
     userMessage: 'Duplicate value'
   }
 }

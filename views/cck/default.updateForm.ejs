@@ -1,10 +1,11 @@
-<h3><%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
+<h3>Edit <%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
 
 <script src="/ace-builds/src-min-noconflict/ace.js"></script>
 <script src="/js/cck-form.js"></script>
 <script src="/ejs/ejs.min.js"></script>
+
 <form id="cw-form" action="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>" method="post" enctype="multipart/form-data">
-  <input type="hidden" name="_excludeDeleted" value="<%= cckState.excludeDeleted %>" />
+  <input type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
   <input type="hidden" name="limit" value="<%= cckState.limit %>" />
 
   <% for (let fieldName of cckState.fieldNames) { %>
@@ -52,3 +53,10 @@
     </div>
   </div>
 </form>
+
+<%- include default.update/modal.ejs %>
+
+<script src="/js/cck-form-update.js"></script>
+<script>
+  cwAjaxifyUpdateForm('<%= cckState.schemaName %>', '<%= cckState.documentId %>')
+</script>

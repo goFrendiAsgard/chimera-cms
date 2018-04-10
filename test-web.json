@@ -922,7 +922,7 @@
 					"response": []
 				},
 				{
-					"name": "GET: cck tests - limit offset and _showHistory",
+					"name": "GET: cck tests - limit offset and showHistory",
 					"event": [
 						{
 							"listen": "test",
@@ -966,7 +966,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?limit=2&offset=1&_showHistory=1",
+							"raw": "http://localhost:3000/api/v1/tests?limit=2&offset=1&showHistory=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -987,7 +987,7 @@
 									"value": "1"
 								},
 								{
-									"key": "_showHistory",
+									"key": "showHistory",
 									"value": "1"
 								}
 							]
@@ -1064,7 +1064,7 @@
 					"response": []
 				},
 				{
-					"name": "GET: cck tests - by _k",
+					"name": "GET: cck tests - by k",
 					"event": [
 						{
 							"listen": "test",
@@ -1098,7 +1098,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?_k=ue3",
+							"raw": "http://localhost:3000/api/v1/tests?k=ue3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1111,7 +1111,7 @@
 							],
 							"query": [
 								{
-									"key": "_k",
+									"key": "k",
 									"value": "ue3"
 								}
 							]
@@ -1121,7 +1121,7 @@
 					"response": []
 				},
 				{
-					"name": "GET: cck tests - by _q",
+					"name": "GET: cck tests - by q",
 					"event": [
 						{
 							"listen": "test",
@@ -1157,7 +1157,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?_q={\"$or\":[{\"key\":\"testKey1\"},{\"key\":\"testKey3\"}]}",
+							"raw": "http://localhost:3000/api/v1/tests?q={\"$or\":[{\"key\":\"testKey1\"},{\"key\":\"testKey3\"}]}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1170,7 +1170,7 @@
 							],
 							"query": [
 								{
-									"key": "_q",
+									"key": "q",
 									"value": "{\"$or\":[{\"key\":\"testKey1\"},{\"key\":\"testKey3\"}]}"
 								}
 							]
@@ -1680,7 +1680,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?_excludeDeleted=0",
+							"raw": "http://localhost:3000/api/v1/tests?excludeDeleted=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1693,7 +1693,7 @@
 							],
 							"query": [
 								{
-									"key": "_excludeDeleted",
+									"key": "excludeDeleted",
 									"value": "0"
 								}
 							]
@@ -1741,7 +1741,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?_excludeDeleted=0",
+							"raw": "http://localhost:3000/api/v1/tests?excludeDeleted=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1754,7 +1754,7 @@
 							],
 							"query": [
 								{
-									"key": "_excludeDeleted",
+									"key": "excludeDeleted",
 									"value": "0"
 								}
 							]
@@ -1798,7 +1798,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/tests?_excludeDeleted=0",
+							"raw": "http://localhost:3000/api/v1/tests?excludeDeleted=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1811,7 +1811,7 @@
 							],
 							"query": [
 								{
-									"key": "_excludeDeleted",
+									"key": "excludeDeleted",
 									"value": "0"
 								}
 							]
