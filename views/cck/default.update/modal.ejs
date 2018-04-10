@@ -1,0 +1,20 @@
+<div id="cw-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update</h5>
+      </div>
+      <div class="modal-body">
+        <div id="cw-modal-alert" class="alert" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <a id="cw-btn-re-edit" class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Edit Again</a>
+        <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
+          <a class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>">Finish</a>
+        <% } else { %>
+          <a class="btn btn-secondary" href="/">Finish</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

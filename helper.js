@@ -45,11 +45,17 @@ function loadEjs (fileName, data) {
 }
 
 function renderContent (responseData, view, viewPath) {
+  let relativeView = path.join(viewPath, view)
   if (fs.existsSync(view)) {
+    responseData.filename = view
     return loadEjs(view, responseData)
-  } else if (fs.existsSync(path.join(viewPath, view))) {
-    return loadEjs(path.join(viewPath, view), responseData)
+  } else if (fs.existsSync(relativeView)) {
+    responseData.filename = relativeView
+    return loadEjs(relativeView, responseData)
   } else {
+    if (util.isRealObject(responseData)) {
+      responseData.filename = path.join(viewPath, 'index.ejs')
+    }
     return ejs.render(view, responseData)
   }
 }
@@ -84,9 +90,11 @@ function injectBaseLayout (state, callback) {
         partialPath = state.config.partial[partialName]
       }
       if (fs.existsSync(partialPath)) {
-        newResponseData.partial[partialName] = loadEjs(partialPath, {request, response, renderFieldTemplate, render, config, isAuthorized})
+        let filename = partialPath
+        newResponseData.partial[partialName] = loadEjs(partialPath, {request, response, renderFieldTemplate, render, config, isAuthorized, filename})
       } else {
-        newResponseData.partial[partialName] = ejs.render(partialPath, {request, response, renderFieldTemplate, render, config, isAuthorized})
+        let filename = path.join(config.viewPath, 'index.ejs')
+        newResponseData.partial[partialName] = ejs.render(partialPath, {request, response, renderFieldTemplate, render, config, isAuthorized, filename})
       }
       next()
     })

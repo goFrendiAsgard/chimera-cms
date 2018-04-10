@@ -1,0 +1,46 @@
+<!-- Variable declarations -->
+<%% let fieldName, fieldInfo, template %>
+<tr id="cw-row-<%%= row._id %>" class="<%%= row._deleted ? "table-danger" : "" %> d-flex">
+
+  <!-- Content -->
+  <% for (let fieldName of cckState.fieldNames) { %>
+    <% let fieldInfo = cckState.schema.fields[fieldName] %>
+    <% if (fieldInfo.hidden && fieldInfo.hidden.indexOf('tabular') > -1) { continue;} %>
+
+    <%% fieldName = '<%=fieldName%>' %%>
+    <%% fieldInfo = cckState.schema.fields[fieldName] %>
+    <%% template = 'tabularPresentationTemplate' in fieldInfo ? fieldInfo.tabularPresentationTemplate : fieldInfo.presentationTemplate %>
+    <td class="<%= fieldInfo.bootstrapColWidth ? 'col-' + fieldInfo.bootstrapColWidth : 'col' %>">
+      <%%- ejs.render(template, {row, fieldName, fieldInfo, value:row[fieldName]}) %>
+    </td>
+
+  <% } %>
+
+  <td class="col">
+    <%% if (row._customHtmlComponents) { %>
+      <%%- row._customHtmlComponents %>
+    <%% } %>
+    <!-- Detail Button -->
+    <% if (isAuthorized(cckState.auth, cckState.schema.selectGroups)) { %>
+      <a class="cw-btn-detail btn btn-sm btn-secondary button-detail" rowId="<%%=row._id%>" href="/data/<%= cckState.schemaName %>/<%%=row._id%>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>&q=<%%= cckState.q %>&k=<%%= cckState.k %>">
+        <span class="oi oi-file"></span>
+      </a>
+    <% } %>
+    <!-- Update Button -->
+    <% if (isAuthorized(cckState.auth, cckState.schema.updateGroups)) { %>
+    <%% if (!row._restrictUpdate) { %>
+      <a class="cw-btn-update btn btn-sm btn-secondary button-update" rowId="<%%=row._id%>" href="/data/<%= cckState.schemaName %>/update/<%%=row._id%>?excludeDeleted=<%%= cckState.excludeDeleted%>&limit=<%%= cckState.limit %>">
+        <span class="oi oi-pencil"></span>
+      </a>
+    <%% } %>
+    <% } %>
+    <!-- Delete Button -->
+    <% if (isAuthorized(cckState.auth, cckState.schema.deleteGroups)) { %>
+    <%% if (!row._restrictDelete) { %>
+      <a class="cw-btn-delete btn btn-sm btn-secondary button-delete" rowId="<%%=row._id%>" href="/data/<%= cckState.schemaName %>/delete/<%%=row._id%>?excludeDeleted=<%%= row._deleted ? 0 : 1%>&limit=<%%= cckState.limit %>">
+        <span class="oi oi-trash"></span>
+      </a>
+    <%% } %>
+    <% } %>
+  </td>
+</tr>
