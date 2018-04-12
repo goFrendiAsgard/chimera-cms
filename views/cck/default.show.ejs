@@ -10,7 +10,7 @@
 </div>
 
 <!-- Caption -->
-<h3><%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
+<%- include default.show/caption.ejs %>
 
 <div style="margin-bottom:1em">
   <!-- Custom HTML components -->
@@ -19,11 +19,7 @@
   <%- include default.show/searchForm.ejs %>
 </div>
 
-<table class="table cw-table">
-  <!-- Table header-->
-  <%- include default.show/tableHeader.ejs %>
-  <tbody id="cw-result-container" style="max-height:23em;"><!-- Results will be loaded here --></tbody>
-</table>
+<%- include default.show/presentationTemplate.ejs %>
 
 <div id="cw-pagination"><!-- Pagination will be loaded here --></div>
 

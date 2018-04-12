@@ -68,6 +68,7 @@ const defaultSchemaData = {
   deleteActionView: '<%= viewPath %>cck/default.deleteAction.ejs', // delete action
   showView: '<%= viewPath %>cck/default.show.ejs', // show
   showOneView: '<%= viewPath %>cck/default.showOne.ejs', // showOne
+  includes: {},
   insertGroups: [],
   updateGroups: [],
   deleteGroups: [],
