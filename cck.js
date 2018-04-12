@@ -57,17 +57,33 @@ const defaultSchemaData = {
   site: null,
   fields: {},
   initChain: null,
-  insertChain: '<%= chainPath %>cck/default.insert.js', // insert api
-  updateChain: '<%= chainPath %>cck/default.update.js', // update api
-  deleteChain: '<%= chainPath %>cck/default.delete.js', // delete api
-  selectChain: '<%= chainPath %>cck/default.select.js', // select api
-  insertFormView: '<%= viewPath %>cck/default.insertForm.ejs', // insert form
-  updateFormView: '<%= viewPath %>cck/default.updateForm.ejs', // update form
-  insertActionView: '<%= viewPath %>cck/default.insertAction.ejs', // insert action
-  updateActionView: '<%= viewPath %>cck/default.updateAction.ejs', // update action
-  deleteActionView: '<%= viewPath %>cck/default.deleteAction.ejs', // delete action
-  showView: '<%= viewPath %>cck/default.show.ejs', // show
-  showOneView: '<%= viewPath %>cck/default.showOne.ejs', // showOne
+  insertChain: '<%- chainPath %>cck/default.insert.js', // insert api
+  updateChain: '<%- chainPath %>cck/default.update.js', // update api
+  deleteChain: '<%- chainPath %>cck/default.delete.js', // delete api
+  selectChain: '<%- chainPath %>cck/default.select.js', // select api
+  insertFormView: '<%- viewPath %>cck/default.insertForm.ejs', // insert form
+  insertFormViewCaption: '<%- viewPath %>cck/default.insertForm/caption.ejs',
+  insertFormViewModal: '<%- viewPath %>cck/default.insertForm/modal.ejs',
+  insertFormViewPresentation: '<%- viewPath %>cck/default.insertForm/presentation.ejs',
+  updateFormView: '<%- viewPath %>cck/default.updateForm.ejs', // update form
+  updateFormViewCaption: '<%- viewPath %>cck/default.updateForm/caption.ejs',
+  updateFormViewModal: '<%- viewPath %>cck/default.updateForm/modal.ejs',
+  updateFormViewPresentation: '<%- viewPath %>cck/default.updateForm/presentation.ejs',
+  insertActionView: '<%- viewPath %>cck/default.insertAction.ejs', // insert action
+  updateActionView: '<%- viewPath %>cck/default.updateAction.ejs', // update action
+  deleteActionView: '<%- viewPath %>cck/default.deleteAction.ejs', // delete action
+  showView: '<%- viewPath %>cck/default.show.ejs', // show (tabular)
+  showViewCaption: '<%- viewPath %>cck/default.show/caption.ejs',
+  showViewDeleteModal: '<%- viewPath %>cck/default.show/deleteModal.ejs',
+  showViewPaginationTemplate: '<%- viewPath %>cck/default.show/paginationTemplate.ejs',
+  showViewPresentationTemplate: '<%- viewPath %>cck/default.show/presentationTemplate.ejs',
+  showViewRowTemplate: '<%- viewPath %>cck/default.show/rowTemplate.ejs',
+  showViewSearchForm: '<%- viewPath %>cck/default.show/searchForm.ejs',
+  showViewTableHeader: '<%- viewPath %>cck/default.show/tableHeader.ejs',
+  showOneView: '<%- viewPath %>cck/default.showOne.ejs', // showOne
+  showOneViewCaption: '<%- viewPath %>cck/default.showOne/caption.ejs',
+  showOneViewModal: '<%- viewPath %>cck/default.showOne/modal.ejs',
+  showOneViewPresentation: '<%- viewPath %>cck/default.showOne/presentation.ejs',
   insertGroups: [],
   updateGroups: [],
   deleteGroups: [],
@@ -197,7 +213,11 @@ function getCompleteSchemaFields (schemaFields, config) {
 function preprocessSchema (schema, config) {
   schema = getTrimmedObject(schema)
   config = util.isNullOrUndefined(config) ? helper.getWebConfig() : config
-  let completeSchema = util.getPatchedObject(defaultSchemaData, schema)
+  let completeSchema = defaultSchemaData
+  if ('cck' in config && 'config' in config.cck) {
+    completeSchema = util.getPatchedObject(completeSchema, config.cck.config)
+  }
+  completeSchema = util.getPatchedObject(completeSchema, schema)
   // completing chiml path
   for (let key in completeSchema) {
     if (util.isString(completeSchema[key])) {

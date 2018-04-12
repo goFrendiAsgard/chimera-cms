@@ -5,29 +5,25 @@
 <div class="cw-hidden">
   <textarea id="cw-cckState"><%= JSON.stringify(cckState) %></textarea>
   <textarea id="cw-initial-data"><%= JSON.stringify({metadata, results}) %></textarea>
-  <textarea id="cw-row-template"><%- include default.show/rowTemplate.ejs %></textarea>
-  <textarea id="cw-pagination-template"><%- include default.show/paginationTemplate.ejs %></textarea>
+  <textarea id="cw-row-template"><%- include(cckState.schema.showViewRowTemplate) %></textarea>
+  <textarea id="cw-pagination-template"><%- include(cckState.schema.showViewPaginationTemplate) %></textarea>
 </div>
 
 <!-- Caption -->
-<h3><%='caption' in cckState && cckState.caption ? cckState.caption : cckState.schemaName %></h3>
+<%- include(cckState.schema.showViewCaption) %>
 
 <div style="margin-bottom:1em">
   <!-- Custom HTML components -->
   <%- cckState._customHtmlComponents ? cckState._customHtmlComponents : '' %>
   <!-- Search form -->
-  <%- include default.show/searchForm.ejs %>
+  <%- include(cckState.schema.showViewSearchForm) %>
 </div>
 
-<table class="table cw-table">
-  <!-- Table header-->
-  <%- include default.show/tableHeader.ejs %>
-  <tbody id="cw-result-container" style="max-height:23em;"><!-- Results will be loaded here --></tbody>
-</table>
+<%- include(cckState.schema.showViewPresentationTemplate) %>
 
 <div id="cw-pagination"><!-- Pagination will be loaded here --></div>
 
-<%- include default.show/deleteModal.ejs %>
+<%- include(cckState.schema.showViewDeleteModal) %>
 
 <script src="/js/cck-form-show.js"></script>
 <script>
