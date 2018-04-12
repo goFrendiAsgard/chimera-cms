@@ -4,6 +4,7 @@ if (typeof $ === 'undefined') {
   var cwRenderResults = () => {}
   var cwRenderPagination = () => {}
   var cwAdjustDflexTables = () => {}
+  var history = {}
 }
 
 function cwAjaxifyShow () {

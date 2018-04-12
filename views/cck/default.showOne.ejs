@@ -2,10 +2,10 @@
 <script src="/js/cck-form.js"></script>
 <script src="/ejs/ejs.min.js"></script>
 
-<%- include default.showOne/caption.ejs %>
+<%- include(cckState.schema.showOneViewCaption) %>
 
 <div id="cw-form">
-  <%- include default.showOne/presentation.ejs %>
+  <%- include(cckState.schema.showOneViewPresentation) %>
   
   <div class="form-group row">
     <div class="col-sm-10 col-sm-offset-2">

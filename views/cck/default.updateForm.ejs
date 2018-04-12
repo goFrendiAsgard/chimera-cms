@@ -2,7 +2,7 @@
 <script src="/js/cck-form.js"></script>
 <script src="/ejs/ejs.min.js"></script>
 
-<%- include default.updateForm/caption.ejs %>
+<%- include(cckState.schema.updateFormViewCaption) %>
 
 <form id="cw-form" action="/data/<%= cckState.schemaName %>/update/<%= cckState.documentId %>" method="post" enctype="multipart/form-data">
   <input type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
@@ -22,7 +22,7 @@
   </div>
 </form>
 
-<%- include default.updateForm/modal.ejs %>
+<%- include(cckState.schema.updateFormViewModal) %>
 
 <script src="/js/cck-form-update.js"></script>
 <script>
