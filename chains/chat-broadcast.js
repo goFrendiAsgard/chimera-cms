@@ -3,7 +3,8 @@ module.exports = (ins, vars, callback) => {
   let response = state.response
   let request = state.request
   let message = request.body['message']
-  message = request.auth.username + ': ' + message
+  let username = request.auth.username ? request.auth.username : 'guest'
+  message = '<b>' + username + ':</b> ' + message
   response.data = 'ok'
   response._emit = {
     event: 'chat-broadcast',
