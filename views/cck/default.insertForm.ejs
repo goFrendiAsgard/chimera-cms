@@ -2,14 +2,14 @@
 <script src="/js/cck-form.js"></script>
 <script src="/ejs/ejs.min.js"></script>
 
-<%- include(cckState.schema.insertFormViewCaption) %>
+<%- include(cckState.schema.include.insertFormViewCaption) %>
 
 <form id="cw-form" action="/data/<%= cckState.schemaName %>/insert" method="post" enctype="multipart/form-data">
   <input type="hidden" name="excludeDeleted" value="<%= cckState.excludeDeleted %>" />
   <input type="hidden" name="limit" value="<%= cckState.limit %>" />
 
-  <%- include default.insertForm/presentation.ejs %>
-  
+  <%- include(cckState.schema.include.insertFormViewPresentation) %>
+
   <div class="form-group row">
     <div class="">
       <button class="btn btn-secondary btn-lg" href="/data/<%= cckState.schemaName %>">Save</button>
@@ -22,7 +22,7 @@
   </div>
 </form>
 
-<%- include(cckState.schema.insertFormViewModal) %>
+<%- include(cckState.schema.include.insertFormViewModal) %>
 
 <script src="/js/cck-form-insert.js"></script>
 <script>

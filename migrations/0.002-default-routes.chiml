@@ -63,6 +63,12 @@ do:
               view: 'default.logout.ejs'
               groups: ['loggedIn', 'loggedOut']
               defaultRoute: 1
+            - name: 'Chat Broadcast'
+              route: '/chat-broadcast'
+              method: 'all'
+              chain: '<%= chainPath %>chat-broadcast.js'
+              groups: ['loggedIn', 'loggedOut']
+              defaultRoute: 1
           out: defaultRoutes
         - "('web_routes', 'insert', defaultRoutes) -> [$.helper.mongoExecute] -> output"
 

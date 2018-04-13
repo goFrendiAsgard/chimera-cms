@@ -78,7 +78,6 @@ function injectBaseLayout (state, callback) {
     return callback(null, state)
   }
   let {response, config, request} = state
-  console.error(config.title)
   let responseData = response.data
   let newResponseData
   let actions = []
