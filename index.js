@@ -3,7 +3,6 @@
 const staticCache = require('express-static-cache')
 const process = require('process')
 const web = require('chimera-framework/lib/web.js')
-const util = require('chimera-framework/lib/util.js')
 const cck = require('./cck.js')
 const helper = require('./helper.js')
 const express = require('express')
@@ -37,15 +36,8 @@ for (let publishedPath in webConfig.customStaticRoutes) {
 
 // create app
 let app = web.createApp(webConfig, ...webConfig.middlewares)
-let server = require('http').Server(app)
-let io = require('socket.io')(server)
-
-// socket.io handling
-if ('socketHandler' in webConfig && util.isFunction(webConfig.socketHandler)) {
-  io.on('connection', (socket) => {
-    webConfig.socketHandler(socket)
-  })
-}
+let server = web.createServer(app)
+let io = web.createWebSocket(server)
 
 // export the app
 module.exports = {app, io, server}

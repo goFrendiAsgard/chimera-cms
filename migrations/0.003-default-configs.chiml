@@ -106,28 +106,29 @@ vars:
           deleteChain: '<%- chainPath %>cck/default.delete.js'
           selectChain: '<%- chainPath %>cck/default.select.js'
           insertFormView: '<%- viewPath %>cck/default.insertForm.ejs'
-          insertFormViewCaption: '<%- viewPath %>cck/default.insertForm/caption.ejs'
-          insertFormViewModal: '<%- viewPath %>cck/default.insertForm/modal.ejs'
-          insertFormViewPresentation: '<%- viewPath %>cck/default.insertForm/presentation.ejs'
           updateFormView: '<%- viewPath %>cck/default.updateForm.ejs'
-          updateFormViewCaption: '<%- viewPath %>cck/default.updateForm/caption.ejs'
-          updateFormViewModal: '<%- viewPath %>cck/default.updateForm/modal.ejs'
-          updateFormViewPresentation: '<%- viewPath %>cck/default.updateForm/presentation.ejs'
           insertActionView: '<%- viewPath %>cck/default.insertAction.ejs'
           updateActionView: '<%- viewPath %>cck/default.updateAction.ejs'
           deleteActionView: '<%- viewPath %>cck/default.deleteAction.ejs'
           showView: '<%- viewPath %>cck/default.show.ejs'
-          showViewCaption: '<%- viewPath %>cck/default.show/caption.ejs'
-          showViewDeleteModal: '<%- viewPath %>cck/default.show/deleteModal.ejs'
-          showViewPaginationTemplate: '<%- viewPath %>cck/default.show/paginationTemplate.ejs'
-          showViewPresentationTemplate: '<%- viewPath %>cck/default.show/presentationTemplate.ejs'
-          showViewRowTemplate: '<%- viewPath %>cck/default.show/rowTemplate.ejs'
-          showViewSearchForm: '<%- viewPath %>cck/default.show/searchForm.ejs'
-          showViewTableHeader: '<%- viewPath %>cck/default.show/tableHeader.ejs'
           showOneView: '<%- viewPath %>cck/default.showOne.ejs'
-          showOneViewCaption: '<%- viewPath %>cck/default.showOne/caption.ejs'
-          showOneViewModal: '<%- viewPath %>cck/default.showOne/modal.ejs'
-          showOneViewPresentation: '<%- viewPath %>cck/default.showOne/presentation.ejs'
+          include:
+            insertFormViewCaption: '<%- viewPath %>cck/default.insertForm/caption.ejs'
+            insertFormViewModal: '<%- viewPath %>cck/default.insertForm/modal.ejs'
+            insertFormViewPresentation: '<%- viewPath %>cck/default.insertForm/presentation.ejs'
+            updateFormViewCaption: '<%- viewPath %>cck/default.updateForm/caption.ejs'
+            updateFormViewModal: '<%- viewPath %>cck/default.updateForm/modal.ejs'
+            updateFormViewPresentation: '<%- viewPath %>cck/default.updateForm/presentation.ejs'
+            showViewCaption: '<%- viewPath %>cck/default.show/caption.ejs'
+            showViewDeleteModal: '<%- viewPath %>cck/default.show/deleteModal.ejs'
+            showViewPaginationTemplate: '<%- viewPath %>cck/default.show/paginationTemplate.ejs'
+            showViewPresentationTemplate: '<%- viewPath %>cck/default.show/presentationTemplate.ejs'
+            showViewRowTemplate: '<%- viewPath %>cck/default.show/rowTemplate.ejs'
+            showViewSearchForm: '<%- viewPath %>cck/default.show/searchForm.ejs'
+            showViewTableHeader: '<%- viewPath %>cck/default.show/tableHeader.ejs'
+            showOneViewCaption: '<%- viewPath %>cck/default.showOne/caption.ejs'
+            showOneViewModal: '<%- viewPath %>cck/default.showOne/modal.ejs'
+            showOneViewPresentation: '<%- viewPath %>cck/default.showOne/presentation.ejs'
 
     - key: showTopNav
       defaultConfig: 1
@@ -206,10 +207,12 @@ vars:
             $('#chat-messages').append(data + '<br />')
           })
           $('#chat-send').click(function (event) {
-            let userName = '<%%= request.auth.username ? request.auth.username : 'Guest' %>'
-            let message = userName + ': ' + $('#chat-box').val()
-            socket.emit('chat-send', message)
-            $('#chat-box').val('')
+            $.ajax({
+              url: '/chat-broadcast',
+              method: 'post',
+              data: {'message': $('#chat-box').val()},
+              success: function () {$('#chat-box').val('')}
+            })
           })
         </script>
 
