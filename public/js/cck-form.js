@@ -2,8 +2,19 @@
 
 if (typeof $ === 'undefined') {
   var ace = {}
-  var ejs = {}
   var FormData = {}
+  module.exports = {
+    cwAjaxifyForm,
+    cwAdjustDflexTables,
+    cwInitAce,
+    cwSwitchTab,
+    cwAfterLoadTable,
+    cwPreprocessValue,
+    cwLoadMany2OnePresentationContainer,
+    cwLoadMany2OneInputContainer,
+    cwLoadOne2ManyPresentationContainer,
+    cwLoadOne2ManyInputContainer
+  }
 }
 
 function cwAjaxifyForm (formId, options = {}) {
@@ -301,20 +312,6 @@ function cwLoadOne2ManyInputContainer (componentId, componentFieldInfo) {
   html += '</table>'
   $('#' + componentId + 'InputContainer').html(html)
   cwAfterLoadTable()
-}
-
-function cwRenderResults (cckState, rowTemplate, data) {
-  let html = ''
-  let results = data.results
-  for (let row of results) {
-    html += ejs.render(rowTemplate, {cckState, row})
-  }
-  return html
-}
-
-function cwRenderPagination (cckState, paginationTemplate, data) {
-  let metadata = data.metadata
-  return ejs.render(paginationTemplate, {cckState, metadata})
 }
 
 $(document).ready(function () {

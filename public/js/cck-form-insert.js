@@ -2,6 +2,9 @@
 
 if (typeof $ === 'undefined') {
   var cwAjaxifyForm = () => {}
+  module.exports = {
+    cwAjaxifyInsertForm
+  }
 }
 
 function cwAjaxifyInsertForm (schemaName) {

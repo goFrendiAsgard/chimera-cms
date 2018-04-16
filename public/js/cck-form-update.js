@@ -2,6 +2,9 @@
 
 if (typeof $ === 'undefined') {
   var cwAjaxifyForm = () => {}
+  module.exports = {
+    cwAjaxifyUpdateForm
+  }
 }
 
 function cwAjaxifyUpdateForm (schemaName, documentId) {
