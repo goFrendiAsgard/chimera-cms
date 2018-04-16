@@ -196,7 +196,7 @@ vars:
       defaultConfig: 1
       value: |
         <div class="row container">
-          <div id="chat-messages" class="col-sm-12 card" style="height:150px;">
+          <div id="chat-messages" class="col-sm-12 border" style="height:150px; overflow-y:auto">
           </div>
           <textarea id="chat-box" class="form-control"></textarea>
           <button id="chat-send" class="form-control btn btn-secondary">Send</button>

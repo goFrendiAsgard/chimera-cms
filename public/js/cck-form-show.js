@@ -1,16 +1,97 @@
 /* eslint-env jquery */
 
 if (typeof $ === 'undefined') {
-  var cwRenderResults = () => {}
-  var cwRenderPagination = () => {}
+  var ejs = {}
   var cwAdjustDflexTables = () => {}
   var history = {}
+  module.exports = {
+    cwAjaxifyShow,
+    cwState
+  }
+}
+
+function cwState (...args) {
+  const availableKeys = ['excludeDeleted', 'limit', 'offset', 'q', 'k', 'sort']
+
+  function getCckState (key) {
+    return $('#cw-input-' + key).val()
+  }
+
+  function setCckState (key, val) {
+    if (Object(val) === val) {
+      val = JSON.stringify(val)
+    }
+    return $('#cw-input-' + key).val(val)
+  }
+
+  function reload () {
+    $('#cw-input-q').trigger('change')
+  }
+
+  if (args.length === 0) {
+    // return cckState
+    let cckState = {}
+    for (let key in availableKeys) {
+      cckState[key] = getCckState(key)
+    }
+    return cckState
+  } else if (args.length === 1) {
+    if (args[0] === Object(args[0])) {
+      // set cckState for provided key
+      let newCckState = args[0]
+      for (let key in newCckState) {
+        setCckState(key, newCckState[key])
+      }
+      reload()
+    } else {
+      // get cckState for the specific key
+      let key = args[0]
+      return getCckState(key)
+    }
+  } else if (args.length === 2) {
+    // set cckState for key and value
+    let key = args[0]
+    let val = args[1]
+    setCckState(key, val)
+    reload()
+  }
 }
 
 function cwAjaxifyShow () {
-
   var cckState, rowTemplate, paginationTemplate
 
+  // load cckState from the hidden inputs
+  function cwLoadCckState () {
+    cckState.excludeDeleted = $('#cw-input-excludeDeleted').val()
+    cckState.limit = $('#cw-input-limit').val()
+    cckState.offset = $('#cw-input-offset').val()
+    cckState.q = $('#cw-input-q').val()
+    cckState.k = $('#cw-input-k').val()
+    cckState.sort = $('#cw-input-sort').val()
+  }
+
+  function cwGetQueryUrl () {
+    cwLoadCckState()
+    return '?excludeDeleted=' + cckState.excludeDeleted + '&limit=' + cckState.limit + '&offset=' + cckState.offset + '&q=' + cckState.q + '&k=' + cckState.k + '&sort=' + cckState.sort
+  }
+
+  // get data presentation in HTML format
+  function cwRenderResults (cckState, rowTemplate, data) {
+    let html = ''
+    let results = data.results
+    for (let row of results) {
+      html += ejs.render(rowTemplate, {cckState, row})
+    }
+    return html
+  }
+
+  // get pagination in HTML format
+  function cwRenderPagination (cckState, paginationTemplate, data) {
+    let metadata = data.metadata
+    return ejs.render(paginationTemplate, {cckState, metadata})
+  }
+
+  // render data with all it's visual accessories
   function cwRender (cckState, rowTemplate, paginationTemplate, data) {
     data = (typeof data === 'undefined' || data === null) ? JSON.parse($('#cw-initial-data').val()) : data
     let renderedResults = cwRenderResults(cckState, rowTemplate, data)
@@ -21,22 +102,18 @@ function cwAjaxifyShow () {
     cwAdjustSortIcon()
   }
 
+  // send AJAX request and call cwRender
   function cwReload () {
-    cckState.excludeDeleted = $('#cw-input-excludeDeleted').val()
-    cckState.limit = $('#cw-input-limit').val()
-    cckState.offset = $('#cw-input-offset').val()
-    cckState.q = $('#cw-input-q').val()
-    cckState.k = $('#cw-input-k').val()
-    cckState.sort = $('#cw-input-sort').val()
-    let urlQuery = '?excludeDeleted=' + cckState.excludeDeleted + '&limit=' + cckState.limit + '&offset=' + cckState.offset + '&q=' + cckState.q + '&k=' + cckState.k + '&sort=' + cckState.sort
+    cwLoadCckState()
+    let queryUrl = cwGetQueryUrl()
     $.ajax({
-      url: '/api/v1/' + cckState.schemaName + urlQuery,
+      url: '/api/v1/' + cckState.schemaName + queryUrl,
       method: 'get',
       dataType: 'json',
       success: function (data, textStatus, jqXhr) {
         if (data.status < 400) {
           cwRender(cckState, rowTemplate, paginationTemplate, data)
-          history.pushState({}, '', '/data/' + cckState.schemaName + '/' + urlQuery)
+          history.pushState({}, '', '/data/' + cckState.schemaName + '/' + queryUrl)
         } else {
           console.log(textStatus)
         }
@@ -47,10 +124,12 @@ function cwAjaxifyShow () {
     })
   }
 
+  // get sort Object
   function cwGetSort () {
+    cwLoadCckState()
     let sort
     try {
-      sort = JSON.parse($('#cw-input-sort').val())
+      sort = JSON.parse(cckState.sort)
     } catch (error) {
       sort = {}
     }
@@ -60,25 +139,31 @@ function cwAjaxifyShow () {
     return sort
   }
 
+  // adjust sortIcon (.cw-sort-icon[field="fieldName"])
   function cwAdjustSortIcon () {
     let sort = cwGetSort()
+    let keys = Object.keys(sort)
     $('.cw-sort').each(function () {
       let fieldName = $(this).attr('field')
       let state = fieldName in sort ? sort[fieldName] : 0
+      let index = '<sup>' + (keys.indexOf(fieldName) + 1) + '</sup>'
       if (state === -1 || state === '-1') {
-        $('.cw-sort-icon[field="' + fieldName + '"]').html('&#9652')
+        $('.cw-sort-icon[field="' + fieldName + '"]').html('&#9652 ' + index)
       } else if (state === 1 || state === '1') {
-        $('.cw-sort-icon[field="' + fieldName + '"]').html('&#9662')
+        $('.cw-sort-icon[field="' + fieldName + '"]').html('&#9662 ' + index)
       } else {
         $('.cw-sort-icon[field="' + fieldName + '"]').html('')
       }
     })
   }
 
+  // on change, call reload
   $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k, #cw-input-sort').change(function (event) {
+    event.preventDefault()
     cwReload()
   })
 
+  // on key-enter, call reaload
   $('#cw-input-excludeDeleted, #cw-input-limit, #cw-input-offset, #cw-input-q, #cw-input-k, #cw-input-sort').keypress(function (event) {
     if (event.keyCode === 13) {
       event.preventDefault()
@@ -86,6 +171,7 @@ function cwAjaxifyShow () {
     }
   })
 
+  // sort-icon click
   $('.cw-sort').click(function (event) {
     let fieldName = $(this).attr('field')
     let sort = cwGetSort()
@@ -100,6 +186,7 @@ function cwAjaxifyShow () {
     cwReload()
   })
 
+  // page navigation click
   $('body').on('click', '.cw-page-item .cw-page-link', function (event) {
     event.preventDefault()
     $('#cw-input-offset').val($(this).attr('offset'))
