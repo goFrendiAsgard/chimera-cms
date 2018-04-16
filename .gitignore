@@ -6,6 +6,7 @@ node_modules/
 npm_debug.log
 .cache-require-paths.json
 .*.cjson
+.tern-port
 public/uploads/*.*
 views/simpleplugin/
 public/simpleplugin/
