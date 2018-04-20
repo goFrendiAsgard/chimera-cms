@@ -21,7 +21,9 @@ function cwAjaxifyInsertForm (schemaName) {
           $('#cw-modal-alert').addClass('alert-success')
           $('#cw-modal-alert').html('<strong>Success</strong> ' + data.userMessage)
           if ('_id' in data.result) {
-            $('#cw-btn-re-edit').attr('href', '/data/<%= cckState.schemaName %>/update/' + data.result._id + '?excludeDeleted=<%= cckState.excludeDeleted%>&limit=<%= cckState.limit %>')
+            let excludeDeleted = $('#cw-btn-re-edit').attr('excludeDeleted')
+            let limit = $('#cw-btn-re-edit').attr('limit')
+            $('#cw-btn-re-edit').attr('href', '/data/' + schemaName + '/update/' + data.result._id + '?excludeDeleted=' + excludeDeleted + '&limit=' + limit)
             $('#cw-btn-re-edit').show()
           }
         } else {
