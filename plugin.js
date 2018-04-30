@@ -193,7 +193,7 @@ function pack (pluginName, callback) {
     ], (error) => {
       if (error) { return console.error(error) }
       callback = isFunction(callback) ? callback : defaultCallback
-      return adjustPackageAndPackDirectories(pluginName, packCallback)
+      return adjustPackageAndPackDirectories(pluginName, callback)
     })
   })
 }

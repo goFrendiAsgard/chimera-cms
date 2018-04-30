@@ -15,13 +15,13 @@ module.exports = (processor, rowRestrictionKey) => {
     let $ = vars.$
     let response = state.response
     let chainPath = path.join(__dirname, 'core.select.js')
-    $.cck.getInitialCckState(state, (error, cckState) => {
+    $.cck.getInitialCckState(state, vars, (error, cckState) => {
       if (error) {
         return callback(error, response)
       }
       // when selecting, make sure data is empty so that it will not affect the filter
       cckState.data = {}
-      $.runChain(chainPath, state, cckState, (error, apiResponse) => {
+      vars._runChain(chainPath, state, cckState, (error, apiResponse) => {
         if (error) {
           return callback(error, response)
         }

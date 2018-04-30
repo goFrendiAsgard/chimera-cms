@@ -1,5 +1,6 @@
 'use strict'
 
+const safeEval = require('safe-eval')
 const async = require('neo-async')
 const path = require('path')
 const ejs = require('ejs')
@@ -395,7 +396,7 @@ function getSort (request) {
   return sort
 }
 
-function getInitialCckState (state, callback) {
+function getInitialCckState (state, vars, callback) {
   try {
     let { config, request } = state
     let basePath = config.basePath ? config.basePath : null
@@ -431,7 +432,7 @@ function getInitialCckState (state, callback) {
         let caption = 'caption' in schema && schema.caption.trim() !== '' ? schema.caption : schema.name.charAt(0).toUpperCase() + schema.name.slice(1)
         // compose initialState
         let initialState = util.getPatchedObject(defaultInitialState, {auth, documentId, apiVersion, q, k, fields, includeFieldInfo, caption, schemaName, fieldNames, data, unset, filter, sort, limit, offset, excludeDeleted, showHistory, schema, basePath, chainPath, viewPath, migrationPath})
-        return executeInitChain(initialState, state, error, callback)
+        return executeInitChain(initialState, state, vars, error, callback)
       })
     })
   } catch (error) {
@@ -453,10 +454,12 @@ function getSchemaWithDeleted (schema, config, excludeDeleted) {
   return schema
 }
 
-function executeInitChain (initialState, state, error, callback) {
-  if (initialState.schema.initChain) {
-    return helper.runChain(initialState.schema.initChain, initialState, state, (error, newInitialState) => {
-      callback(error, newInitialState)
+function executeInitChain (initialState, state, vars, error, callback) {
+  const initChain = initialState.schema.initChain
+  const runChain = vars._runChain
+  if (initChain && runChain) {
+    return runChain(initChain, initialState, state, (error, newInitialState) => {
+      callback(error, initialState)
     })
   }
   return callback(error, initialState)
@@ -509,13 +512,14 @@ function getPreprocessedSingleData (data, files, fieldNames, config) {
       let file = files[key]
       let fileName = getFileName(file.name)
       let keyParts = key.split('.')
-      let script = 'data'
+      let script = '(() => { data'
       for (let keyPart of keyParts) {
         script += '[' + JSON.stringify(keyPart) + ']'
       }
-      script += ' = ' + JSON.stringify('/uploads/' + fileName)
+      script += ' = ' + JSON.stringify('/uploads/' + fileName) + ';'
+      script += 'return data })()'
       try {
-        eval(script)
+        data = safeEval(script, {data})
         actions.push((next) => {
           file.mv(uploadPath + fileName, (error) => {
             next(error)

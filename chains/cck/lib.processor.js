@@ -49,7 +49,8 @@ function createInvalidRegexValidationResponse (fieldOption) {
   }
 }
 
-function mainProcess (state, cckState, $, chainNames, groupKey, callback) {
+function mainProcess (state, cckState, vars, chainNames, groupKey, callback) {
+  let $ = vars.$
   // add `chainNames` to actions sequentially
   let actions = []
   for (let chainName of chainNames) {
@@ -77,14 +78,15 @@ function mainProcess (state, cckState, $, chainNames, groupKey, callback) {
   })
 }
 
-function checkAndContinueProcess (state, cckState, $, chainNames, groupKey, processFilter, callback) {
+function checkAndContinueProcess (state, cckState, vars, chainNames, groupKey, processFilter, callback) {
+  let $ = vars.$
   // check authorization based on `groupKey`
   if (!$.helper.isAuthorized(state.request.auth, cckState.schema[groupKey])) {
     return callback(null, unauthorizedResponse)
   }
   // not processFilter, continue to mainProcess
   if (!processFilter) {
-    return mainProcess(state, cckState, $, chainNames, groupKey, callback)
+    return mainProcess(state, cckState, vars, chainNames, groupKey, callback)
   }
   // processFilter
   let uniqueFilter = []
@@ -144,7 +146,7 @@ function checkAndContinueProcess (state, cckState, $, chainNames, groupKey, proc
   }
   // uniqueFilter doesn't exists, continue to mainProcess
   if (uniqueFilter.length === 0) {
-    return mainProcess(state, cckState, $, chainNames, groupKey, callback)
+    return mainProcess(state, cckState, vars, chainNames, groupKey, callback)
   }
   // post-process uniqueFilter
   uniqueFilter = {$or: uniqueFilter}
@@ -163,7 +165,7 @@ function checkAndContinueProcess (state, cckState, $, chainNames, groupKey, proc
       return callback(error, notUniqueResponse)
     }
     // filter checking success, continue to mainProcess
-    return mainProcess(state, cckState, $, chainNames, groupKey, callback)
+    return mainProcess(state, cckState, vars, chainNames, groupKey, callback)
   })
 }
 
@@ -173,14 +175,14 @@ module.exports = (chainNames, groupKey, processFilter) => {
     let cckState = ins[1]
     let $ = vars.$
     if (!cckState) {
-      return $.cck.getInitialCckState(state, (error, cckState) => {
+      return $.cck.getInitialCckState(state, vars, (error, cckState) => {
         if (error) {
           let response = {data: {}}
           return callback(error, response)
         }
-        return checkAndContinueProcess(state, cckState, $, chainNames, groupKey, processFilter, callback)
+        return checkAndContinueProcess(state, cckState, vars, chainNames, groupKey, processFilter, callback)
       })
     }
-    return checkAndContinueProcess(state, cckState, $, chainNames, groupKey, processFilter, callback)
+    return checkAndContinueProcess(state, cckState, vars, chainNames, groupKey, processFilter, callback)
   }
 }

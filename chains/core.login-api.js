@@ -11,14 +11,14 @@ const invalidLoginResponse = {
 function createLoggedInResponse (ins, vars, user) {
   let state = ins[0]
   let $ = vars.$
-  let {config, request} = state
+  let {config} = state
   let jwtSecret = config.jwtSecret
   let expiresIn = config.jwtExpired
   let auth = $.helper.getLoggedInAuth(user)
   let jwtToken = jsonwebtoken.sign(auth, jwtSecret, { expiresIn })
   let cookies = {}
   cookies[config.jwtTokenName] = jwtToken
-  response = {
+  let response = {
     cookies,
     auth,
     data: {
@@ -33,10 +33,9 @@ function createLoggedInResponse (ins, vars, user) {
 
 function thirdPartyLogin (ins, vars, callback) {
   let state = ins[0]
-  let $ = vars.$
-  let {config, request} = state
+  let {config} = state
   if (config.thirdPartyLoginChain) {
-    return $.runChain(config.thirPartyLoginChain, ...ins, (error, user) => {
+    return vars._runChain(config.thirPartyLoginChain, ...ins, (error, user) => {
       let response = user ? createLoggedInResponse(ins, vars, user) : invalidLoginResponse
       callback(error, response)
     })
@@ -47,11 +46,10 @@ function thirdPartyLogin (ins, vars, callback) {
 module.exports = (ins, vars, callback) => {
   let state = ins[0]
   let $ = vars.$
-  let {config, request} = state
+  let {request} = state
   let identity = request.query.user || request.body.user
   let password = request.query.password || request.body.password
   $.helper.mongoExecute('web_users', 'find', {$and: [{_deleted: {$ne: 1}}, {$or: [{username: identity}, {email: identity}]}]}, (error, users) => {
-    let response = invalidLoginResponse
     if (users.length > 0) {
       let user = users[0]
       let salt = user.salt

@@ -12,12 +12,11 @@ let webConfig = helper.getWebConfig()
 const maxAgeOption = {maxAge: webConfig.staticMaxAge || (365 * 24 * 60 * 60)}
 const port = webConfig.port || process.env.PORT || 3000
 
-// add `helper`, `cck`, and helper.runChain to webConfig.vars.$
+// add `helper` and `cck` to webConfig.vars.$
 webConfig.vars = 'vars' in webConfig ? webConfig.vars : {}
 webConfig.vars.$ = '$' in webConfig.vars ? webConfig.vars.$ : {}
 webConfig.vars.$.helper = helper
 webConfig.vars.$.cck = cck
-webConfig.vars.$.runChain = helper.runChain
 
 // deal with midlewares
 webConfig.middlewares = 'middlewares' in webConfig ? webConfig.middlewares : []
