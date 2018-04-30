@@ -8,7 +8,6 @@ const ejs = require('ejs')
 const fs = require('fs')
 const util = require('chimera-framework/lib/util.js')
 const mongo = require('chimera-framework/lib/mongo.js')
-const core = require('chimera-framework/lib/core.js')
 
 const configExceptionKeys = ['basePath', 'chainPath', 'cckPath', 'helperPath', 'exceptionKeys', 'routes', 'jwtSecret', 'jwtExpired', 'jwtTokenName', 'sessionSecret', 'sessionMaxAge', 'sessionSaveUnitialized', 'sessionResave', 'startupHook', 'beforeRequestHook', 'afterRequestHook', 'middlewares', 'mongoUrl', 'migrationPath', 'staticPath', 'faviconPath', 'viewPath', 'errorTemplate', 'defaultTemplate', 'baseLayout', 'vars', 'socketHandler', 'port', 'customStaticRoutes', 'fallbackHook']
 
@@ -26,14 +25,7 @@ module.exports = {
   getSubObject,
   isAuthorized,
   injectBaseLayout,
-  runChain,
   loadEjs
-}
-
-function runChain (chain, ...args) {
-  let vars = {$: {runChain, helper: module.exports, cck: require('./cck.js')}}
-  let callback = args.pop()
-  core.executeChain(chain, args, vars, callback)
 }
 
 function loadEjs (fileName, data) {

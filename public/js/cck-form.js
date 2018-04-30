@@ -3,6 +3,7 @@
 if (typeof $ === 'undefined') {
   var ace = {}
   var FormData = {}
+  var ejs = {}
   module.exports = {
     cwAjaxifyForm,
     cwAdjustDflexTables,

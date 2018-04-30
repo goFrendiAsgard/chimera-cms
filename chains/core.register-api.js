@@ -10,7 +10,7 @@ module.exports = (ins, vars, callback) => {
     email: request.query.email || request.body.email
   }
   state.request.params = {version: 'v1', schemaName: 'users'}
-  $.cck.getInitialCckState(state, (error, cckState) => {
+  $.cck.getInitialCckState(state, vars, (error, cckState) => {
     if (error) {
       let response = {
         data: {
@@ -26,7 +26,7 @@ module.exports = (ins, vars, callback) => {
     cckState.schema.insertGroups = []
     cckState.data = data
     let chainPath = path.join(__dirname, 'cck/core.insert.js')
-    return $.runChain(chainPath, state, cckState, (error, apiResponse) => {
+    return vars._runChain(chainPath, state, cckState, (error, apiResponse) => {
       if (error) {
         let response = {
           data: {

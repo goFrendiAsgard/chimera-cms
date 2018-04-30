@@ -4,14 +4,14 @@ module.exports = (ins, vars, callback) => {
   let state = ins[0]
   let $ = vars.$
   let response = state.response
-  $.cck.getInitialCckState(state, (error, cckState) => {
+  $.cck.getInitialCckState(state, vars, (error, cckState) => {
     if (error) {
       return callback(error, response)
     }
     // determine the view
     response.view = $.util.isString(cckState.documentId) ? cckState.schema.showOneView : cckState.schema.showView
     let chainPath = path.join(__dirname, 'core.select.js')
-    return $.runChain(chainPath, state, cckState, (error, apiResponse) => {
+    return vars._runChain(chainPath, state, cckState, (error, apiResponse) => {
       if (error) {
         return callback(error, response)
       }
