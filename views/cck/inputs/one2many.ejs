@@ -55,8 +55,7 @@
     $('#<%= inputId %>BtnAdd').click(function (event) {
       event.preventDefault()
       let fields = Object.keys(fieldInfo.fields)
-      let {colWidth, actionWidth} = cwGetColWidthAndActionWidth(fields, fieldInfo.fields, true)
-      let html = cwGetOne2ManyTableRow({}, fieldInfo.fields, colWidth, actionWidth)
+      let html = cwGetOne2ManyTableRow({}, fieldInfo.fields)
       // add to tbody
       $('#<%= inputId %>Table>tbody').append(html)
       cwAdjustDflexTables()
