@@ -50,13 +50,12 @@ function createInvalidRegexValidationResponse (fieldOption) {
 }
 
 function mainProcess (state, cckState, vars, chainNames, groupKey, callback) {
-  let $ = vars.$
   // add `chainNames` to actions sequentially
   let actions = []
   for (let chainName of chainNames) {
     actions.push((next) => {
       if (cckState.result.status < 400 && cckState.schema[chainName]) {
-        return $.runChain(cckState.schema[chainName], cckState, state, (error, newCckState) => {
+        return vars._runChain(cckState.schema[chainName], cckState, state, (error, newCckState) => {
           cckState = newCckState
           return next(error)
         })
