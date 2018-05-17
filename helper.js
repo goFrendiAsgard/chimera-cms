@@ -397,7 +397,7 @@ function getWebConfig () {
   for (let configFile of ['./webConfig.default.js', './webConfig.js', './webConfig.json']) {
     try {
       let config = require(configFile)
-      webConfig = util.getPatchedObject(webConfig, config)
+      webConfig = util.getPatchedObject(webConfig, config, false)
     } catch (error) {
       // do nothing
     }
