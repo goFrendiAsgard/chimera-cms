@@ -459,7 +459,7 @@ function executeInitChain (initialState, state, vars, error, callback) {
   const runChain = vars._runChain
   if (initChain && runChain) {
     return runChain(initChain, initialState, state, (error, newInitialState) => {
-      callback(error, initialState)
+      callback(error, newInitialState)
     })
   }
   return callback(error, initialState)

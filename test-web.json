@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5372bdd6-1068-48ac-8824-b9a7de8098de",
+		"_postman_id": "7a50ba2f-846b-4dc6-aa81-64fec57fd039",
 		"name": "test-web",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -576,6 +576,76 @@
 							"port": "3000",
 							"path": [
 								""
+							]
+						},
+						"description": "Login API"
+					},
+					"response": []
+				},
+				{
+					"name": "GET: cck cck with fieldInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7f7ba7eb-a034-4539-a89c-e94dff070b59",
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON, results, firstResult, fieldInfo;",
+									"",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"console.log(responseJSON);",
+									"tests['response contains `results`'] = _.has(responseJSON, 'results');",
+									"fieldInfo = responseJSON.metadata.fieldInfo;",
+									"resultset = responseJSON.metadata.resultset;",
+									"results = responseJSON.results;",
+									"firstResult = results[0];",
+									"tests['group options should be more than 2'] = Object.keys(fieldInfo.groups.options).length > 2",
+									"tests['offset should be 0'] = resultset.offset === 0;",
+									"tests['results contains 3 rows'] = results.length === 1;",
+									"tests['firstResult has id'] = ('_id' in firstResult);",
+									"tests['firstResult does not have history'] = !('_history' in firstResult);",
+									"",
+									"postman.setEnvironmentVariable('firstTestId', firstResult._id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/routes?includeFieldInfo=1&limit=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"routes"
+							],
+							"query": [
+								{
+									"key": "includeFieldInfo",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
 							]
 						},
 						"description": "Login API"
